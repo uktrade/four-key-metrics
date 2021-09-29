@@ -10,7 +10,9 @@ with open('data.json') as f:
   data = json.load(f)
 
 
-to_print = []
+production_deploys = []
+
+deploy_dates = []
 
 for build in data['builds']:
     change_set = []
@@ -22,26 +24,28 @@ for build in data['builds']:
         continue
 
     for change in build['changeSet']['items']:
-        date_time = ciso8601.parse_datetime(re.sub(r"^(.*?) (.*?) (.*)$", r"\1T\2\3", change['date']))
-        timestamp = time.mktime(date_time.timetuple())
-        change_set.append({'timestamp': timestamp})
+        change_set.append({'timestamp': change['timestamp']/1000})
 
+    duration = int(build['duration'])/1000
     deploy_time = int(build['timestamp'])/1000
-    to_print.append({
+    production_deploys.append({
             'result': build['result'],
-            'duration': build['duration'],
-            'timestamp': deploy_time,
+            'duration': duration,
+            'timestamp': deploy_time + duration,
             'environment': environment,
             'change_set': change_set 
 
         })
+    deploy_dates.append(deploy_time)
 
-pprint.pprint(to_print)
-
+pprint.pprint(production_deploys)
 
 lead_times = []
 
-for deploy in to_print:
+for deploy in production_deploys:
+    if deploy['result'] != 'SUCCESS':
+        continue
+
     for commit in deploy['change_set']:
         lead_times.append((deploy['timestamp']-commit['timestamp']))
 
@@ -51,7 +55,9 @@ pprint.pprint(
         { 'average': str(timedelta(seconds=sum(lead_times) / len(lead_times))),
             'maximum': str(timedelta(seconds=max(lead_times))),
             'minimum': str(timedelta(seconds=min(lead_times))),
-            'standard_deviation': str(timedelta(seconds=statistics.pstdev(lead_times)))
+            'standard_deviation': str(timedelta(seconds=statistics.pstdev(lead_times))),
+            'earliest_deploy': datetime.fromtimestamp(min(deploy_dates)).isoformat(),
+            'latest_deploy': datetime.fromtimestamp(max(deploy_dates)).isoformat(),
             })
 
 print(data['builds'][0].keys())
