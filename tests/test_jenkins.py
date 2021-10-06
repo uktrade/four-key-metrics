@@ -26,7 +26,7 @@ def test_can_get_no_builds():
         body=json.dumps(jenkins)
     )
 
-    builds = Jenkins().get_jenkins_builds('https://jenkins.test/', 'datahub-fe')
+    builds = Jenkins('https://jenkins.test/').get_jenkins_builds('https://jenkins.test/', 'datahub-fe')
 
     assert len(builds) == 0
     expected_url = 'https://jenkins.test/' \
@@ -67,7 +67,7 @@ def test_can_get_one_build():
         "job/datahub-api/api/json",
         body=json.dumps(jenkins)
     )
-    builds = Jenkins().get_jenkins_builds('https://jenkins.ci.uktrade.digital/', 'datahub-api')
+    builds = Jenkins('https://jenkins.ci.uktrade.digital/').get_jenkins_builds('https://jenkins.ci.uktrade.digital/', 'datahub-api')
 
     assert len(builds) == 1
 
@@ -134,7 +134,7 @@ def test_can_get_two_builds():
         "job/datahub-api/api/json",
         body=json.dumps(jenkins)
     )
-    builds = Jenkins().get_jenkins_builds('https://jenkins.ci.uktrade.digital/', 'datahub-api')
+    builds = Jenkins('https://jenkins.ci.uktrade.digital/').get_jenkins_builds('https://jenkins.ci.uktrade.digital/', 'datahub-api')
 
     assert len(builds) == 2
     assert builds[0].started_at == 1632913357.801
