@@ -21,16 +21,16 @@ def test_can_get_no_builds():
 
     httpretty.register_uri(
         httpretty.GET,
-        "https://jenkins.ci.uktrade.digital/"
-        "job/datahub-api/api/json",
+        "https://jenkins.test/"
+        "job/datahub-fe/api/json",
         body=json.dumps(jenkins)
     )
 
-    builds = get_jenkins_builds('https://jenkins.ci.uktrade.digital', 'data-hub-api')
+    builds = get_jenkins_builds('https://jenkins.test/', 'datahub-fe')
 
     assert len(builds) == 0
-    expected_url = 'https://jenkins.ci.uktrade.digital/' \
-                   'job/datahub-api/api/json' \
+    expected_url = 'https://jenkins.test/' \
+                   'job/datahub-fe/api/json' \
                    '?tree=builds%5Btimestamp%2Cresult%2Cduration%2Cactions%5Bparameters' \
                    '%5B%2A%5D%5D%2CchangeSet%5Bitems%5B%2A%5D%5D%5D'
     assert expected_url == httpretty.last_request().url
@@ -67,9 +67,16 @@ def test_can_get_one_build():
         "job/datahub-api/api/json",
         body=json.dumps(jenkins)
     )
-    builds = get_jenkins_builds('https://jenkins.ci.uktrade.digital', 'data-hub-api')
+    builds = get_jenkins_builds('https://jenkins.ci.uktrade.digital/', 'datahub-api')
 
     assert len(builds) == 1
+
+    expected_url = 'https://jenkins.ci.uktrade.digital/' \
+                   'job/datahub-api/api/json' \
+                   '?tree=builds%5Btimestamp%2Cresult%2Cduration%2Cactions%5Bparameters' \
+                   '%5B%2A%5D%5D%2CchangeSet%5Bitems%5B%2A%5D%5D%5D'
+    assert expected_url == httpretty.last_request().url
+
     assert builds[0].started_at == 1632913347.701
     assert builds[0].finished_at == 1632913961.314
     assert builds[0].successful
@@ -127,7 +134,7 @@ def test_can_get_two_builds():
         "job/datahub-api/api/json",
         body=json.dumps(jenkins)
     )
-    builds = get_jenkins_builds('https://jenkins.ci.uktrade.digital', 'data-hub-api')
+    builds = get_jenkins_builds('https://jenkins.ci.uktrade.digital/', 'datahub-api')
 
     assert len(builds) == 2
     assert builds[0].started_at == 1632913357.801

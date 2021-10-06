@@ -12,8 +12,8 @@ class Build:
 
 def get_jenkins_builds(host, job):
     response = requests.get(
-        "https://jenkins.ci.uktrade.digital/"
-        "job/datahub-api/api/json",
+        host +
+        "job/%s/api/json" % job,
         params={
             "tree": "builds[timestamp,result,duration,actions[parameters[*]],changeSet[items[*]]]"
         },
