@@ -1,16 +1,18 @@
 from four_key_metrics.metrics_calculator import MetricsCalculator
 
 
-def test_can_calculate_lead_time_for_nothing():
+def test_can_calculate_metrics_for_nothing():
     assert MetricsCalculator().get_average_lead_time() is None
+    assert MetricsCalculator().get_lead_time_standard_deviation() is None
 
 
-def test_can_calculate_lead_time_for_one_deploy_with_one_commit():
+def test_can_calculate_metrics_for_one_deploy_with_one_commit():
     calculator = MetricsCalculator()
 
     calculator.add_deploy(timestamp=1, commit_timestamps=[0])
 
     assert calculator.get_average_lead_time() == 1
+    assert calculator.get_lead_time_standard_deviation() == 0
 
 
 def test_can_calculate_lead_time_for_one_deploy_with_two_commits():
@@ -28,15 +30,3 @@ def test_can_calculate_lead_time_for_two_deploys_with_two_commits():
     calculator.add_deploy(timestamp=20, commit_timestamps=[9, 9])
 
     assert calculator.get_average_lead_time() == 6.5
-
-
-def test_can_calculate_standard_deviation_for_nothing():
-    assert MetricsCalculator().get_lead_time_standard_deviation() is None
-
-
-def test_can_calculate_standard_deviation_for_one_deploy_with_one_commit():
-    calculator = MetricsCalculator()
-
-    calculator.add_deploy(timestamp=1, commit_timestamps=[0])
-
-    assert calculator.get_lead_time_standard_deviation() == 0
