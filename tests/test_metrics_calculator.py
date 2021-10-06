@@ -28,3 +28,7 @@ def test_can_calculate_lead_time_for_two_deploys_with_two_commits():
     calculator.add_deploy(timestamp=20, commit_timestamps=[9, 9])
 
     assert calculator.average_lead_time() == 6.5
+
+
+def test_can_calculate_standard_deviation_for_nothing():
+    assert MetricsCalculator().get_lead_time_standard_deviation() is None

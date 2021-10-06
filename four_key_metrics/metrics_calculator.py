@@ -19,3 +19,6 @@ class MetricsCalculator(object):
             "timestamp": timestamp,
             "commit_timestamps": commit_timestamps,
         })
+
+    def get_lead_time_standard_deviation(self):
+        pass
