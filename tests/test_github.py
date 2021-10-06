@@ -1,7 +1,17 @@
 import httpretty
 import json
 
+import pytest
+
 from four_key_metrics.github import get_commits_between
+
+
+@pytest.fixture(autouse=True)
+def around_each():
+    httpretty.enable(allow_net_connect=False, verbose=True)
+    yield
+    httpretty.reset()
+    httpretty.disable()
 
 
 def test_can_get_comparison_with_one_commit():
@@ -17,7 +27,6 @@ def test_can_get_comparison_with_one_commit():
         ]
     }
 
-    httpretty.enable(allow_net_connect=False, verbose=True)
     httpretty.register_uri(
         httpretty.GET,
         "https://api.github.com/repos/uktrade/data-hub-frontend/compare/v9.19.0...v9.17.1",
@@ -50,7 +59,6 @@ def test_can_get_comparison_with_two_commits():
         ]
     }
 
-    httpretty.enable(allow_net_connect=False, verbose=True)
     httpretty.register_uri(
         httpretty.GET,
         "https://api.github.com/repos/uktrade/data-hub-frontend/compare/v9.19.0...v9.17.1",
@@ -69,7 +77,6 @@ def test_can_request_different_comparisons():
         "commits": []
     }
 
-    httpretty.enable(allow_net_connect=False, verbose=True)
     httpretty.register_uri(
         httpretty.GET,
         "https://api.github.com/repos/123/456/compare/789...0",
