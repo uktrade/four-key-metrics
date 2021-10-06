@@ -12,7 +12,7 @@ class Build:
 
 class Jenkins:
 
-    def __init__(self, host=None):
+    def __init__(self, host):
         self.host = host
 
     def get_jenkins_builds(self, job):
