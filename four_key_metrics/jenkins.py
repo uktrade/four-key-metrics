@@ -17,7 +17,7 @@ class Jenkins:
 
     def get_jenkins_builds(self, host, job):
         response = requests.get(
-            host +
+            self.host +
             "job/%s/api/json" % job,
             params={
                 "tree": "builds[timestamp,result,duration,actions[parameters[*]],changeSet[items[*]]]"
