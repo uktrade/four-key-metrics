@@ -32,3 +32,11 @@ def test_can_calculate_lead_time_for_two_deploys_with_two_commits():
 
 def test_can_calculate_standard_deviation_for_nothing():
     assert MetricsCalculator().get_lead_time_standard_deviation() is None
+
+
+def test_can_calculate_standard_deviation_for_one_deploy_with_one_commit():
+    calculator = MetricsCalculator()
+
+    calculator.add_deploy(timestamp=1, commit_timestamps=[0])
+
+    assert calculator.get_lead_time_standard_deviation() == 0
