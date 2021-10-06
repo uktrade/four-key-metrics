@@ -11,6 +11,10 @@ class Build:
 
 
 class Jenkins:
+
+    def __init__(self, host=None):
+        self.host = host
+
     def get_jenkins_builds(self, host, job):
         response = requests.get(
             host +
