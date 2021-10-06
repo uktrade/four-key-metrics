@@ -3,7 +3,11 @@ import json
 import httpretty
 import pytest
 
-from four_key_metrics.jenkins import get_jenkins_builds
+from four_key_metrics.jenkins import get_jenkins_builds as _gjb
+
+
+def get_jenkins_builds(host, job):
+    return _gjb(host, job)
 
 
 @pytest.fixture(autouse=True)

@@ -9,6 +9,7 @@ class Build:
         self.environment = environment
         self.git_reference = git_reference
 
+
 class Jenkins:
     def get_jenkins_builds(host, job):
         response = requests.get(
