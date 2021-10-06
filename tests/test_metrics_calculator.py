@@ -16,7 +16,7 @@ def test_can_calculate_metrics_for_one_deploy_with_one_commit():
     assert calculator.get_lead_time_standard_deviation() == 0
 
 
-def test_can_calculate_lead_time_for_one_deploy_with_two_commits():
+def test_can_calculate_metrics_for_one_deploy_with_two_commits():
     calculator = MetricsCalculator()
 
     calculator.add_deploy(timestamp=10, commit_timestamps=[8, 8])
@@ -25,7 +25,7 @@ def test_can_calculate_lead_time_for_one_deploy_with_two_commits():
     assert calculator.get_lead_time_standard_deviation() == 0
 
 
-def test_can_calculate_lead_time_for_two_deploys_with_two_commits():
+def test_can_calculate_metrics_for_two_deploys_with_two_commits():
     calculator = MetricsCalculator()
 
     calculator.add_deploy(timestamp=10, commit_timestamps=[8, 8])
