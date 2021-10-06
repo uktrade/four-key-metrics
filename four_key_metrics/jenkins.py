@@ -11,7 +11,7 @@ class Build:
 
 
 class Jenkins:
-    def get_jenkins_builds(host, job):
+    def get_jenkins_builds(self, host, job):
         response = requests.get(
             host +
             "job/%s/api/json" % job,
