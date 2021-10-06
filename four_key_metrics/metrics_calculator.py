@@ -2,7 +2,7 @@ class MetricsCalculator(object):
     def __init__(self) -> None:
         self.deploys = []
 
-    def average_lead_time(self):
+    def get_average_lead_time(self):
         if len(self.deploys) == 0:
             return None
 
