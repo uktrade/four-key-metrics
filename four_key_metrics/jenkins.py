@@ -1,3 +1,5 @@
+import os
+
 import requests
 
 
@@ -22,9 +24,7 @@ class Jenkins:
             params={
                 "tree": "builds[timestamp,result,duration,actions[parameters[*]],changeSet[items[*]]]"
             },
-            headers={
-
-            },
+            auth=(os.environ['DIT_JENKINS_USER'], os.environ['DIT_JENKINS_TOKEN'])
         )
         body = response.json()
 

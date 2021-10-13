@@ -2,6 +2,7 @@ import json
 
 import httpretty
 import pytest
+import os
 
 from four_key_metrics.jenkins import Jenkins
 
@@ -9,6 +10,8 @@ from four_key_metrics.jenkins import Jenkins
 @pytest.fixture(autouse=True)
 def around_each():
     httpretty.enable(allow_net_connect=False, verbose=True)
+    os.environ['DIT_JENKINS_USER'] = 'test'
+    os.environ['DIT_JENKINS_TOKEN'] = '1234'
     yield
     httpretty.reset()
     httpretty.disable()
@@ -34,6 +37,7 @@ def test_can_get_no_builds():
                    '?tree=builds%5Btimestamp%2Cresult%2Cduration%2Cactions%5Bparameters' \
                    '%5B%2A%5D%5D%2CchangeSet%5Bitems%5B%2A%5D%5D%5D'
     assert expected_url == httpretty.last_request().url
+    assert 'Basic dGVzdDoxMjM0' == httpretty.last_request().headers['Authorization']
 
 
 def test_can_get_one_build():
