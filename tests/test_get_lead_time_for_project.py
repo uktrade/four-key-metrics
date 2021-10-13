@@ -74,6 +74,45 @@ def test_can_get_lead_time_for_two_builds_one_commit():
     assert response['lead_time_standard_deviation'] == 0
 
 
+def test_can_get_lead_time_for_three_builds_one_commit():
+    build1 = Build(
+        started_at=0,
+        finished_at=5,
+        successful=True,
+        environment='Production',
+        git_reference='123456'
+    )
+    build2 = Build(
+        started_at=0,
+        finished_at=6,
+        successful=True,
+        environment='Production',
+        git_reference='123457'
+    )
+    build3 = Build(
+        started_at=0,
+        finished_at=7,
+        successful=True,
+        environment='Production',
+        git_reference='123457'
+    )
+    commit = GitCommit(
+        timestamp=0
+    )
+    get_lead_time_for_project = GetLeadTimeForProject(
+        get_commits_between=lambda organisation, repository, base, head: [commit],
+        get_jenkins_builds=lambda job: [build1, build2, build3]
+    )
+    response = get_lead_time_for_project(
+        jenkins_job='no/builds',
+        github_organisation='has-no-commits',
+        github_repository='commit-less'
+    )
+    assert response['successful']
+    assert response['lead_time_mean_average'] == 6.5
+    assert response['lead_time_standard_deviation'] == 0.5
+
+
 def test_can_get_lead_time_for_two_builds_two_commits():
     build1 = Build(
         started_at=0,

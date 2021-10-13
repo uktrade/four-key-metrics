@@ -18,15 +18,20 @@ class GetLeadTimeForProject(object):
                 'lead_time_standard_deviation': None
             }
 
-        commits = self.get_commits_between(
-            organisation=github_organisation,
-            repository=github_repository,
-            base=jenkins_builds[0].git_reference,
-            head=jenkins_builds[-1].git_reference
-        )
-
         calculator = MetricsCalculator()
-        calculator.add_deploy(timestamp=jenkins_builds[-1].finished_at, commit_timestamps=list(map(lambda x: x.timestamp, commits)))
+        last_build = jenkins_builds.pop(0)
+        for build in jenkins_builds:
+            commits = self.get_commits_between(
+                organisation=github_organisation,
+                repository=github_repository,
+                base=last_build.git_reference,
+                head=build.git_reference
+            )
+            calculator.add_deploy(
+                timestamp=build.finished_at,
+                commit_timestamps=self._get_timestamps_of(commits)
+            )
+            last_build = build
 
         return {
             'successful': True,
@@ -34,3 +39,5 @@ class GetLeadTimeForProject(object):
             'lead_time_standard_deviation': calculator.get_lead_time_standard_deviation()
         }
 
+    def _get_timestamps_of(self, commits):
+        return list(map(lambda x: x.timestamp, commits))
