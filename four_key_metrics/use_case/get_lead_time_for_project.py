@@ -9,8 +9,10 @@ class GetLeadTimeForProject(object):
     def __call__(self,
                  jenkins_job,
                  github_organisation,
-                 github_repository):
-        jenkins_builds = self.get_jenkins_builds(jenkins_job)
+                 github_repository,
+                 environment='Production'):
+        jenkins_builds = self._get_jenkins_builds(jenkins_job, environment)
+
         if len(jenkins_builds) < 2:
             return {
                 'successful': False,
@@ -38,6 +40,10 @@ class GetLeadTimeForProject(object):
             'lead_time_mean_average': calculator.get_lead_time_mean_average(),
             'lead_time_standard_deviation': calculator.get_lead_time_standard_deviation()
         }
+
+    def _get_jenkins_builds(self, jenkins_job, environment):
+        jenkins_builds = self.get_jenkins_builds(jenkins_job)
+        return list(filter(lambda b: b.environment == environment, jenkins_builds))
 
     def _get_timestamps_of(self, commits):
         return list(map(lambda x: x.timestamp, commits))

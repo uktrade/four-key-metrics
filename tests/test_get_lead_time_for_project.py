@@ -42,6 +42,36 @@ def test_can_not_get_lead_time_for_one_build():
     assert response['lead_time_standard_deviation'] is None
 
 
+def test_can_not_get_lead_time_for_mismatched_environments():
+    build1 = Build(
+        started_at=0,
+        finished_at=1,
+        successful=True,
+        environment='Production',
+        git_reference='123456'
+    )
+    build2 = Build(
+        started_at=0,
+        finished_at=1,
+        successful=True,
+        environment='Staging',
+        git_reference='123456'
+    )
+    get_lead_time_for_project = GetLeadTimeForProject(
+        get_commits_between=lambda organisation, repository, base, head: [],
+        get_jenkins_builds=lambda job: [build1, build2]
+    )
+    response = get_lead_time_for_project(
+        jenkins_job='no/builds',
+        github_organisation='has-no-commits',
+        github_repository='commit-less',
+        environment='Production'
+    )
+    assert not response['successful']
+    assert response['lead_time_mean_average'] is None
+    assert response['lead_time_standard_deviation'] is None
+
+
 def test_can_get_lead_time_for_two_builds_one_commit():
     build1 = Build(
         started_at=0,
