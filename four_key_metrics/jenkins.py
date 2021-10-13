@@ -29,12 +29,12 @@ class Jenkins:
             "job/%s/api/json" % job,
             params={
                 "tree": "builds["
-                            "timestamp,result,duration,"
-                            "actions["
-                                "parameters[*],"
-                                "lastBuiltRevision[branch[*]]"
-                            "],"
-                            "changeSet[items[*]]"
+                        "timestamp,result,duration,"
+                        "actions["
+                        "parameters[*],"
+                        "lastBuiltRevision[branch[*]]"
+                        "],"
+                        "changeSet[items[*]]"
                         "]"
             },
             auth=(os.environ['DIT_JENKINS_USER'], os.environ['DIT_JENKINS_TOKEN'])
@@ -51,8 +51,22 @@ class Jenkins:
                 started_at=started_at,
                 finished_at=started_at + build['duration'] / 1000,
                 successful=build['result'] == 'SUCCESS',
-                environment=get_action('hudson.model.ParametersAction', ['parameters', 0, 'value'], build['actions']),
-                git_reference=get_action('hudson.plugins.git.util.BuildData', ['lastBuiltRevision', 'branch', 0, 'SHA1'], build['actions'])
+                environment=self._get_environment(build),
+                git_reference=self._get_git_reference(build)
             ))
 
         return builds
+
+    def _get_git_reference(self, build):
+        return get_action(
+            'hudson.plugins.git.util.BuildData',
+            ['lastBuiltRevision', 'branch', 0, 'SHA1'],
+            build['actions']
+        )
+
+    def _get_environment(self, build):
+        return get_action(
+            'hudson.model.ParametersAction',
+            ['parameters', 0, 'value'],
+            build['actions']
+        )
