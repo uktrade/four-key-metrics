@@ -19,6 +19,9 @@ class MetricsCalculator(object):
         return statistics.pstdev(self._get_lead_times())
 
     def add_deploy(self, timestamp, commit_timestamps):
+        if len(commit_timestamps) == 0:
+            return
+
         self.deploys.append({
             "timestamp": timestamp,
             "commit_timestamps": commit_timestamps,

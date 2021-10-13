@@ -7,6 +7,15 @@ def test_can_calculate_metrics_for_nothing():
     assert calculator.get_lead_time_standard_deviation() is None
 
 
+def test_can_calculate_metrics_for_single_deploy_with_no_commits():
+    calculator = MetricsCalculator()
+
+    calculator.add_deploy(timestamp=1, commit_timestamps=[])
+
+    assert calculator.get_lead_time_mean_average() is None
+    assert calculator.get_lead_time_standard_deviation() is None
+
+
 def test_can_calculate_metrics_for_one_deploy_with_one_commit():
     calculator = MetricsCalculator()
 
