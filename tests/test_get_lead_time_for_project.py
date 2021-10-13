@@ -13,7 +13,8 @@ def test_can_get_no_lead_time():
     response = get_lead_time_for_project(
         jenkins_job='no/builds',
         github_organisation='has-no-commits',
-        github_repository='commit-less'
+        github_repository='commit-less',
+        environment='Production'
     )
     assert not response['successful']
     assert response['lead_time_mean_average'] is None
@@ -35,7 +36,8 @@ def test_can_not_get_lead_time_for_one_build():
     response = get_lead_time_for_project(
         jenkins_job='no/builds',
         github_organisation='has-no-commits',
-        github_repository='commit-less'
+        github_repository='commit-less',
+        environment='Production'
     )
     assert not response['successful']
     assert response['lead_time_mean_average'] is None
@@ -97,7 +99,8 @@ def test_can_get_lead_time_for_two_builds_one_commit():
     response = get_lead_time_for_project(
         jenkins_job='no/builds',
         github_organisation='has-no-commits',
-        github_repository='commit-less'
+        github_repository='commit-less',
+        environment='Production'
     )
     assert response['successful']
     assert response['lead_time_mean_average'] == 1
@@ -136,7 +139,8 @@ def test_can_get_lead_time_for_three_builds_one_commit():
     response = get_lead_time_for_project(
         jenkins_job='no/builds',
         github_organisation='has-no-commits',
-        github_repository='commit-less'
+        github_repository='commit-less',
+        environment='Production'
     )
     assert response['successful']
     assert response['lead_time_mean_average'] == 6.5
@@ -171,7 +175,8 @@ def test_can_get_lead_time_for_two_builds_two_commits():
     response = get_lead_time_for_project(
         jenkins_job='no/builds',
         github_organisation='has-no-commits',
-        github_repository='commit-less'
+        github_repository='commit-less',
+        environment='Production'
     )
     assert response['successful']
     assert response['lead_time_mean_average'] == 2
@@ -205,7 +210,8 @@ def test_can_pass_parameters_to_get_jenkins_builds_correctly(job):
     get_lead_time_for_project(
         jenkins_job=job,
         github_organisation='has-no-commits',
-        github_repository='commit-less'
+        github_repository='commit-less',
+        environment='Production'
     )
 
     assert len(spy_calls) == 1
@@ -225,14 +231,14 @@ def test_can_pass_parameters_to_get_commits_between_correctly(head, base, organi
             started_at=0,
             finished_at=1,
             successful=True,
-            environment='Production',
+            environment='Staging',
             git_reference=base
         ),
         Build(
             started_at=0,
             finished_at=2,
             successful=True,
-            environment='Production',
+            environment='Staging',
             git_reference=head
         )
     ]
@@ -250,7 +256,8 @@ def test_can_pass_parameters_to_get_commits_between_correctly(head, base, organi
     get_lead_time_for_project(
         jenkins_job='a/job',
         github_organisation=organisation,
-        github_repository=repository
+        github_repository=repository,
+        environment='Staging'
     )
 
     assert len(spy_calls) == 1
