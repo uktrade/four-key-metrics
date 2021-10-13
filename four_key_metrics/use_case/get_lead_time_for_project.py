@@ -10,7 +10,7 @@ class GetLeadTimeForProject(object):
                  jenkins_job,
                  github_organisation,
                  github_repository,
-                 environment='Production'):
+                 environment):
         jenkins_builds = self._get_jenkins_builds(jenkins_job, environment)
 
         if len(jenkins_builds) < 2:
