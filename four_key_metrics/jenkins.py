@@ -1,6 +1,7 @@
 import os
 
 import requests
+from glom import glom, Path
 
 
 class Build:
@@ -10,6 +11,11 @@ class Build:
         self.successful = successful
         self.environment = environment
         self.git_reference = git_reference
+
+
+def get_action(key, parameter_path, actions):
+    a = list(filter(lambda a: a.get('_class') == key, actions))
+    return glom(a, Path(0, *parameter_path))
 
 
 class Jenkins:
@@ -22,7 +28,14 @@ class Jenkins:
             self.host +
             "job/%s/api/json" % job,
             params={
-                "tree": "builds[timestamp,result,duration,actions[parameters[*]],changeSet[items[*]]]"
+                "tree": "builds["
+                            "timestamp,result,duration,"
+                            "actions["
+                                "parameters[*],"
+                                "lastBuiltRevision[branch[*]]"
+                            "],"
+                            "changeSet[items[*]]"
+                        "]"
             },
             auth=(os.environ['DIT_JENKINS_USER'], os.environ['DIT_JENKINS_TOKEN'])
         )
@@ -38,7 +51,8 @@ class Jenkins:
                 started_at=started_at,
                 finished_at=started_at + build['duration'] / 1000,
                 successful=build['result'] == 'SUCCESS',
-                environment=build['actions'][0]['parameters'][0]['value'],
-                git_reference=build['actions'][0]['parameters'][1]['value']
+                environment=get_action('hudson.model.ParametersAction', ['parameters', 0, 'value'], build['actions']),
+                git_reference=get_action('hudson.plugins.git.util.BuildData', ['lastBuiltRevision', 'branch', 0, 'SHA1'], build['actions'])
             ))
+
         return builds

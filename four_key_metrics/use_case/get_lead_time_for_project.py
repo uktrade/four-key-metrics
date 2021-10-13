@@ -12,7 +12,7 @@ class GetLeadTimeForProject(object):
                  github_repository,
                  environment):
         jenkins_builds = self._get_jenkins_builds(jenkins_job, environment)
-
+        jenkins_builds.sort(key=lambda b: b.finished_at)
         if len(jenkins_builds) < 2:
             return {
                 'successful': False,

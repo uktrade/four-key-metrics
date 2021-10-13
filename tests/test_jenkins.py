@@ -4,7 +4,7 @@ import httpretty
 import pytest
 import os
 
-from four_key_metrics.jenkins import Jenkins
+from four_key_metrics.jenkins import Jenkins, get_action
 
 
 @pytest.fixture(autouse=True)
@@ -32,10 +32,12 @@ def test_can_get_no_builds():
     builds = Jenkins('https://jenkins.test/').get_jenkins_builds('datahub-fe')
 
     assert len(builds) == 0
-    expected_url = 'https://jenkins.test/' \
-                   'job/datahub-fe/api/json' \
-                   '?tree=builds%5Btimestamp%2Cresult%2Cduration%2Cactions%5Bparameters' \
-                   '%5B%2A%5D%5D%2CchangeSet%5Bitems%5B%2A%5D%5D%5D'
+    expected_url = 'https://jenkins.test/job/datahub-fe/api/json' \
+                   '?tree=builds%5Btimestamp%2Cresult%2Cduration%2C' \
+                   'actions%5Bparameters%5B%2A%5D%2C' \
+                   'lastBuiltRevision%5Bbranch%5B%2A%5D%5D%5D%2C' \
+                   'changeSet%5Bitems%5B%2A%5D%5D%5D'
+
     assert expected_url == httpretty.last_request().url
     assert 'Basic dGVzdDoxMjM0' == httpretty.last_request().headers['Authorization']
 
@@ -49,17 +51,24 @@ def test_can_get_one_build():
                 "result": "SUCCESS",
                 "actions": [
                     {
+                        "_class": "hudson.model.ParametersAction",
                         "parameters": [
                             {
                                 "name": "Environment",
                                 "value": "dev"
                             },
-                            {
-                                "name": "Git_Commit",
-                                "value": "main"
-                            }
                         ]
                     },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "1234",
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         ]
@@ -77,15 +86,16 @@ def test_can_get_one_build():
 
     expected_url = 'https://jenkins.ci.uktrade.digital/' \
                    'job/datahub-api/api/json' \
-                   '?tree=builds%5Btimestamp%2Cresult%2Cduration%2Cactions%5Bparameters' \
-                   '%5B%2A%5D%5D%2CchangeSet%5Bitems%5B%2A%5D%5D%5D'
+                   '?tree=builds%5Btimestamp%2Cresult%2Cduration%2C' \
+                   'actions%5Bparameters%5B%2A%5D%2ClastBuiltRevision%5Bbranch%5B%2A%5D%5D%5D%2C' \
+                   'changeSet%5Bitems%5B%2A%5D%5D%5D'
     assert expected_url == httpretty.last_request().url
 
     assert builds[0].started_at == 1632913347.701
     assert builds[0].finished_at == 1632913961.314
     assert builds[0].successful
     assert builds[0].environment == 'dev'
-    assert builds[0].git_reference == 'main'
+    assert builds[0].git_reference == '1234'
 
 
 def test_can_get_two_builds():
@@ -97,17 +107,24 @@ def test_can_get_two_builds():
                 "result": "FAILURE",
                 "actions": [
                     {
+                        "_class": "hudson.model.ParametersAction",
                         "parameters": [
                             {
                                 "name": "Environment",
                                 "value": "production"
                             },
-                            {
-                                "name": "Git_Commit",
-                                "value": "v1.0"
-                            }
                         ]
                     },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "0987",
+                                }
+                            ]
+                        }
+                    }
                 ]
             },
             {
@@ -116,17 +133,24 @@ def test_can_get_two_builds():
                 "result": "SUCCESS",
                 "actions": [
                     {
+                        "_class": "hudson.model.ParametersAction",
                         "parameters": [
                             {
                                 "name": "Environment",
                                 "value": "production"
                             },
-                            {
-                                "name": "Git_Commit",
-                                "value": "v1.1"
-                            }
                         ]
                     },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "5678",
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         ]
@@ -145,11 +169,47 @@ def test_can_get_two_builds():
     assert builds[0].finished_at == 1632913957.801
     assert not builds[0].successful
     assert builds[0].environment == 'production'
-    assert builds[0].git_reference == 'v1.0'
+    assert builds[0].git_reference == '0987'
 
     assert builds[1].started_at == 1632913357.801
     assert builds[1].finished_at == 1632913957.801
     assert builds[1].successful
     assert builds[1].environment == 'production'
-    assert builds[1].git_reference == 'v1.1'
+    assert builds[1].git_reference == '5678'
 
+
+def test_can_get_environment_from_actions_list():
+    actions = [
+        {
+            "_class": "hudson.model.ParametersAction",
+            "parameters": [
+                {
+                    "_class": "hudson.model.StringParameterValue",
+                    "name": "Environment",
+                    "value": "production"
+                },
+                {
+                    "_class": "hudson.model.StringParameterValue",
+                    "name": "Git_Commit",
+                    "value": "master"
+                }
+            ]
+        },
+        {
+            "_class": "hudson.plugins.git.util.BuildData",
+            "lastBuiltRevision": {
+                "branch": [
+                    {
+                        "SHA1": "9cf68ec7e3c852ac0ff8da43fadbcbf27ac4eb01",
+                        "name": "origin/master"
+                    }
+                ]
+            }
+        }
+    ]
+
+    sha1 = get_action('hudson.plugins.git.util.BuildData', ['lastBuiltRevision', 'branch', 0, 'SHA1'], actions)
+    assert '9cf68ec7e3c852ac0ff8da43fadbcbf27ac4eb01' == sha1
+
+    environment = get_action('hudson.model.ParametersAction', ['parameters', 0, 'value'], actions)
+    assert 'production' == environment

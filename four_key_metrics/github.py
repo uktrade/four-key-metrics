@@ -1,3 +1,5 @@
+import os
+
 import ciso8601
 import requests
 
@@ -12,6 +14,7 @@ def get_commits_between(organisation, repository, base, head):
         "https://api.github.com/repos/%s/%s/compare/%s...%s" % (
             organisation, repository, base, head
         ),
+        auth=(os.environ['GITHUB_USERNAME'], os.environ['GITHUB_TOKEN']),
         headers={
             "Accept": "application/vnd.github.v3+json"
         },
@@ -25,5 +28,4 @@ def get_commits_between(organisation, repository, base, head):
         commits.append(
             GitCommit(timestamp=timestamp)
         )
-
     return commits
