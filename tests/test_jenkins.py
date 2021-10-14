@@ -5,6 +5,7 @@ import pytest
 import os
 
 from four_key_metrics.jenkins import Jenkins, get_action
+from tests.authorization_assertions import assert_authorization_is
 
 
 @pytest.fixture(autouse=True)
@@ -39,7 +40,7 @@ def test_can_get_no_builds():
                    'changeSet%5Bitems%5B%2A%5D%5D%5D'
 
     assert expected_url == httpretty.last_request().url
-    assert 'Basic dGVzdDoxMjM0' == httpretty.last_request().headers['Authorization']
+    assert_authorization_is(b'test:1234')
 
 
 def test_can_get_one_build():

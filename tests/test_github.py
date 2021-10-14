@@ -1,14 +1,18 @@
-import httpretty
 import json
+import os
 
+import httpretty
 import pytest
 
 from four_key_metrics.github import get_commits_between
+from tests.authorization_assertions import assert_authorization_is
 
 
 @pytest.fixture(autouse=True)
 def around_each():
     httpretty.enable(allow_net_connect=False, verbose=True)
+    os.environ['GITHUB_USERNAME'] = 'testing'
+    os.environ['GITHUB_TOKEN'] = '5678'
     yield
     httpretty.reset()
     httpretty.disable()
@@ -87,3 +91,18 @@ def test_can_request_different_comparisons():
 
     assert httpretty.last_request().url == 'https://api.github.com/repos/123/456/compare/789...0'
 
+
+def test_can_use_authentication():
+    github_response = {
+        "commits": []
+    }
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://api.github.com/repos/123/456/compare/789...0",
+        body=json.dumps(github_response)
+    )
+
+    get_commits_between("123", "456", "789", "0")
+
+    assert_authorization_is(b'testing:5678')
