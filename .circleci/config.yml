@@ -16,6 +16,6 @@ jobs:
           command: poetry run pytest
 
 workflows:
-  sample: 
+  primary:
     jobs:
       - test
