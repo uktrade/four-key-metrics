@@ -18,20 +18,26 @@ class MetricsCalculator(object):
 
         return statistics.pstdev(self._get_lead_times())
 
-    def add_deploy(self, timestamp, commit_timestamps):
+    def add_deploy(self, timestamp, commit_timestamps, commit_hash):
         if len(commit_timestamps) == 0:
             return
 
-        self.deploys.append({
-            "timestamp": timestamp,
-            "commit_timestamps": commit_timestamps,
-        })
+        self.deploys.append(
+            {
+                "timestamp": timestamp,
+                "commit_timestamps": commit_timestamps,
+                "commit_hash": commit_hash,
+            }
+        )
 
     def _get_lead_times(self):
         lead_times = []
         for deploy in self.deploys:
-            for commit_timestamp in deploy['commit_timestamps']:
-                lead_times.append(deploy['timestamp'] - commit_timestamp)
+            for commit_timestamp in deploy["commit_timestamps"]:
+                lead_time = deploy["timestamp"] - commit_timestamp
+                if lead_time > 8460000:
+                print("HASH: ", deploy["commit_hash"], "LEAD TIME: ", lead_time)
+                lead_times.append(deploy["timestamp"] - commit_timestamp)
         return lead_times
 
     def _no_deploys(self) -> bool:
