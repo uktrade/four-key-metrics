@@ -23,7 +23,6 @@ class MetricsCalculator(object):
         return statistics.pstdev(self._get_lead_times())
 
     def add_deploy(self, timestamp, commit_timestamps, commit_hash):
-        # print("COMIT_HASS:", commit_hash)
         if len(commit_timestamps) == 0:
             return
 
@@ -39,31 +38,23 @@ class MetricsCalculator(object):
         lead_times = []
         # pprint(self.deploys)
         for deploy in self.deploys:
-            print(
-                "COMMIT_HASH:",
-                deploy["commit_hash"],
-            )
             for commit_timestamp in deploy["commit_timestamps"]:
                 lead_time = deploy["timestamp"] - commit_timestamp
                 lead_times.append(lead_time)
-                print(str(timedelta(seconds=lead_time)))
-        # #            print(
-        #  #               "deploy[timestamp]-commit",
-        #    #             datetime.fromtimestamp(deploy["timestamp"]).strftime("%c"),
-        #   #              datetime.fromtimestamp(commit_timestamp).strftime("%c"),
-        #                 "lead_time",
-        #                 str(timedelta(seconds=lead_time)),
-        #             )
-        # pprint(lead_times)
-        #       print(
-        ##            "deplo",
-        #          datetime.fromtimestamp(deploy["timestamp"]).strftime("%c"),
-        #            "lead times:",
-        #            lead_times,
-        #            len(lead_times),
-        #            str(timedelta(seconds=sum(lead_times) / len(lead_times))),
-        #     )
-        print()
+                if timedelta(seconds=lead_time) > timedelta(days=800):
+                    print(
+                        "DEPLOYMENT COMMIT_HASH: ",
+                        deploy["commit_hash"],
+                        "DEPLOYMENT TIME: ",
+                        datetime.fromtimestamp(deploy["timestamp"]).strftime("%c"),
+                    )
+                    print(
+                        "COMMIT TIME",
+                        datetime.fromtimestamp(commit_timestamp).strftime("%c"),
+                        "LEAD TIME",
+                        str(timedelta(seconds=lead_time)),
+                    )
+                    print("")
         return lead_times
 
     def _no_deploys(self) -> bool:

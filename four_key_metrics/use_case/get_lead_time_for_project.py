@@ -31,7 +31,8 @@ class GetLeadTimeForProject(object):
             )
             calculator.add_deploy(
                 timestamp=build.finished_at,
-                commit_timestamps=self._get_timestamps_of(commits)
+                # Here we can add the hash of the individual commit
+                commit_timestamps=self._get_timestamps_of(commits),
             )
             last_build = build
 
