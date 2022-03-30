@@ -59,12 +59,12 @@ with open(
                         "build_timestamp": deploy["build_timestamp"],
                         "build_time": datetime.fromtimestamp(
                             deploy["build_timestamp"]
-                        ).strftime("%d/%m/%Y %H%M%S"),
+                        ).strftime("%d/%m/%Y %H:%M:%S"),
                         "commit_hash": commit.sha,
                         "commit_timestamp": commit.timestamp,
                         "commit_time": datetime.fromtimestamp(
                             commit.timestamp
-                        ).strftime("%d/%m/%Y %H%M%S"),
+                        ).strftime("%d/%m/%Y %H:%M:%S"),
                         "commit_lead_timestamp": commit.lead_time,
                         "commit_lead_time": str(timedelta(seconds=commit.lead_time)),
                         "previous_build_commit_hash": deploy[
