@@ -8,6 +8,7 @@ class GitCommit:
     def __init__(self, sha, timestamp):
         self.sha = sha
         self.timestamp = timestamp
+        self.lead_time = None
 
 
 def get_commits_between(organisation, repository, base, head):

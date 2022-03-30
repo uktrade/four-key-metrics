@@ -20,7 +20,7 @@ class MetricsCalculator(object):
         return statistics.pstdev(self.lead_times)
 
     def add_deploy(
-        self, build_timestamp, commits, build_commit_hash, last_build_commit_hash
+        self, build_timestamp, commits, build_commit_hash, previous_build_commit_hash
     ):
         if len(commits) == 0:
             return
@@ -30,37 +30,15 @@ class MetricsCalculator(object):
                 "commits": commits,
                 "build_timestamp": build_timestamp,
                 "build_commit_hash": build_commit_hash,
-                "last_build_commit_hash": last_build_commit_hash,
+                "previous_build_commit_hash": previous_build_commit_hash,
             }
         )
 
     def calculate_lead_times(self):
         for deploy in self.deploys:
             for commit in deploy["commits"]:
-                lead_time = deploy["build_timestamp"] - commit.timestamp
-                # TODO get list of build hashes to ignore from env file
-                if (
-                    deploy["build_commit_hash"]
-                    != "53857a55457f6d65be43aa022326289be0cf3f74"
-                ):
-                    self.lead_times.append(lead_time)
-                if timedelta(seconds=lead_time) > timedelta(days=200):
-                    print(
-                        "DEPLOYMENT COMMIT_HASH: ",
-                        deploy["build_commit_hash"],
-                        "DEPLOYMENT TIME: ",
-                        datetime.fromtimestamp(deploy["build_timestamp"]).strftime(
-                            "%c"
-                        ),
-                    )
-                    print(
-                        "COMMIT HASH",
-                        commit.sha,
-                        "COMMIT TIME",
-                        datetime.fromtimestamp(commit.timestamp).strftime("%c"),
-                        "LEAD TIME",
-                        str(timedelta(seconds=lead_time)),
-                    )
+                commit.lead_time = deploy["build_timestamp"] - commit.timestamp
+                self.lead_times.append(commit.lead_time)
         return None
 
     def _no_deploys(self) -> bool:
