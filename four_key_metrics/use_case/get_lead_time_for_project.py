@@ -37,7 +37,7 @@ class GetLeadTimeForProject(object):
                 commit_hash=build.git_reference,
             )
             last_build = build
-
+        calculator.calculate_lead_times()
         return {
             "successful": True,
             "lead_time_mean_average": calculator.get_lead_time_mean_average(),
