@@ -19,31 +19,39 @@ class MetricsCalculator(object):
             return None
         return statistics.pstdev(self.lead_times)
 
-    def add_deploy(self, timestamp, commits, commit_timestamps, commit_hash):
-        if len(commit_timestamps) == 0:
+    def add_deploy(
+        self, build_timestamp, commits, build_commit_hash, last_build_commit_hash
+    ):
+        if len(commits) == 0:
             return
 
         self.deploys.append(
             {
                 "commits": commits,
-                "timestamp": timestamp,
-                "commit_timestamps": commit_timestamps,
-                "commit_hash": commit_hash,
+                "build_timestamp": build_timestamp,
+                "build_commit_hash": build_commit_hash,
+                "last_build_commit_hash": last_build_commit_hash,
             }
         )
 
     def calculate_lead_times(self):
         for deploy in self.deploys:
             for commit in deploy["commits"]:
-                lead_time = deploy["timestamp"] - commit.timestamp
-                if deploy["commit_hash"] != "53857a55457f6d65be43aa022326289be0cf3f74":
+                lead_time = deploy["build_timestamp"] - commit.timestamp
+                # TODO get list of build hashes to ignore from env file
+                if (
+                    deploy["build_commit_hash"]
+                    != "53857a55457f6d65be43aa022326289be0cf3f74"
+                ):
                     self.lead_times.append(lead_time)
                 if timedelta(seconds=lead_time) > timedelta(days=200):
                     print(
                         "DEPLOYMENT COMMIT_HASH: ",
-                        deploy["commit_hash"],
+                        deploy["build_commit_hash"],
                         "DEPLOYMENT TIME: ",
-                        datetime.fromtimestamp(deploy["timestamp"]).strftime("%c"),
+                        datetime.fromtimestamp(deploy["build_timestamp"]).strftime(
+                            "%c"
+                        ),
                     )
                     print(
                         "COMMIT HASH",

@@ -28,11 +28,10 @@ class GetLeadTimeForProject(object):
                 head=build.git_reference,
             )
             calculator.add_deploy(
-                timestamp=build.finished_at,
-                # Here we can add the hash of the individual commit
-                commit_timestamps=self._get_timestamps_of(commits),
+                build_timestamp=build.finished_at,
                 commits=commits,
-                commit_hash=build.git_reference,
+                build_commit_hash=build.git_reference,
+                last_build_commit_hash=last_build.git_reference,
             )
             last_build = build
         calculator.calculate_lead_times()
@@ -45,6 +44,3 @@ class GetLeadTimeForProject(object):
     def _get_jenkins_builds(self, jenkins_job, environment):
         jenkins_builds = self.get_jenkins_builds(jenkins_job)
         return list(filter(lambda b: b.environment == environment, jenkins_builds))
-
-    def _get_timestamps_of(self, commits):
-        return list(map(lambda x: x.timestamp, commits))
