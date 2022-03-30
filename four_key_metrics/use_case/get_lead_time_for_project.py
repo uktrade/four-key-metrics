@@ -21,8 +21,6 @@ class GetLeadTimeForProject(object):
         calculator = MetricsCalculator()
         last_build = jenkins_builds.pop(0)
         for build in jenkins_builds:
-            # if build.git_reference == "53857a55457f6d65be43aa022326289be0cf3f74":
-            print("BASE: ", last_build.git_reference, "...", build.git_reference)
             commits = self.get_commits_between(
                 organisation=github_organisation,
                 repository=github_repository,
