@@ -38,7 +38,7 @@ with open(
         "commit_hash",  # "Deployment timestamp",
         "commit_timestamp",
         "commit_time",
-        "commit_lead_timestamp",
+        "commit_lead_time_days",
         "commit_lead_time",
         "previous_build_commit_hash",
     ]
@@ -70,7 +70,7 @@ with open(
                         "commit_time": datetime.fromtimestamp(
                             commit.timestamp
                         ).strftime("%d/%m/%Y %H:%M:%S"),
-                        "commit_lead_timestamp": commit.lead_time,
+                        "commit_lead_time_days": commit.lead_time / 86400,
                         "commit_lead_time": str(timedelta(seconds=commit.lead_time)),
                         "previous_build_commit_hash": deploy[
                             "previous_build_commit_hash"
