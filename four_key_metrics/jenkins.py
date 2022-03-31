@@ -29,7 +29,7 @@ class Jenkins:
         response = requests.get(
             self.host + "job/%s/api/json" % job,
             params={
-                "tree": "builds["
+                "tree": "allBuilds["
                 "timestamp,result,duration,"
                 "actions["
                 "parameters[*],"
@@ -43,11 +43,11 @@ class Jenkins:
         )
         body = response.json()
 
-        if len(body["builds"]) == 0:
+        if len(body["allBuilds"]) == 0:
             return []
 
         builds = []
-        for build in body["builds"]:
+        for build in body["allBuilds"]:
             started_at = build["timestamp"] / 1000
             builds.append(
                 Build(
