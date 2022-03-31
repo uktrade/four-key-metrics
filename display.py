@@ -23,8 +23,10 @@ projects = [
     {"job": "datahub-api", "repository": "data-hub-api"},
 ]
 
+csv_filename = f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.csv"
+
 with open(
-    f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.csv",
+    csv_filename,
     "w",
     newline="",
 ) as csvfile:
@@ -86,3 +88,5 @@ with open(
             },
             sort_dicts=False,
         )
+
+print(f"Detailed metrics stored in {csv_filename}")
