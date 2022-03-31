@@ -1,3 +1,5 @@
+import os
+
 from four_key_metrics.metrics_calculator import MetricsCalculator
 
 
@@ -22,7 +24,7 @@ class GetLeadTimeForProject(object):
         last_build = jenkins_builds.pop(0)
         for build in jenkins_builds:
             # TODO get list of build hashes to ignore from env file
-            if build.git_reference != "53857a55457f6d65be43aa022326289be0cf3f74":
+            if build.git_reference not in os.environ["EXCLUDED_DEPLOYMENT_HASHES"]:
                 commits = self.get_commits_between(
                     organisation=github_organisation,
                     repository=github_repository,

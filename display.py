@@ -1,10 +1,13 @@
 from datetime import timedelta, date, datetime
 from pprint import pprint
 import csv
+from dotenv import load_dotenv
 
 from four_key_metrics.github import get_commits_between
 from four_key_metrics.jenkins import Jenkins
 from four_key_metrics.use_case.get_lead_time_for_project import GetLeadTimeForProject
+
+load_dotenv()
 
 jenkins = Jenkins(
     "https://jenkins.ci.uktrade.digital/"
@@ -80,5 +83,6 @@ with open(
                 "standard_deviation": str(
                     timedelta(seconds=response["lead_time_standard_deviation"])
                 ),
-            }
+            },
+            sort_dicts=False,
         )

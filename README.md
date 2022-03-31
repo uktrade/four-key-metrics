@@ -13,8 +13,10 @@ Intended as a way to measure the `four key metrics` as defined in the book Accel
 
 pre-requisites: 
 - poetry
+- python-dotenv
 
 `poetry install`
+`pip install python-dotenv`
 
 
 ## Testing
