@@ -4,7 +4,6 @@ import os
 import httpretty
 import pytest
 
-from four_key_metrics.github import get_commits_between
 from tests.authorization_assertions import assert_authorization_is
 
 

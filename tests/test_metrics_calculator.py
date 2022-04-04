@@ -1,4 +1,3 @@
-from four_key_metrics.metrics_calculator import MetricsCalculator
 
 
 def test_can_calculate_metrics_for_nothing():

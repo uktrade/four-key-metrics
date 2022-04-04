@@ -1,9 +1,5 @@
 import pytest
 
-from four_key_metrics.github import GitCommit
-from four_key_metrics.jenkins import Build
-from four_key_metrics.use_case.get_lead_time_for_project import GetLeadTimeForProject
-
 
 def test_can_get_no_lead_time():
     get_lead_time_for_project = GetLeadTimeForProject(
