@@ -9,6 +9,7 @@ python = "^3.7"
 ciso8601 = "^2.2.0"
 requests = "^2.26.0"
 glom = "^20.11.0"
+python-dotenv = "^0.20.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
