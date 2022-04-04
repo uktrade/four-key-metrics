@@ -11,6 +11,7 @@ class GitCommit:
         self.lead_time = None
 
 
+# Move to Build class
 def get_commits_between(organisation, repository, base, head):
     response = requests.get(
         "https://api.github.com/repos/%s/%s/compare/%s...%s"

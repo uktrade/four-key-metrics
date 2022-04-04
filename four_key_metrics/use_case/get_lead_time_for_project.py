@@ -24,12 +24,14 @@ class GetLeadTimeForProject(object):
         last_build = jenkins_builds.pop(0)
         for build in jenkins_builds:
             if build.git_reference not in os.environ["EXCLUDED_DEPLOYMENT_HASHES"]:
+                # Would live on the Build class - creates a GitCommit object for each commit in the build
                 commits = self.get_commits_between(
                     organisation=github_organisation,
                     repository=github_repository,
                     base=last_build.git_reference,
                     head=build.git_reference,
                 )
+                # Wouldn't be needed? AllBuilds will populates self.builds when it gets them from jenkins
                 calculator.add_deploy(
                     build_timestamp=build.finished_at,
                     commits=commits,
@@ -37,6 +39,8 @@ class GetLeadTimeForProject(object):
                     previous_build_commit_hash=last_build.git_reference,
                 )
             last_build = build
+        # Would be called either by AllBuilds or display.py
+        # but function itself lives on Build class
         calculator.calculate_lead_times()
         return {
             "successful": True,
@@ -45,6 +49,8 @@ class GetLeadTimeForProject(object):
             "deploys": calculator.deploys,
         }
 
+    # Will live on AllBuilds - which gets all jenkins builds and populates self.Builds
+    # Would need to add the environment filtering to the all builds method
     def _get_jenkins_builds(self, jenkins_job, environment):
         jenkins_builds = self.get_jenkins_builds(jenkins_job)
         return list(filter(lambda b: b.environment == environment, jenkins_builds))

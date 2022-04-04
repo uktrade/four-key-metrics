@@ -4,6 +4,8 @@ import requests
 from glom import glom, Path
 
 
+# Add commits and previous build hash to Build object
+# Will contain 'get_commits_between' method
 class Build:
     def __init__(self, started_at, finished_at, successful, environment, git_reference):
         self.started_at = started_at
@@ -13,6 +15,7 @@ class Build:
         self.git_reference = git_reference
 
 
+# Move everything below here to separate file - will be class AllBuilds
 def get_action(key, parameter_path, actions):
     a = list(filter(lambda a: a.get("_class") == key, actions))
     if a:
@@ -24,7 +27,9 @@ def get_action(key, parameter_path, actions):
 class Jenkins:
     def __init__(self, host):
         self.host = host
+        # Add self.builds
 
+    # Would live in AllBuilds class
     def get_jenkins_builds(self, job):
         response = requests.get(
             self.host + "job/%s/api/json" % job,

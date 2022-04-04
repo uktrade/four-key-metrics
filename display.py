@@ -46,6 +46,10 @@ with open(
     writer.writeheader()
 
     for project in projects:
+        # create an AllBuilds class which then gets the lead time for the projects
+        # E.g.
+        # all_builds = AllBuilds(project=project)
+        # all_builds.get_average_lead_time()
         response = get_lead_time_for_project(
             jenkins_job=project["job"],  # input("Jenkins job id (e.g. datahub-api)"),
             github_organisation="uktrade",  # input("GitHub org (e.g. uktrade)"),
@@ -86,7 +90,7 @@ with open(
                     timedelta(seconds=response["lead_time_standard_deviation"])
                 ),
             },
-            sort_dicts=False,
+            # sort_dicts=False,
         )
 
 print(f"Detailed metrics stored in {csv_filename}")
