@@ -3,25 +3,16 @@ from pprint import pprint
 import csv
 from dotenv import load_dotenv
 
-from four_key_metrics.github import get_commits_between
-from four_key_metrics.jenkins import Jenkins
-from four_key_metrics.use_case.get_lead_time_for_project import GetLeadTimeForProject
+from four_key_metrics.all_builds import AllBuilds
 
 load_dotenv()
-
-jenkins = Jenkins(
-    "https://jenkins.ci.uktrade.digital/"
-)  # input("Jenkins host (e.g. https://my.host.com/)"))
-
-get_lead_time_for_project = GetLeadTimeForProject(
-    get_commits_between=get_commits_between,
-    get_jenkins_builds=jenkins.get_jenkins_builds,
-)
 
 projects = [
     {"job": "datahub-fe", "repository": "data-hub-frontend"},
     {"job": "datahub-api", "repository": "data-hub-api"},
 ]
+
+all_builds = AllBuilds("https://jenkins.ci.uktrade.digital/")
 
 csv_filename = f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.csv"
 
@@ -50,7 +41,7 @@ with open(
         # E.g.
         # all_builds = AllBuilds(project=project)
         # all_builds.get_average_lead_time()
-        response = get_lead_time_for_project(
+        response = all_builds.add_project(
             jenkins_job=project["job"],  # input("Jenkins job id (e.g. datahub-api)"),
             github_organisation="uktrade",  # input("GitHub org (e.g. uktrade)"),
             github_repository=project[
@@ -59,15 +50,16 @@ with open(
             environment="production",  # input("Environment (e.g. production)")
         )
 
-        for deploy in response["deploys"]:
-            for commit in deploy["commits"]:
+        for build in response["builds"]:
+            last_build = build
+            for commit in build.commits:
                 writer.writerow(
                     {
                         "repository": project["repository"],
-                        "build_commit_hash": deploy["build_commit_hash"],
-                        "build_timestamp": deploy["build_timestamp"],
+                        "build_commit_hash": build.git_reference,
+                        "build_timestamp": build.finished_at,
                         "build_time": datetime.fromtimestamp(
-                            deploy["build_timestamp"]
+                            build.finished_at
                         ).strftime("%d/%m/%Y %H:%M:%S"),
                         "commit_hash": commit.sha,
                         "commit_timestamp": commit.timestamp,
@@ -76,9 +68,7 @@ with open(
                         ).strftime("%d/%m/%Y %H:%M:%S"),
                         "commit_lead_time_days": commit.lead_time / 86400,
                         "commit_lead_time": str(timedelta(seconds=commit.lead_time)),
-                        "previous_build_commit_hash": deploy[
-                            "previous_build_commit_hash"
-                        ],
+                        "previous_build_commit_hash": build.last_build_git_reference,
                     }
                 )
 
@@ -90,7 +80,7 @@ with open(
                     timedelta(seconds=response["lead_time_standard_deviation"])
                 ),
             },
-            # sort_dicts=False,
+            sort_dicts=False,
         )
 
 print(f"Detailed metrics stored in {csv_filename}")
