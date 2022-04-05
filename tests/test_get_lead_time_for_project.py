@@ -1,7 +1,6 @@
 import pytest
 
 
-
 def test_can_get_no_lead_time():
     get_lead_time_for_project = GetLeadTimeForProject(
         get_commits_between=lambda organisation, repository, base, head: [],
