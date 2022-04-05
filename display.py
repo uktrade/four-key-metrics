@@ -7,10 +7,15 @@ from four_key_metrics.all_builds import AllBuilds
 
 load_dotenv()
 
-projects = [
-    {"job": "datahub-fe", "repository": "data-hub-frontend"},
-    {"job": "datahub-api", "repository": "data-hub-api"},
-]
+
+global projects
+
+if "projects" not in globals():
+    projects = [
+        {"job": "datahub-fe", "repository": "data-hub-frontend"},
+        #    {"job": "datahub-api", "repository": "data-hub-api"},
+    ]
+    # projects = [{"job": "test-job", "repository": "test-repository"}]
 
 all_builds = AllBuilds("https://jenkins.ci.uktrade.digital/")
 
