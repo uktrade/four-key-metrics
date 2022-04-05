@@ -78,6 +78,7 @@ class AllBuilds:
             auth=(os.environ["DIT_JENKINS_USER"], os.environ["DIT_JENKINS_TOKEN"]),
             timeout=30,
         )
+
         body = response.json()
 
         if len(body["allBuilds"]) == 0:

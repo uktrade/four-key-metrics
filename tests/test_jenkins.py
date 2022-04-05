@@ -4,7 +4,6 @@ import httpretty
 import pytest
 import os
 
-from four_key_metrics.jenkins import Jenkins, get_action
 from tests.authorization_assertions import assert_authorization_is
 
 
