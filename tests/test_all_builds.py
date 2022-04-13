@@ -21,12 +21,6 @@ def around_each():
     httpretty.disable()
 
 
-def test_add_project():
-    
-
-    assert False
-
-
 def test_can_get_no_builds():
     jenkins = {"allBuilds": []}
 
@@ -107,7 +101,7 @@ def test_can_get_one_build():
     assert all_builds.builds[0].git_reference == "1234"
 
 
-def test_can_get_two_builds(capsys):
+def test_can_get_two_builds():
     jenkins = {
         "allBuilds": [
             {
@@ -166,9 +160,6 @@ def test_can_get_two_builds(capsys):
     )
     all_builds = AllBuilds("https://jenkins.ci.uktrade.digital/")
     all_builds.get_jenkins_builds("test-job")
-
-    captured = capsys.readouterr()
-    output = captured.out.replace("\\n", "\n")
 
     assert len(all_builds.builds) == 2
     assert all_builds.builds[0].started_at == 1632913357.801
@@ -229,6 +220,12 @@ def test_can_get_environment_from_actions_list():
     assert "production" == environment
 
 
+def test_can_get_no_lead_time_for_project():
+
+    assert False
+
+
 # Show error message/hint when Jenkins times out due to lack of VPN connection.
 def test_timeout_jenkins_error_message():
+
     assert False

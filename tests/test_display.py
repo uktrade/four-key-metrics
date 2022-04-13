@@ -119,3 +119,11 @@ def test_average_and_standard_deviation_output(capsys):
     assert "'standard_deviation': '19:36:09.800907'" in captured.out
 
 
+def test_can_get_no_lead_time(capsys):
+    projects = [{"job": "test-job", "repository": "test-repository"}]
+
+    display(projects)
+
+    captured = capsys.readouterr()
+    print(captured.out)
+    assert "'project': 'test-repository'" in captured.out

@@ -36,3 +36,6 @@ export DIT_JENKINS_TOKEN='5678'
 
 `poetry run python display.py`
 
+
+Note on tests not appearing in vscode
+A common reason for this is that you're trying to run tests with dependencies. If this is the case, you can select your interpreter by running ctrl/cmd + shift + p and searching Python: Select Interpreter, then selecting the correct interpreter.
