@@ -93,34 +93,21 @@ def test_average_and_standard_deviation_output(capsys):
         ]
     }
 
-    print(
-        "test_display.py@register_uri: ",
-        "https://jenkins.ci.uktrade.digital/",
-        "job/test-job/api/json",
-    )
-
     httpretty.register_uri(
         httpretty.GET,
         "https://jenkins.ci.uktrade.digital/" "job/test-job/api/json",
         body=json.dumps(jenkins),
     )
 
-    print(
-        "test_display.py@register_uri: ",
-        "https://api.github.com/repos/uktrade/data-hub-frontends/compare/0987...5678",
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://api.github.com/repos/uktrade/test-repository/compare/0987...5678",
+        body=json.dumps(github_response),
     )
 
-    # httpretty.register_uri(
-    #     httpretty.GET,
-    #     "https://api.github.com/repos/uktrade/data-hub-frontends/compare/0987...5678",
-    #     body=json.dumps(github_response),
-    # )
+    projects = [{"job": "test-job", "repository": "test-repository"}]
 
-    #    projects =
-
-    # override projects array
-
-    display([{"job": "test-job", "repository": "test-repository"}])
+    display(projects)
 
     captured = capsys.readouterr()
     print(captured.out)
