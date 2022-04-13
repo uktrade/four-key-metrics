@@ -92,8 +92,8 @@ def display(projects):
 
 
 if __name__ == "__main__":
-    dh_projects = [
+    projects = [
         {"job": "datahub-api", "repository": "data-hub-api"},
     ]
 
-    display(dh_projects)
+    display(projects)
