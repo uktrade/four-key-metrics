@@ -8,6 +8,16 @@ import runpy
 from display import display
 
 
+@pytest.fixture(autouse=True)
+def around_each():
+    httpretty.enable(allow_net_connect=False, verbose=True)
+    os.environ["DIT_JENKINS_USER"] = "test"
+    os.environ["DIT_JENKINS_TOKEN"] = "1234"
+    yield
+    httpretty.reset()
+    httpretty.disable()
+
+
 def test_average_and_standard_deviation_output(capsys):
     jenkins = {
         "allBuilds": [
