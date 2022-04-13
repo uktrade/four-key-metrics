@@ -1,5 +1,6 @@
 import os
 import statistics
+import pprint
 
 import requests
 from glom import glom, Path
@@ -63,6 +64,8 @@ class AllBuilds:
 
     # Would live in AllBuilds class
     def get_jenkins_builds(self, job):
+        jenkins_url = self.host + "job/%s/api/json" % job
+        print("all_builds.py jenkins uri: ", jenkins_url)
         response = requests.get(
             self.host + "job/%s/api/json" % job,
             params={
@@ -78,8 +81,10 @@ class AllBuilds:
             auth=(os.environ["DIT_JENKINS_USER"], os.environ["DIT_JENKINS_TOKEN"]),
             timeout=30,
         )
-
+        print("1")
+        print(response)
         body = response.json()
+        print(body)
 
         if len(body["allBuilds"]) == 0:
             return []

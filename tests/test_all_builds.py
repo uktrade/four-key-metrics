@@ -103,7 +103,7 @@ def test_can_get_one_build():
     assert all_builds.builds[0].git_reference == "1234"
 
 
-def test_can_get_two_builds():
+def test_can_get_two_builds(capsys):
     jenkins = {
         "allBuilds": [
             {
@@ -157,11 +157,14 @@ def test_can_get_two_builds():
 
     httpretty.register_uri(
         httpretty.GET,
-        "https://jenkins.ci.uktrade.digital/" "job/datahub-api/api/json",
+        "https://jenkins.ci.uktrade.digital/" "job/test-job/api/json",
         body=json.dumps(jenkins),
     )
     all_builds = AllBuilds("https://jenkins.ci.uktrade.digital/")
-    all_builds.get_jenkins_builds("datahub-api")
+    all_builds.get_jenkins_builds("test-job")
+
+    captured = capsys.readouterr()
+    output = captured.out.replace("\\n", "\n")
 
     assert len(all_builds.builds) == 2
     assert all_builds.builds[0].started_at == 1632913357.801
