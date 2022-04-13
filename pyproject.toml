@@ -5,7 +5,7 @@ description = ""
 authors = ["Craig J. Bass <1889973+craigjbass@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 ciso8601 = "^2.2.0"
 requests = "^2.26.0"
 glom = "^20.11.0"
@@ -13,7 +13,7 @@ python-dotenv = "^0.20.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
-HTTPretty = "^1.1.4"
+httpretty = "^1.1.4"
 black = {version = "^22.1.0", allow-prereleases = true}
 
 [build-system]
