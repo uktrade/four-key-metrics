@@ -26,7 +26,6 @@ class AllBuilds:
                 "lead_time_mean_average": None,
                 "lead_time_standard_deviation": None,
             }
-
         last_build = jenkins_builds.pop(0)
         for build in jenkins_builds:
             if build.git_reference not in os.environ["EXCLUDED_DEPLOYMENT_HASHES"]:
@@ -65,7 +64,7 @@ class AllBuilds:
     # Would live in AllBuilds class
     def get_jenkins_builds(self, job):
         jenkins_url = self.host + "job/%s/api/json" % job
-        print("all_builds.py jenkins uri: ", jenkins_url)
+        
         response = requests.get(
             self.host + "job/%s/api/json" % job,
             params={
@@ -81,10 +80,9 @@ class AllBuilds:
             auth=(os.environ["DIT_JENKINS_USER"], os.environ["DIT_JENKINS_TOKEN"]),
             timeout=30,
         )
-        print("1")
-        print(response)
+        
         body = response.json()
-        print(body)
+      
 
         if len(body["allBuilds"]) == 0:
             return []

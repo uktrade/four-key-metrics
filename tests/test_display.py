@@ -13,6 +13,9 @@ def around_each():
     httpretty.enable(allow_net_connect=False, verbose=True)
     os.environ["DIT_JENKINS_USER"] = "test"
     os.environ["DIT_JENKINS_TOKEN"] = "1234"
+    os.environ["GITHUB_USERNAME"] = "git_test"
+    os.environ["GITHUB_TOKEN"] = "1234"
+    os.environ["EXCLUDED_DEPLOYMENT_HASHES"] = '["1234"]'
     yield
     httpretty.reset()
     httpretty.disable()
@@ -111,24 +114,8 @@ def test_average_and_standard_deviation_output(capsys):
 
     captured = capsys.readouterr()
     print(captured.out)
-    # assert captured.out == "hello\n"
-    # call 'display.py'
-
-    #    all_builds = AllBuilds("https://jenkins.ci.uktrade.digital/")
-    #    all_builds.get_jenkins_builds("datahub-api")
-
-    # Create and insert dummy input
-    # Assert output
-    # output = {
-    #     "average": "4 days, 10:11:19.988286",
-    #     "project": "data-hub-frontend",
-    #     "standard_deviation": "4 days, 23:57:23.917895",
-    # }
-    # assert True
+    assert "'project': 'test-repository'" in captured.out
+    assert "'average': '10 days, 21:41:12.801000'" in captured.out
+    assert "'standard_deviation': '19:36:09.800907'" in captured.out
 
 
-# def test_can_get_jenkins_builds(authentication):
-#     basic_string = base64.b64encode(authentication).decode()
-#     actual_header = httpretty.last_request().headers["Authorization"]
-#     expected_header = "Basic %s" % basic_string
-#     assert actual_header == expected_header

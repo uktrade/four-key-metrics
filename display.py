@@ -9,7 +9,6 @@ load_dotenv()
 
 
 def display(projects):
-    pprint(projects)
 
     all_builds = AllBuilds("https://jenkins.ci.uktrade.digital/")
 

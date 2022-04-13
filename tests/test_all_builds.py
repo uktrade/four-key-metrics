@@ -13,12 +13,16 @@ def around_each():
     httpretty.enable(allow_net_connect=False, verbose=True)
     os.environ["DIT_JENKINS_USER"] = "test"
     os.environ["DIT_JENKINS_TOKEN"] = "1234"
+    os.environ["GITHUB_USERNAME"] = "git_test"
+    os.environ["GITHUB_TOKEN"] = "1234"
+    os.environ["EXCLUDED_DEPLOYMENT_HASHES"] = '["1234"]'
     yield
     httpretty.reset()
     httpretty.disable()
 
 
 def test_add_project():
+    
 
     assert False
 

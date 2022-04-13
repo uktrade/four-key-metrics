@@ -18,11 +18,7 @@ class Build:
         self.last_build_git_reference = None
 
     def get_commits_between(self, organisation, repository, base, head):
-        print(
-            "build.py github uri: ",
-            "https://api.github.com/repos/%s/%s/compare/%s...%s"
-            % (organisation, repository, base, head),
-        )
+        
         response = requests.get(
             "https://api.github.com/repos/%s/%s/compare/%s...%s"
             % (organisation, repository, base, head),
