@@ -3,8 +3,15 @@ import os
 
 import httpretty
 import pytest
+import requests
 
 from four_key_metrics.all_builds import AllBuilds
+
+from tests.mock_jenkins_request import httpretty_404_no_job_jenkings_builds
+from tests.mock_jenkins_request import httpretty_no_jenkings_builds
+from tests.mock_jenkins_request import httpretty_one_jenkings_build
+from tests.mock_jenkins_request import httpretty_two_jenkins_builds
+
 from tests.authorization_assertions import assert_authorization_is
 
 
@@ -22,20 +29,12 @@ def around_each():
 
 
 def test_can_get_no_builds():
-    jenkins = {"allBuilds": []}
-
-    httpretty.register_uri(
-        httpretty.GET,
-        "https://jenkins.test/" "job/datahub-fe/api/json",
-        body=json.dumps(jenkins),
-    )
-
-    all_builds = AllBuilds("https://jenkins.test/")
-    all_builds.get_jenkins_builds("datahub-fe")
+    all_builds = httpretty_no_jenkings_builds()
+    all_builds.get_jenkins_builds("test-job")
 
     assert len(all_builds.builds) == 0
     expected_url = (
-        "https://jenkins.test/job/datahub-fe/api/json"
+        "https://jenkins.test/job/test-job/api/json"
         "?tree=allBuilds%5Btimestamp%2Cresult%2Cduration%2C"
         "actions%5Bparameters%5B%2A%5D%2C"
         "lastBuiltRevision%5Bbranch%5B%2A%5D%5D%5D%2C"
@@ -47,47 +46,14 @@ def test_can_get_no_builds():
 
 
 def test_can_get_one_build():
-    jenkins = {
-        "allBuilds": [
-            {
-                "timestamp": 1632913347701,
-                "duration": 613613,
-                "result": "SUCCESS",
-                "actions": [
-                    {
-                        "_class": "hudson.model.ParametersAction",
-                        "parameters": [
-                            {"name": "Environment", "value": "dev"},
-                        ],
-                    },
-                    {
-                        "_class": "hudson.plugins.git.util.BuildData",
-                        "lastBuiltRevision": {
-                            "branch": [
-                                {
-                                    "SHA1": "1234",
-                                }
-                            ]
-                        },
-                    },
-                ],
-            }
-        ]
-    }
-
-    httpretty.register_uri(
-        httpretty.GET,
-        "https://jenkins.ci.uktrade.digital/" "job/datahub-api/api/json",
-        body=json.dumps(jenkins),
-    )
-    all_builds = AllBuilds("https://jenkins.ci.uktrade.digital/")
-    all_builds.get_jenkins_builds("datahub-api")
+    all_builds = httpretty_one_jenkings_build()
+    all_builds.get_jenkins_builds("test-job")
 
     assert len(all_builds.builds) == 1
 
     expected_url = (
         "https://jenkins.ci.uktrade.digital/"
-        "job/datahub-api/api/json"
+        "job/test-job/api/json"
         "?tree=allBuilds%5Btimestamp%2Cresult%2Cduration%2C"
         "actions%5Bparameters%5B%2A%5D%2ClastBuiltRevision%5Bbranch%5B%2A%5D%5D%5D%2C"
         "changeSet%5Bitems%5B%2A%5D%5D%5D"
@@ -102,63 +68,7 @@ def test_can_get_one_build():
 
 
 def test_can_get_two_builds():
-    jenkins = {
-        "allBuilds": [
-            {
-                "timestamp": 1632913357801,
-                "duration": 600000,
-                "result": "FAILURE",
-                "actions": [
-                    {
-                        "_class": "hudson.model.ParametersAction",
-                        "parameters": [
-                            {"name": "Environment", "value": "production"},
-                        ],
-                    },
-                    {
-                        "_class": "hudson.plugins.git.util.BuildData",
-                        "lastBuiltRevision": {
-                            "branch": [
-                                {
-                                    "SHA1": "0987",
-                                }
-                            ]
-                        },
-                    },
-                ],
-            },
-            {
-                "timestamp": 1632913357801,
-                "duration": 600000,
-                "result": "SUCCESS",
-                "actions": [
-                    {
-                        "_class": "hudson.model.ParametersAction",
-                        "parameters": [
-                            {"name": "Environment", "value": "production"},
-                        ],
-                    },
-                    {
-                        "_class": "hudson.plugins.git.util.BuildData",
-                        "lastBuiltRevision": {
-                            "branch": [
-                                {
-                                    "SHA1": "5678",
-                                }
-                            ]
-                        },
-                    },
-                ],
-            },
-        ]
-    }
-
-    httpretty.register_uri(
-        httpretty.GET,
-        "https://jenkins.ci.uktrade.digital/" "job/test-job/api/json",
-        body=json.dumps(jenkins),
-    )
-    all_builds = AllBuilds("https://jenkins.ci.uktrade.digital/")
+    all_builds = httpretty_two_jenkins_builds()
     all_builds.get_jenkins_builds("test-job")
 
     assert len(all_builds.builds) == 2
@@ -220,12 +130,70 @@ def test_can_get_environment_from_actions_list():
     assert "production" == environment
 
 
-def test_can_get_no_lead_time_for_project():
+def test_add_project_fails_without_schema():
+    all_builds = AllBuilds("")
 
-    assert False
+    assert all_builds
+
+    with pytest.raises(requests.exceptions.MissingSchema) as exception_info:
+        metrics = all_builds.add_project("", "", "", "")
+    assert "No schema supplied." in str(exception_info.value)
 
 
-# Show error message/hint when Jenkins times out due to lack of VPN connection.
-def test_timeout_jenkins_error_message():
+def test_no_jenkins_job(capsys):
+    all_builds = httpretty_no_jenkings_builds()
+    all_builds.get_jenkins_builds("test-job")
 
-    assert False
+    assert all_builds
+
+
+def test_empty_add_project(capsys):
+    httpretty_404_no_job_jenkings_builds()
+    all_builds = httpretty_no_jenkings_builds()
+
+    all_builds.get_jenkins_builds("test-job")
+    metrics = all_builds.add_project("", "", "", "")
+
+    captured = capsys.readouterr()
+    assert all_builds
+    assert metrics["successful"] == False
+    assert (
+        "Not Found [404] whilst loading https://jenkins.test/job//api/json?tree=allBuilds%5Btimestamp%2Cresult%2Cduration%2Cactions%5Bparameters%5B%2A%5D%2ClastBuiltRevision%5Bbranch%5B%2A%5D%5D%5D%2CchangeSet%5Bitems%5B%2A%5D%5D%5D"
+        in captured.out
+    )
+    assert "Check your project's job name." in captured.out
+    assert metrics["lead_time_mean_average"] is None
+    assert metrics["lead_time_standard_deviation"] is None
+
+
+def exceptionconnectTimeoutCallback(request, uri, headers):
+    raise requests.exceptions.ConnectTimeout(
+        "HTTPSConnectionPool(host='jenkins.test', port=443): Max retries exceeded with url: /job/test-job/api/json?tree=allBuilds%5Btimestamp%2Cresult%2Cduration%2Cactions%5Bparameters%5B%2A%5D%2ClastBuiltRevision%5Bbranch%5B%2A%5D%5D%5D%2CchangeSet%5Bitems%5B%2A%5D%5D%5D (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x1049ab880>, 'Connection to jenkins.test timed out. (connect timeout=1)'))"
+    )
+
+
+def test_jenkings_connect_timeout(capsys):
+    # TODO If you're not connected to the VPN the jenkins request will fail with a requests.exceptions.ConnectTimeout
+    # The current way of raising an exception from httpretty doesn't work. Need to find a way to raise the exception
+    # so it can be caught by display.py.
+    # Create timeout on call
+    jenkins = {"allBuilds": []}
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://jenkins.test/" "job/test-job/api/json",
+        status=200,
+        body=exceptionconnectTimeoutCallback,
+    )
+
+    all_builds = AllBuilds("https://jenkins.test/")
+    # all_builds = httpretty_no_jenkings_builds()
+    all_builds.get_jenkins_builds("test-job")
+
+    # all_builds = AllBuilds("https://jenkins.test/")
+    # metrics = all_builds.add_project("test-job", "", "", "")
+
+    captured = capsys.readouterr()
+
+    assert len(all_builds.builds) == 0
+    assert "Max retries exceeded with url" in captured.out
+    assert "Are you connected to the VPN‽" in captured.out
