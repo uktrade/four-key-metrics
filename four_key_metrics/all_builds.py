@@ -64,25 +64,38 @@ class AllBuilds:
     # Would live in AllBuilds class
     def get_jenkins_builds(self, job):
         jenkins_url = self.host + "job/%s/api/json" % job
-        
-        response = requests.get(
-            self.host + "job/%s/api/json" % job,
-            params={
-                "tree": "allBuilds["
-                "timestamp,result,duration,"
-                "actions["
-                "parameters[*],"
-                "lastBuiltRevision[branch[*]]"
-                "],"
-                "changeSet[items[*]]"
-                "]"
-            },
-            auth=(os.environ["DIT_JENKINS_USER"], os.environ["DIT_JENKINS_TOKEN"]),
-            timeout=30,
-        )
-        
+
+        try:
+            response = requests.get(
+                self.host + "job/%s/api/json" % job,
+                params={
+                    "tree": "allBuilds["
+                    "timestamp,result,duration,"
+                    "actions["
+                    "parameters[*],"
+                    "lastBuiltRevision[branch[*]]"
+                    "],"
+                    "changeSet[items[*]]"
+                    "]"
+                },
+                auth=(os.environ["DIT_JENKINS_USER"], os.environ["DIT_JENKINS_TOKEN"]),
+                timeout=5,
+            )
+        except requests.exceptions.ConnectTimeout as connect_timeout:
+            print(connect_timeout.args[0])
+            print("Are you connected to the VPN‽")
+            return []
+
+        if response.status_code != 200:
+            print(
+                f"{response.reason} [{response.status_code}] whilst loading {response.url}"
+            )
+            if response.status_code == 404:
+                print("Check your project's job name.")
+
+            return []
+
         body = response.json()
-      
 
         if len(body["allBuilds"]) == 0:
             return []
