@@ -30,7 +30,7 @@ def httpretty_one_jenkings_build():
     jenkins = {
         "allBuilds": [
             {
-                "timestamp": 1632913347701,
+                "timestamp": 1643768542000,
                 "duration": 613613,
                 "result": "SUCCESS",
                 "actions": [
@@ -68,7 +68,67 @@ def httpretty_two_jenkins_builds():
     jenkins = {
         "allBuilds": [
             {
-                "timestamp": 1632913357801,
+                "timestamp": 1643768542000,
+                "duration": 600000,
+                "result": "FAILURE",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-1",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+            {
+                "timestamp": 1646278413000,
+                "duration": 600000,
+                "result": "SUCCESS",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-2",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+        ]
+    }
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://jenkins.test/" "job/test-job/api/json",
+        body=json.dumps(jenkins),
+    )
+    return AllBuilds("https://jenkins.test/")
+
+
+def httpretty_two_jenkins_builds_one_production_one_development():
+    jenkins = {
+        "allBuilds": [
+            {
+                "timestamp": 1643768542000,
                 "duration": 600000,
                 "result": "FAILURE",
                 "actions": [
@@ -91,14 +151,14 @@ def httpretty_two_jenkins_builds():
                 ],
             },
             {
-                "timestamp": 1632913357801,
+                "timestamp": 1646278413000,
                 "duration": 600000,
                 "result": "SUCCESS",
                 "actions": [
                     {
                         "_class": "hudson.model.ParametersAction",
                         "parameters": [
-                            {"name": "Environment", "value": "production"},
+                            {"name": "Environment", "value": "development"},
                         ],
                     },
                     {
@@ -124,11 +184,11 @@ def httpretty_two_jenkins_builds():
     return AllBuilds("https://jenkins.test/")
 
 
-def httpretty_two_jenkins_builds_one_production_one_development():
+def httpretty_three_jenkins_builds():
     jenkins = {
         "allBuilds": [
             {
-                "timestamp": 1632913357801,
+                "timestamp": 1643768542000,
                 "duration": 600000,
                 "result": "FAILURE",
                 "actions": [
@@ -143,7 +203,7 @@ def httpretty_two_jenkins_builds_one_production_one_development():
                         "lastBuiltRevision": {
                             "branch": [
                                 {
-                                    "SHA1": "0987",
+                                    "SHA1": "build-sha-1",
                                 }
                             ]
                         },
@@ -151,14 +211,14 @@ def httpretty_two_jenkins_builds_one_production_one_development():
                 ],
             },
             {
-                "timestamp": 1632913357801,
+                "timestamp": 1646278413000,
                 "duration": 600000,
                 "result": "SUCCESS",
                 "actions": [
                     {
                         "_class": "hudson.model.ParametersAction",
                         "parameters": [
-                            {"name": "Environment", "value": "development"},
+                            {"name": "Environment", "value": "production"},
                         ],
                     },
                     {
@@ -166,7 +226,30 @@ def httpretty_two_jenkins_builds_one_production_one_development():
                         "lastBuiltRevision": {
                             "branch": [
                                 {
-                                    "SHA1": "5678",
+                                    "SHA1": "build-sha-2",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+            {
+                "timestamp": 1649047484000,
+                "duration": 600000,
+                "result": "SUCCESS",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-3",
                                 }
                             ]
                         },

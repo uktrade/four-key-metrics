@@ -14,7 +14,9 @@ from tests.mock_jenkins_request import httpretty_two_jenkins_builds
 from tests.mock_jenkins_request import (
     httpretty_two_jenkins_builds_one_production_one_development,
 )
+from tests.mock_jenkins_request import httpretty_three_jenkins_builds
 from tests.mock_github_request import httpretty_one_github_requests
+from tests.mock_github_request import httpretty_two_github_requests
 from tests.mock_github_request import httpretty_three_github_requests
 
 
@@ -48,8 +50,8 @@ def test_average_and_standard_deviation_output(capsys):
 
     captured = capsys.readouterr()
     assert "'project': 'test-repository'" in captured.out
-    assert "'average': '10 days, 21:41:12.801000'" in captured.out
-    assert "'standard_deviation': '19:36:09.800907'" in captured.out
+    assert "'average': '60 days, 1:41:31'" in captured.out
+    assert "'standard_deviation': '20:25:34.498575'" in captured.out
 
 
 def test_can_get_no_lead_time(capsys):
@@ -130,12 +132,56 @@ def test_can_get_lead_time_for_two_builds_one_commit(capsys):
     print(captured.out)
 
     assert "'project': 'test-repository'" in captured.out
-    assert "'average': '11 days, 21:41:52.801000'" in captured.out
+    assert "'average': '61 days, 2:42:32'" in captured.out
     assert "'standard_deviation': '0:00:00'" in captured.out
 
 
-def test_can_get_lead_time_for_three_builds_one_commit():
-    assert "TODO"
+def test_can_get_lead_time_for_three_builds_one_commit(capsys):
+    httpretty_three_jenkins_builds()
+    httpretty_one_github_requests()
+    httpretty_one_github_requests("build-sha-2", "build-sha-3")
+    httpretty_one_github_requests("build-sha-3", "build-sha-1")
+
+    projects = [
+        {
+            "job": "test-job",
+            "repository": "test-repository",
+            "environment": "production",
+        }
+    ]
+
+    display(projects)
+
+    captured = capsys.readouterr()
+    print(captured.out)
+
+    assert "'project': 'test-repository'" in captured.out
+    assert "'average': '77 days, 3:18:07.500000'" in captured.out
+    assert "'standard_deviation': '16 days, 0:35:35.500000'" in captured.out
+
+
+def test_can_get_lead_time_for_two_builds_two_commits(capsys):
+    httpretty_two_jenkins_builds()
+    httpretty_two_github_requests()
+    #    httpretty_one_github_requests("build-sha-2", "build-sha-3")
+    #    httpretty_one_github_requests("build-sha-3", "build-sha-1")
+
+    projects = [
+        {
+            "job": "test-job",
+            "repository": "test-repository",
+            "environment": "production",
+        }
+    ]
+
+    display(projects)
+
+    captured = capsys.readouterr()
+    print(captured.out)
+
+    assert "'project': 'test-repository'" in captured.out
+    assert "'average': '60 days, 14:12:01.500000'" in captured.out
+    assert "'standard_deviation': '12:30:30.500000'" in captured.out
 
 
 def test_project_job_not_found(capsys):

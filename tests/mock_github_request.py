@@ -6,13 +6,13 @@ import json
 from four_key_metrics.all_builds import AllBuilds
 
 
-def httpretty_one_github_requests(start="0987", end="5678"):
+def httpretty_one_github_requests(base="build-sha-1", compare="build-sha-2"):
     github_response = {
         "commits": [
             {
                 "sha": "commit-sha1",
                 "commit": {
-                    "author": {"date": "2021-09-17T13:30:45Z"},
+                    "author": {"date": "2022-01-01T01:01:01Z"},
                 },
             },
         ]
@@ -21,32 +21,26 @@ def httpretty_one_github_requests(start="0987", end="5678"):
     httpretty.register_uri(
         httpretty.GET,
         "https://api.github.com/repos/uktrade/test-repository/compare/"
-        + start
+        + base
         + "..."
-        + end,
+        + compare,
         body=json.dumps(github_response),
     )
 
 
-def httpretty_three_github_requests(start="0987", end="5678"):
+def httpretty_two_github_requests(base="build-sha-1", compare="build-sha-2"):
     github_response = {
         "commits": [
             {
                 "sha": "commit-sha1",
                 "commit": {
-                    "author": {"date": "2021-09-17T13:30:45Z"},
+                    "author": {"date": "2022-01-01T01:01:01Z"},
                 },
             },
             {
                 "sha": "commit-sha2",
                 "commit": {
-                    "author": {"date": "2021-09-18T13:31:45Z"},
-                },
-            },
-            {
-                "sha": "commit-sha3",
-                "commit": {
-                    "author": {"date": "2021-09-19T13:31:45Z"},
+                    "author": {"date": "2022-01-02T02:02:02Z"},
                 },
             },
         ]
@@ -55,8 +49,42 @@ def httpretty_three_github_requests(start="0987", end="5678"):
     httpretty.register_uri(
         httpretty.GET,
         "https://api.github.com/repos/uktrade/test-repository/compare/"
-        + start
+        + base
         + "..."
-        + end,
+        + compare,
+        body=json.dumps(github_response),
+    )
+
+
+def httpretty_three_github_requests(base="build-sha-1", compare="build-sha-2"):
+    github_response = {
+        "commits": [
+            {
+                "sha": "commit-sha1",
+                "commit": {
+                    "author": {"date": "2022-01-01T01:01:01Z"},
+                },
+            },
+            {
+                "sha": "commit-sha2",
+                "commit": {
+                    "author": {"date": "2022-01-02T02:02:02Z"},
+                },
+            },
+            {
+                "sha": "commit-sha3",
+                "commit": {
+                    "author": {"date": "2022-01-03T03:03:03Z"},
+                },
+            },
+        ]
+    }
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://api.github.com/repos/uktrade/test-repository/compare/"
+        + base
+        + "..."
+        + compare,
         body=json.dumps(github_response),
     )
