@@ -81,7 +81,7 @@ class AllBuilds:
                 auth=(os.environ["DIT_JENKINS_USER"], os.environ["DIT_JENKINS_TOKEN"]),
                 timeout=5,
             )
-        except requests.exceptions.ConnectTimeout as connect_timeout:
+        except requests.exceptions.ConnectionError as connect_timeout:
             print(connect_timeout.args[0])
             print("Are you connected to the VPN‽")
             return []
