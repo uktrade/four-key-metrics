@@ -28,7 +28,7 @@ def httpretty_one_github_requests(base="build-sha-1", compare="build-sha-2"):
     )
 
 
-def httpretty_two_github_requests(base="build-sha-1", compare="build-sha-2"):
+def httpretty_two_github_requests(base="build-sha-1", compare="build-sha-2", repository="test-repository"):
     github_response = {
         "commits": [
             {
@@ -48,7 +48,7 @@ def httpretty_two_github_requests(base="build-sha-1", compare="build-sha-2"):
 
     httpretty.register_uri(
         httpretty.GET,
-        "https://api.github.com/repos/uktrade/test-repository/compare/"
+        "https://api.github.com/repos/uktrade/" + repository + "/compare/"
         + base
         + "..."
         + compare,
