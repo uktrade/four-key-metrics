@@ -4,13 +4,18 @@ import os
 import httpretty
 import pytest
 import requests
+import pprint
 
 from four_key_metrics.all_builds import AllBuilds
+from four_key_metrics.build import Build
 
 from tests.mock_jenkins_request import httpretty_404_no_job_jenkings_builds
 from tests.mock_jenkins_request import httpretty_no_jenkings_builds
 from tests.mock_jenkins_request import httpretty_one_jenkings_build
 from tests.mock_jenkins_request import httpretty_two_jenkins_builds
+from tests.mock_jenkins_request import (
+    httpretty_two_jenkins_builds_one_production_one_development,
+)
 
 from tests.authorization_assertions import assert_authorization_is
 
@@ -20,6 +25,7 @@ def around_each():
     httpretty.enable(allow_net_connect=False, verbose=True)
     os.environ["DIT_JENKINS_USER"] = "test"
     os.environ["DIT_JENKINS_TOKEN"] = "1234"
+    os.environ["DIT_JENKINS_URI"] = "https://jenkins.test/"
     os.environ["GITHUB_USERNAME"] = "git_test"
     os.environ["GITHUB_TOKEN"] = "1234"
     os.environ["EXCLUDED_DEPLOYMENT_HASHES"] = '["1234"]'
@@ -52,7 +58,7 @@ def test_can_get_one_build():
     assert len(all_builds.builds) == 1
 
     expected_url = (
-        "https://jenkins.ci.uktrade.digital/"
+        "https://jenkins.test/"
         "job/test-job/api/json"
         "?tree=allBuilds%5Btimestamp%2Cresult%2Cduration%2C"
         "actions%5Bparameters%5B%2A%5D%2ClastBuiltRevision%5Bbranch%5B%2A%5D%5D%5D%2C"
@@ -63,7 +69,7 @@ def test_can_get_one_build():
     assert all_builds.builds[0].started_at == 1632913347.701
     assert all_builds.builds[0].finished_at == 1632913961.314
     assert all_builds.builds[0].successful
-    assert all_builds.builds[0].environment == "dev"
+    assert all_builds.builds[0].environment == "production"
     assert all_builds.builds[0].git_reference == "1234"
 
 
@@ -166,16 +172,59 @@ def test_empty_add_project(capsys):
     assert metrics["lead_time_standard_deviation"] is None
 
 
+def test_can_get_no_lead_time():
+    all_builds = httpretty_no_jenkings_builds()
+
+    response = all_builds.add_project(
+        jenkins_job="test-job",
+        github_organisation="has-no-commits",
+        github_repository="commit-less",
+        environment="Production",
+    )
+
+    assert not response["successful"]
+    assert response["lead_time_mean_average"] is None
+    assert response["lead_time_standard_deviation"] is None
+
+
+def test_can_not_get_lead_time_for_one_build():
+    all_builds = httpretty_two_jenkins_builds()
+
+    response = all_builds.add_project(
+        jenkins_job="test-job",
+        github_organisation="has-no-commits",
+        github_repository="commit-less",
+        environment="Production",
+    )
+
+    assert not response["successful"]
+    assert response["lead_time_mean_average"] is None
+    assert response["lead_time_standard_deviation"] is None
+
+
+def test_can_not_get_lead_time_for_mismatched_environments():
+    all_builds = httpretty_two_jenkins_builds_one_production_one_development()
+
+    response = all_builds.add_project(
+        jenkins_job="test-job",
+        github_organisation="has-no-commits",
+        github_repository="commit-less",
+        environment="production",
+    )
+
+    assert not response["successful"]
+    assert response["lead_time_mean_average"] is None
+    assert response["lead_time_standard_deviation"] is None
+
+
 def exceptionconnectTimeoutCallback(request, uri, headers):
-    raise requests.exceptions.ConnectTimeout(
+    raise requests.exceptions.ConnectionError(
         "HTTPSConnectionPool(host='jenkins.test', port=443): Max retries exceeded with url: /job/test-job/api/json?tree=allBuilds%5Btimestamp%2Cresult%2Cduration%2Cactions%5Bparameters%5B%2A%5D%2ClastBuiltRevision%5Bbranch%5B%2A%5D%5D%5D%2CchangeSet%5Bitems%5B%2A%5D%5D%5D (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x1049ab880>, 'Connection to jenkins.test timed out. (connect timeout=1)'))"
     )
+    return
 
 
 def test_jenkings_connect_timeout(capsys):
-    # TODO If you're not connected to the VPN the jenkins request will fail with a requests.exceptions.ConnectTimeout
-    # The current way of raising an exception from httpretty doesn't work. Need to find a way to raise the exception
-    # so it can be caught by display.py.
     # Create timeout on call
     jenkins = {"allBuilds": []}
     httpretty.register_uri(
@@ -186,14 +235,8 @@ def test_jenkings_connect_timeout(capsys):
     )
 
     all_builds = AllBuilds("https://jenkins.test/")
-    # all_builds = httpretty_no_jenkings_builds()
     all_builds.get_jenkins_builds("test-job")
-
-    # all_builds = AllBuilds("https://jenkins.test/")
-    # metrics = all_builds.add_project("test-job", "", "", "")
-
     captured = capsys.readouterr()
 
     assert len(all_builds.builds) == 0
-    assert "Max retries exceeded with url" in captured.out
     assert "Are you connected to the VPN‽" in captured.out

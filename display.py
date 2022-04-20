@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta, date, datetime
 from pprint import pprint
 import csv
@@ -10,7 +11,9 @@ load_dotenv()
 
 def display(projects):
 
-    all_builds = AllBuilds("https://jenkins.ci.uktrade.digital/")
+    all_builds = AllBuilds(
+        os.getenv("DIT_JENKINS_URI", "https://jenkins.ci.uktrade.digital/")
+    )
     csv_filename = f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.csv"
 
     with open(
@@ -46,9 +49,19 @@ def display(projects):
                 github_repository=project[
                     "repository"
                 ],  # input("GitHub repository (e.g. data-hub-api)"),
-                environment="production",  # input("Environment (e.g. production)")
+                environment=project[
+                    "environment"
+                ],  # input("Environment (e.g. production)")
             )
-            if response["successful"]:
+            if not response["successful"]:
+                pprint(
+                    {
+                        "project": project["repository"],
+                        "average": response["lead_time_mean_average"],
+                        "standard_deviation": response["lead_time_standard_deviation"],
+                    }
+                )
+            else:
                 for build in response["builds"]:
                     last_build = build
                     for commit in build.commits:
@@ -76,6 +89,7 @@ def display(projects):
                 pprint(
                     {
                         "project": project["repository"],
+                        "environment": project["environment"],
                         "average": str(
                             timedelta(seconds=response["lead_time_mean_average"])
                         ),
@@ -91,8 +105,16 @@ def display(projects):
 
 if __name__ == "__main__":
     projects = [
-        {"job": "datahub-api", "repository": "data-hub-api"},
-        {"job": "datahub-fe", "repository": "data-hub-frontend"},
+        {
+            "job": "datahub-api",
+            "repository": "data-hub-api",
+            "environment": "production",
+        },
+        {
+            "job": "datahub-fe",
+            "repository": "data-hub-frontend",
+            "environment": "production",
+        },
     ]
 
     display(projects)
