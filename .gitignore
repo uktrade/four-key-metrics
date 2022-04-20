@@ -5,3 +5,5 @@ __pycache__/**
 /env
 four-key-metrics.code-workspace
 *.csv
+lcov.info
+.coverage
