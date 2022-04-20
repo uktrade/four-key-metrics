@@ -94,10 +94,6 @@ def test_csv_github_commits(capsys):
     with open(csv_filename, newline="") as csvfile:
         csvreader_list = list(csv.DictReader(csvfile))
 
-        # csvreader = csv.DictReader(csvfile)
-        # for row in csvreader:
-        #     fileoutput.append(pprint.pformat(row))
-
         assert csvreader_list[0]["repository"] == "test-repository"
         assert csvreader_list[0]["build_commit_hash"] == "build-sha-2"
         assert csvreader_list[0]["build_time"] == "03/03/2022 03:43:33"
