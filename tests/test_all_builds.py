@@ -1,13 +1,10 @@
-import json
 import os
 
 import httpretty
 import pytest
 import requests
-import pprint
 
 from four_key_metrics.all_builds import AllBuilds
-from four_key_metrics.build import Build
 
 from tests.mock_jenkins_request import httpretty_404_no_job_jenkings_builds
 from tests.mock_jenkins_request import httpretty_no_jenkings_builds
@@ -36,7 +33,7 @@ def around_each():
 
 def test_can_get_no_builds():
     all_builds = httpretty_no_jenkings_builds()
-    all_builds.get_jenkins_builds("test-job")
+    all_builds.get_jenkins_builds("test-job", "production")
 
     assert len(all_builds.builds) == 0
     expected_url = (
@@ -53,7 +50,7 @@ def test_can_get_no_builds():
 
 def test_can_get_one_build():
     all_builds = httpretty_one_jenkings_build()
-    all_builds.get_jenkins_builds("test-job")
+    all_builds.get_jenkins_builds("test-job", "production")
 
     assert len(all_builds.builds) == 1
 
@@ -61,7 +58,8 @@ def test_can_get_one_build():
         "https://jenkins.test/"
         "job/test-job/api/json"
         "?tree=allBuilds%5Btimestamp%2Cresult%2Cduration%2C"
-        "actions%5Bparameters%5B%2A%5D%2ClastBuiltRevision%5Bbranch%5B%2A%5D%5D%5D%2C"
+        "actions%5Bparameters%5B%2A%5D%2ClastBuiltRevision"
+        "%5Bbranch%5B%2A%5D%5D%5D%2C"
         "changeSet%5Bitems%5B%2A%5D%5D%5D"
     )
     assert expected_url == httpretty.last_request().url
@@ -75,7 +73,7 @@ def test_can_get_one_build():
 
 def test_can_get_two_builds():
     all_builds = httpretty_two_jenkins_builds()
-    all_builds.get_jenkins_builds("test-job")
+    all_builds.get_jenkins_builds("test-job", "production")
 
     assert len(all_builds.builds) == 2
     assert all_builds.builds[0].started_at == 1643768542.0
@@ -142,13 +140,14 @@ def test_add_project_fails_without_schema():
     assert all_builds
 
     with pytest.raises(requests.exceptions.MissingSchema) as exception_info:
-        metrics = all_builds.add_project("", "", "", "")
-    assert "Invalid URL 'job//api/json': No scheme supplied. Perhaps you meant http://job//api/json?" in str(exception_info.value)
+        all_builds.add_project("", "", "", "")
+    assert "Invalid URL 'job//api/json': No scheme supplied. "
+    "Perhaps you meant http://job//api/json?" in str(exception_info.value)
 
 
 def test_no_jenkins_job(capsys):
     all_builds = httpretty_no_jenkings_builds()
-    all_builds.get_jenkins_builds("test-job")
+    all_builds.get_jenkins_builds("test-job", "production")
 
     assert all_builds
 
@@ -157,14 +156,17 @@ def test_empty_add_project(capsys):
     httpretty_404_no_job_jenkings_builds()
     all_builds = httpretty_no_jenkings_builds()
 
-    all_builds.get_jenkins_builds("test-job")
+    all_builds.get_jenkins_builds("test-job", "production")
     metrics = all_builds.add_project("", "", "", "")
 
     captured = capsys.readouterr()
     assert all_builds
-    assert metrics["successful"] == False
+    assert metrics["successful"] is False
     assert (
-        "Not Found [404] whilst loading https://jenkins.test/job//api/json?tree=allBuilds%5Btimestamp%2Cresult%2Cduration%2Cactions%5Bparameters%5B%2A%5D%2ClastBuiltRevision%5Bbranch%5B%2A%5D%5D%5D%2CchangeSet%5Bitems%5B%2A%5D%5D%5D"
+        "Not Found [404] whilst loading https://jenkins.test/job//api/json"
+        "?tree=allBuilds%5Btimestamp%2Cresult%2Cduration%2Cactions"
+        "%5Bparameters%5B%2A%5D%2ClastBuiltRevision%5Bbranch"
+        "%5B%2A%5D%5D%5D%2CchangeSet%5Bitems%5B%2A%5D%5D%5D"
         in captured.out
     )
     assert "Check your project's job name." in captured.out
@@ -219,14 +221,19 @@ def test_can_not_get_lead_time_for_mismatched_environments():
 
 def exceptionconnectTimeoutCallback(request, uri, headers):
     raise requests.exceptions.ConnectionError(
-        "HTTPSConnectionPool(host='jenkins.test', port=443): Max retries exceeded with url: /job/test-job/api/json?tree=allBuilds%5Btimestamp%2Cresult%2Cduration%2Cactions%5Bparameters%5B%2A%5D%2ClastBuiltRevision%5Bbranch%5B%2A%5D%5D%5D%2CchangeSet%5Bitems%5B%2A%5D%5D%5D (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x1049ab880>, 'Connection to jenkins.test timed out. (connect timeout=1)'))"
+        "HTTPSConnectionPool(host='jenkins.test', port=443): Max retries "
+        "exceeded with url: /job/test-job/api/json?tree=allBuilds%5Btimestamp"
+        "%2Cresult%2Cduration%2Cactions%5Bparameters%5B%2A%5D%2C"
+        "lastBuiltRevision%5Bbranch%5B%2A%5D%5D%5D%2CchangeSet%5Bitems"
+        "%5B%2A%5D%5D%5D (Caused by ConnectTimeoutError(<urllib3.connection."
+        "HTTPSConnection object at 0x1049ab880>, 'Connection to jenkins.test "
+        "timed out. (connect timeout=1)'))"
     )
     return
 
 
 def test_jenkings_connect_timeout(capsys):
     # Create timeout on call
-    jenkins = {"allBuilds": []}
     httpretty.register_uri(
         httpretty.GET,
         "https://jenkins.test/" "job/test-job/api/json",
@@ -235,7 +242,7 @@ def test_jenkings_connect_timeout(capsys):
     )
 
     all_builds = AllBuilds("https://jenkins.test/")
-    all_builds.get_jenkins_builds("test-job")
+    all_builds.get_jenkins_builds("test-job", "production")
     captured = capsys.readouterr()
 
     assert len(all_builds.builds) == 0
