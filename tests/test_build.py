@@ -120,7 +120,7 @@ def test_can_request_different_comparisons():
         git_reference="sha1-git-reference",
     )
 
-    commits = build.get_commits_between(
+    build.get_commits_between(
         organisation="123",
         repository="456",
         base="789",

@@ -1,8 +1,6 @@
 import httpretty
 import json
 
-from four_key_metrics.all_builds import AllBuilds
-
 
 def httpretty_one_github_requests(base="build-sha-1", compare="build-sha-2"):
     github_response = {

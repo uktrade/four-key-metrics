@@ -1,6 +1,4 @@
 import httpretty
-import pytest
-import requests
 import json
 
 from four_key_metrics.all_builds import AllBuilds

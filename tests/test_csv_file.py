@@ -1,26 +1,14 @@
 import csv
 import httpretty
-import json
 import os
 import re
-import runpy
 import pprint
 import pytest
-import unittest
 
 from display import display
 
-from tests.mock_jenkins_request import httpretty_404_no_job_jenkings_builds
-from tests.mock_jenkins_request import httpretty_no_jenkings_builds
-from tests.mock_jenkins_request import httpretty_one_jenkings_build
 from tests.mock_jenkins_request import httpretty_two_jenkins_builds
-from tests.mock_jenkins_request import (
-    httpretty_two_jenkins_builds_one_production_one_development,
-)
-from tests.mock_jenkins_request import httpretty_three_jenkins_builds
-from tests.mock_github_request import httpretty_one_github_requests
 from tests.mock_github_request import httpretty_two_github_requests
-from tests.mock_github_request import httpretty_three_github_requests
 
 
 @pytest.fixture(autouse=True)
@@ -70,7 +58,6 @@ def test_column_names_in_csv_file(capsys):
     run_display_with_simple_builds()
     csv_filename, captured = get_csv_filename_and_captured_outerr(capsys)
 
-    fileoutput = []
     with open(csv_filename, newline="") as csvfile:
         csvreader = csv.DictReader(csvfile)
 
@@ -90,7 +77,6 @@ def test_csv_github_commits(capsys):
     run_display_with_simple_builds()
     csv_filename, captured = get_csv_filename_and_captured_outerr(capsys)
 
-    fileoutput = []
     with open(csv_filename, newline="") as csvfile:
         csvreader_list = list(csv.DictReader(csvfile))
 
