@@ -1,5 +1,5 @@
 import os
-from datetime import timedelta, date, datetime
+from datetime import timedelta, datetime
 from pprint import pprint
 import csv
 from dotenv import load_dotenv
@@ -63,7 +63,7 @@ def display(projects):
                 )
             else:
                 for build in response["builds"]:
-                    last_build = build
+                    build
                     for commit in build.commits:
                         writer.writerow(
                             {

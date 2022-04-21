@@ -166,8 +166,7 @@ def test_empty_add_project(capsys):
         "Not Found [404] whilst loading https://jenkins.test/job//api/json"
         "?tree=allBuilds%5Btimestamp%2Cresult%2Cduration%2Cactions"
         "%5Bparameters%5B%2A%5D%2ClastBuiltRevision%5Bbranch"
-        "%5B%2A%5D%5D%5D%2CchangeSet%5Bitems%5B%2A%5D%5D%5D"
-        in captured.out
+        "%5B%2A%5D%5D%5D%2CchangeSet%5Bitems%5B%2A%5D%5D%5D" in captured.out
     )
     assert "Check your project's job name." in captured.out
     assert metrics["lead_time_mean_average"] is None

@@ -1,6 +1,4 @@
 import httpretty
-import pytest
-import requests
 import json
 
 from four_key_metrics.all_builds import AllBuilds
@@ -52,7 +50,9 @@ def httpretty_two_github_requests(
 
     httpretty.register_uri(
         httpretty.GET,
-        "https://api.github.com/repos/uktrade/" + repository + "/compare/"
+        "https://api.github.com/repos/uktrade/"
+        + repository
+        + "/compare/"
         + base
         + "..."
         + compare,

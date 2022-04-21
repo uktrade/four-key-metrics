@@ -23,16 +23,14 @@ class AllBuilds:
         if len(jenkins_builds) < 2:
             return self._build_summary()
         self._update_last_build_git_reference(
-            github_organisation,
-            github_repository,
-            jenkins_builds
+            github_organisation, github_repository, jenkins_builds
         )
         self.calculate_lead_times()
         return self._build_summary(
             True,
             self.get_lead_time_mean_average(),
             self.get_lead_time_standard_deviation(),
-            self.builds
+            self.builds,
         )
 
     def _build_summary(
@@ -78,9 +76,8 @@ class AllBuilds:
 
     # Would live in AllBuilds class
     def get_jenkins_builds(self, job, environment):
-        jenkins_url = self.host + "job/%s/api/json" % job
-
         try:
+            jenkins_url = self.host + "job/%s/api/json" % job
             response = requests.get(
                 jenkins_url,
                 params={
@@ -120,6 +117,17 @@ class AllBuilds:
             return []
 
         self.builds = []
+        self._update_build_with_github_commits(body)
+        # Ignore entries where no git reference present - which happens on
+        # releasing from non existing tag.
+        return list(
+            filter(
+                lambda b: b.environment == environment,
+                [build for build in self.builds if build.git_reference],
+            )
+        )
+
+    def _update_build_with_github_commits(self, body):
         for build in body["allBuilds"]:
             started_at = build["timestamp"] / 1000
             self.builds.append(
@@ -131,15 +139,6 @@ class AllBuilds:
                     git_reference=self._get_git_reference(build),
                 )
             )
-
-        # Ignore entries where no git reference present - which happens on
-        # releasing from non existing tag.
-        return list(
-            filter(
-                lambda b: b.environment == environment,
-                [build for build in self.builds if build.git_reference]
-            )
-        )
 
     # Would live on AllBuilds class
     def get_lead_time_mean_average(self):
