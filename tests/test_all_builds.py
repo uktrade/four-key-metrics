@@ -143,7 +143,7 @@ def test_add_project_fails_without_schema():
 
     with pytest.raises(requests.exceptions.MissingSchema) as exception_info:
         metrics = all_builds.add_project("", "", "", "")
-    assert "No schema supplied." in str(exception_info.value)
+    assert "Invalid URL 'job//api/json': No scheme supplied. Perhaps you meant http://job//api/json?" in str(exception_info.value)
 
 
 def test_no_jenkins_job(capsys):

@@ -30,7 +30,7 @@ class AllBuilds:
         for build in jenkins_builds:
             if build.git_reference not in os.environ["EXCLUDED_DEPLOYMENT_HASHES"]:
                 # Creates a GitCommit object for each commit in the build
-                commits = build.get_commits_between(
+                build.get_commits_between(
                     organisation=github_organisation,
                     repository=github_repository,
                     base=last_build.git_reference,
@@ -67,7 +67,7 @@ class AllBuilds:
 
         try:
             response = requests.get(
-                self.host + "job/%s/api/json" % job,
+                jenkins_url,
                 params={
                     "tree": "allBuilds["
                     "timestamp,result,duration,"
