@@ -1,13 +1,10 @@
-import json
 import os
 
 import httpretty
 import pytest
-import runpy
 
 from display import display
 
-from tests.mock_jenkins_request import httpretty_404_no_job_jenkings_builds
 from tests.mock_jenkins_request import httpretty_no_jenkings_builds
 from tests.mock_jenkins_request import httpretty_one_jenkings_build
 from tests.mock_jenkins_request import httpretty_two_jenkins_builds
