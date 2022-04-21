@@ -1,16 +1,15 @@
-from distutils.command.build import build
 import os
 import statistics
-import pprint
-
 import requests
 from glom import glom, Path
 
 
 from four_key_metrics.build import Build
 
-# Class that extracts all builds from Jenkins based on project name.
+
 class AllBuilds:
+    """Class that extracts all builds from Jenkins based on project name."""
+
     def __init__(self, host):
         self.host = host
         self.builds = []
@@ -23,20 +22,23 @@ class AllBuilds:
         jenkins_builds.sort(key=lambda b: b.finished_at)
         if len(jenkins_builds) < 2:
             return self._build_summary()
-        self._update_last_build_git_reference(github_organisation, github_repository, jenkins_builds)
-        # Would be called either by AllBuilds or display.py
-        # but function itself lives on Build class
+        self._update_last_build_git_reference(
+            github_organisation,
+            github_repository,
+            jenkins_builds
+        )
         self.calculate_lead_times()
         return self._build_summary(
-            is_success=True, 
-            lead_time_mean_average=self.get_lead_time_mean_average(),
-            lead_time_standard_deviation=self.get_lead_time_standard_deviation(),
-            builds=self.builds
+            True,
+            self.get_lead_time_mean_average(),
+            self.get_lead_time_standard_deviation(),
+            self.builds
         )
 
-    def _build_summary(self, 
-        is_success: bool = False, 
-        lead_time_mean_average: str | None = None, 
+    def _build_summary(
+        self,
+        is_success: bool = False,
+        lead_time_mean_average: str | None = None,
         lead_time_standard_deviation: str | None = None,
         builds: list = None,
     ):
@@ -44,13 +46,19 @@ class AllBuilds:
             "successful": is_success,
             "lead_time_mean_average": lead_time_mean_average,
             "lead_time_standard_deviation": lead_time_standard_deviation,
-            "builds": builds ,
+            "builds": builds,
         }
 
-    def _update_last_build_git_reference(self, github_organisation, github_repository, jenkins_builds):
+    def _update_last_build_git_reference(
+        self,
+        github_organisation,
+        github_repository,
+        jenkins_builds,
+    ):
         last_build = jenkins_builds.pop(0)
+        excluded_hashes = os.environ["EXCLUDED_DEPLOYMENT_HASHES"]
         for build in jenkins_builds:
-            if build.git_reference not in os.environ["EXCLUDED_DEPLOYMENT_HASHES"]:
+            if build.git_reference not in excluded_hashes:
                 # Creates a GitCommit object for each commit in the build
                 build.get_commits_between(
                     organisation=github_organisation,
@@ -85,7 +93,10 @@ class AllBuilds:
                     "changeSet[items[*]]"
                     "]"
                 },
-                auth=(os.environ["DIT_JENKINS_USER"], os.environ["DIT_JENKINS_TOKEN"]),
+                auth=(
+                    os.environ["DIT_JENKINS_USER"],
+                    os.environ["DIT_JENKINS_TOKEN"],
+                ),
                 timeout=5,
             )
         except requests.exceptions.ConnectionError as connect_timeout:
@@ -95,7 +106,8 @@ class AllBuilds:
 
         if response.status_code != 200:
             print(
-                f"{response.reason} [{response.status_code}] whilst loading {response.url}"
+                f"{response.reason} [{response.status_code}] "
+                f"whilst loading {response.url}"
             )
             if response.status_code == 404:
                 print("Check your project's job name.")
@@ -120,8 +132,14 @@ class AllBuilds:
                 )
             )
 
-        # Ignore entries where no git reference present - which happens on releasing from non existing tag.
-        return list(filter(lambda b: b.environment == environment, [build for build in self.builds if build.git_reference]))
+        # Ignore entries where no git reference present - which happens on
+        # releasing from non existing tag.
+        return list(
+            filter(
+                lambda b: b.environment == environment,
+                [build for build in self.builds if build.git_reference]
+            )
+        )
 
     # Would live on AllBuilds class
     def get_lead_time_mean_average(self):
