@@ -231,7 +231,7 @@ def create_timeout_on_call():
 
 
 @pytest.mark.filterwarnings("ignore")
-def test_jenkings_connect_timeout(capsys):
+def test_can_tell_the_user_to_check_vpn_if_connection_issue(capsys):
     create_timeout_on_call()
 
     all_builds = AllBuilds("https://jenkins.test/")
