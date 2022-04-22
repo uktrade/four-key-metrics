@@ -110,7 +110,13 @@ class AllBuilds:
             print("Are you connected to the VPN‽")
             return []
 
-        if self._is_not_success(response):
+        if response.status_code != 200:
+            print(
+                f"{response.reason} [{response.status_code}] "
+                f"whilst loading {response.url}"
+            )
+            if response.status_code == 404:
+                print("Check your project's job name.")
             return []
 
         body = response.json()
@@ -125,18 +131,6 @@ class AllBuilds:
                 [build for build in self.builds if build.git_reference],
             )
         )
-
-    def _is_not_success(response):
-        if response.status_code != 200:
-            print(
-                f"{response.reason} [{response.status_code}] "
-                f"whilst loading {response.url}"
-            )
-            if response.status_code == 404:
-                print("Check your project's job name.")
-
-            return True
-        return False
 
     def _update_build_with_github_commits(self, body):
         for build in body["allBuilds"]:
