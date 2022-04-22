@@ -1,3 +1,4 @@
+from cmd import Cmd
 import os
 from datetime import timedelta, datetime
 from pprint import pprint
@@ -9,7 +10,7 @@ from four_key_metrics.all_builds import AllBuilds
 load_dotenv()
 
 
-def display(projects):
+def generate_lead_time_metrics(projects):
 
     all_builds = AllBuilds(
         os.getenv("DIT_JENKINS_URI", "https://jenkins.ci.uktrade.digital/")
@@ -103,18 +104,63 @@ def display(projects):
     print(f"Detailed metrics stored in {csv_filename}")
 
 
-if __name__ == "__main__":
-    projects = [
-        {
-            "job": "datahub-api",
-            "repository": "data-hub-api",
-            "environment": "production",
-        },
-        {
-            "job": "datahub-fe",
-            "repository": "data-hub-frontend",
-            "environment": "production",
-        },
-    ]
+def remove_generated_reports(extension=".csv"):
+    for file in os.listdir("."):
+        if file.endswith(extension):
+            os.remove(file)
+            print(os.path.join("Removed ./", file))
 
-    display(projects)
+
+class DisplayShell(Cmd):
+    """Command allowing specific reports to be generated through actions"""
+
+    intro = "Welcome to the key metrics shell. Type help or ?.\n"
+    prompt = "(type <topic> to generate report) "
+
+    def do_ltm(self, arg):
+        """Generate lead time time metrics
+
+        Args:
+            arg (json): TODO: Figure out what can be passed to make this more
+            configurable
+        """
+        self.do_lead_time_metrics(arg)
+
+    def do_lead_time_metrics(self, arg):
+        """Generate lead time time metrics
+
+        Args:
+            arg (json): TODO: Figure out what can be passed to make this more
+            configurable
+        """
+        projects = [
+            {
+                "job": "datahub-api",
+                "repository": "data-hub-api",
+                "environment": "production",
+            },
+            {
+                "job": "datahub-fe",
+                "repository": "data-hub-frontend",
+                "environment": "production",
+            },
+        ]
+        generate_lead_time_metrics(projects)
+
+    def do_remove_reports(self, arg):
+        """Clean up generated reports by supported output types, e.g. .csv
+
+        Args:
+            arg (string): Defaults to '.csv' but can be overriden to support
+                '.json, '.txt', '.xml' or other supported types
+        """
+        fileExtension = ".csv"
+        if arg:
+            fileExtension = arg
+        print("searching ", fileExtension)
+        remove_generated_reports(fileExtension)
+
+
+if __name__ == "__main__":
+
+    DisplayShell().cmdloop()

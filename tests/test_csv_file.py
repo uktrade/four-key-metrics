@@ -5,7 +5,7 @@ import re
 import pprint
 import pytest
 
-from display import display
+from display import generate_lead_time_metrics
 
 from tests.mock_jenkins_request import httpretty_two_jenkins_builds
 from tests.mock_github_request import httpretty_two_github_requests
@@ -44,7 +44,7 @@ def run_display_with_simple_builds():
         }
     ]
 
-    display(projects)
+    generate_lead_time_metrics(projects)
 
 
 def test_csv_created(capsys):
@@ -121,7 +121,7 @@ def test_multiple_projects(capsys):
             "environment": "production",
         },
     ]
-    display(projects)
+    generate_lead_time_metrics(projects)
 
     csv_filename, captured = get_csv_filename_and_captured_outerr(capsys)
 
