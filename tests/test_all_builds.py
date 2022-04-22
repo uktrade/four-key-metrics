@@ -218,7 +218,7 @@ def test_can_not_get_lead_time_for_mismatched_environments():
     assert response["lead_time_standard_deviation"] is None
 
 
-def create_timeout_on_call():
+def register_on_call_to_jenkins_a_connection_error_occurs():
     def exceptionconnectTimeoutCallback(request, uri, headers):
         raise requests.exceptions.ConnectionError("Dummy Connection Error")
 
@@ -232,7 +232,7 @@ def create_timeout_on_call():
 
 @pytest.mark.filterwarnings("ignore")
 def test_can_tell_the_user_to_check_vpn_if_connection_issue(capsys):
-    create_timeout_on_call()
+    register_on_call_to_jenkins_a_connection_error_occurs()
 
     all_builds = AllBuilds("https://jenkins.test/")
     all_builds.get_jenkins_builds("test-job", "production")
