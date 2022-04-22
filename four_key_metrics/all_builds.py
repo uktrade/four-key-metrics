@@ -101,6 +101,23 @@ class AllBuilds:
             print("Are you connected to the VPN‽")
             return []
 
+        if self._is_not_success(response):
+            return []
+
+        body = response.json()
+        if len(body["allBuilds"]) == 0:
+            return []
+
+        self.builds = []
+        self._update_build_with_github_commits(body)
+        return list(
+            filter(
+                lambda b: b.environment == environment,
+                [build for build in self.builds if build.git_reference],
+            )
+        )
+
+    def _is_not_success(response):
         if response.status_code != 200:
             print(
                 f"{response.reason} [{response.status_code}] "
@@ -109,23 +126,8 @@ class AllBuilds:
             if response.status_code == 404:
                 print("Check your project's job name.")
 
-            return []
-
-        body = response.json()
-
-        if len(body["allBuilds"]) == 0:
-            return []
-
-        self.builds = []
-        self._update_build_with_github_commits(body)
-        # Ignore entries where no git reference present - which happens on
-        # releasing from non existing tag.
-        return list(
-            filter(
-                lambda b: b.environment == environment,
-                [build for build in self.builds if build.git_reference],
-            )
-        )
+            return True
+        return False
 
     def _update_build_with_github_commits(self, body):
         for build in body["allBuilds"]:
@@ -140,13 +142,11 @@ class AllBuilds:
                 )
             )
 
-    # Would live on AllBuilds class
     def get_lead_time_mean_average(self):
         if self._no_builds():
             return None
         return sum(self.lead_times) / len(self.lead_times)
 
-    # Would live on AllBuilds class
     def get_lead_time_standard_deviation(self):
         if self._no_builds():
             return None

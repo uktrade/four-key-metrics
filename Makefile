@@ -1,4 +1,4 @@
-code-format:
+format-code:
 	@echo "Black code formatting for all python files in the project"	
 	poetry run black {**/*.py,*.py}
 

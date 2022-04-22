@@ -5,8 +5,6 @@ import requests
 from four_key_metrics.git_commit import GitCommit
 
 
-# Add commits and previous build hash to Build object
-# Will contain 'get_commits_between' method
 class Build:
     def __init__(
         self,

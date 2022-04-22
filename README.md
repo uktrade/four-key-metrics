@@ -13,18 +13,18 @@ Intended as a way to measure the `four key metrics` as defined in the book Accel
 
 - The _Make_ file contains all the commands for running the application and generating/maintaining specific reports
 
-  - `make code-format` Developers can run black on the code base to format any developer files for any code issues, where possible, and output the file changes within the file
+  - `make format-code` Developers can run black on the code base to format any developer files for any code issues, where possible, and output the file changes within the file
 
   ![image-20220422110915740](./black-output.png)
 
   - `make install` Will install all the poetry configured libraries to run this application
 
   - `make metrics` Will run the application ready for execute a relevent command - see output in terminal for how to use the application
-  
+
     - Once up and running, help on documented commands can be attained by typing help or ? and extended to help on specific commands by typing the `help <command>`
-  
+
       ![image-20220422112828465](./metrics-console.png)
-  
+
   - `make test` Will run tests locally
 
 ## Local setup
