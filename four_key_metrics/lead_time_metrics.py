@@ -33,10 +33,6 @@ def generate_lead_time_metrics(projects):
         writer.writeheader()
 
         for project in projects:
-            # create an AllBuilds class which then gets the lead time for the projects
-            # E.g.
-            # all_builds = AllBuilds(project=project)
-            # all_builds.get_average_lead_time()
             response = all_builds.add_project(
                 jenkins_job=project[
                     "job"
@@ -96,4 +92,4 @@ def generate_lead_time_metrics(projects):
                     sort_dicts=False,
                 )
 
-    print(f"Detailed metrics stored in {csv_filename}")
+    pprint(f"Detailed metrics stored in {csv_filename}")

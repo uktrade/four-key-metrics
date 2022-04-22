@@ -57,6 +57,10 @@ class DisplayShell(Cmd):
         pprint("searching ", fileExtension)
         remove_generated_reports(fileExtension)
 
+    def do_close(self, line):
+        """Close or exit application"""
+        return True
+
 
 if __name__ == "__main__":
 
