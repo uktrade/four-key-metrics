@@ -23,6 +23,18 @@ build-backend = "poetry.masonry.api"
 
 [tool.black]
 max_line_length = 120
-#ignore = "E501,W6"  # or ["E501", "W6"]
-in-place = true
-recursive = true
+target-version = ['py37']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+    | \.git          
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''

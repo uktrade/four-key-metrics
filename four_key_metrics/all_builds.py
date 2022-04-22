@@ -56,16 +56,26 @@ class AllBuilds:
         last_build = jenkins_builds.pop(0)
         excluded_hashes = os.environ["EXCLUDED_DEPLOYMENT_HASHES"]
         for build in jenkins_builds:
-            if build.git_reference not in excluded_hashes:
-                # Creates a GitCommit object for each commit in the build
-                build.get_commits_between(
-                    organisation=github_organisation,
-                    repository=github_repository,
-                    base=last_build.git_reference,
-                    head=build.git_reference,
-                )
-            build.set_last_build_git_reference(last_build.git_reference)
-            last_build = build
+            self._update_with_exclusion_builds_with_git_reference(
+                github_organisation,
+                github_repository,
+                last_build,
+                excluded_hashes,
+                build,
+            )
+
+    def _update_with_exclusion_builds_with_git_reference(
+        self, github_organisation, github_repository, last_build, excluded_hashes, build
+    ):
+        if build.git_reference not in excluded_hashes:
+            build.get_commits_between(
+                organisation=github_organisation,
+                repository=github_repository,
+                base=last_build.git_reference,
+                head=build.git_reference,
+            )
+        build.set_last_build_git_reference(last_build.git_reference)
+        last_build = build
 
     def calculate_lead_times(self):
         for build in self.builds:
@@ -74,7 +84,6 @@ class AllBuilds:
                 self.lead_times.append(commit.lead_time)
         return None
 
-    # Would live in AllBuilds class
     def get_jenkins_builds(self, job, environment):
         try:
             jenkins_url = self.host + "job/%s/api/json" % job
