@@ -224,7 +224,6 @@ def exceptionconnectTimeoutCallback(request, uri, headers):
 
 @pytest.mark.filterwarnings("ignore")
 def test_jenkings_connect_timeout(capsys):
-    # Create timeout on call
     create_timeout_on_call()
 
     all_builds = AllBuilds("https://jenkins.test/")
