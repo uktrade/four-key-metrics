@@ -220,13 +220,7 @@ def test_can_not_get_lead_time_for_mismatched_environments():
 
 def exceptionconnectTimeoutCallback(request, uri, headers):
     raise requests.exceptions.ConnectionError(
-        "HTTPSConnectionPool(host='jenkins.test', port=443): Max retries "
-        "exceeded with url: /job/test-job/api/json?tree=allBuilds%5Btimestamp"
-        "%2Cresult%2Cduration%2Cactions%5Bparameters%5B%2A%5D%2C"
-        "lastBuiltRevision%5Bbranch%5B%2A%5D%5D%5D%2CchangeSet%5Bitems"
-        "%5B%2A%5D%5D%5D (Caused by ConnectTimeoutError(<urllib3.connection."
-        "HTTPSConnection object at 0x1049ab880>, 'Connection to jenkins.test "
-        "timed out. (connect timeout=1)'))"
+        "Dummy Connection Error"
     )
 
 
