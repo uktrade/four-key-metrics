@@ -37,7 +37,9 @@ pre-requisites:
 
 ## Testing
 
-`poetry run pytest`
+`make test`
+
+To automatically watch for changes and rerun tests use `make watch-test`
 
 ## Running the tool
 
