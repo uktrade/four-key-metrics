@@ -3,7 +3,6 @@ code-format:
 	poetry run black {**/*.py,*.py}
 
 metrics:
-	@echo "Open metrics generation shell for executing reports to generate metrics"	
 	poetry run python display.py
 
 install:
