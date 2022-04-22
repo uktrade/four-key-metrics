@@ -228,7 +228,6 @@ def exceptionconnectTimeoutCallback(request, uri, headers):
         "HTTPSConnection object at 0x1049ab880>, 'Connection to jenkins.test "
         "timed out. (connect timeout=1)'))"
     )
-    return
 
 
 def test_jenkings_connect_timeout(capsys):
