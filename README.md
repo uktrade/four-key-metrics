@@ -25,7 +25,7 @@ Intended as a way to measure the `four key metrics` as defined in the book Accel
 
       ![image-20220422112828465](./metrics-console.png)
 
-  - `make test` Will run tests locally
+  - `make test` or `make watch-test` Will run tests locally once
 
 ## Local setup
 
