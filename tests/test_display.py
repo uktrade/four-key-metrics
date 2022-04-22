@@ -3,7 +3,7 @@ import os
 import httpretty
 import pytest
 
-from display import generate_lead_time_metrics
+from four_key_metrics.lead_time_metrics import generate_lead_time_metrics
 
 from tests.mock_jenkins_request import httpretty_no_jenkings_builds
 from tests.mock_jenkins_request import httpretty_one_jenkings_build
