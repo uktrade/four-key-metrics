@@ -15,7 +15,7 @@ Intended as a way to measure the `four key metrics` as defined in the book Accel
 
   - `make format-code` Developers can run black on the code base to format any developer files for any code issues, where possible, and output the file changes within the file
 
-  ![image-20220422110915740](./black-output.png)
+    ![Black console](./black-output.png)
 
   - `make install` Will install all the poetry configured libraries to run this application
 
@@ -23,9 +23,10 @@ Intended as a way to measure the `four key metrics` as defined in the book Accel
 
     - Once up and running, help on documented commands can be attained by typing help or ? and extended to help on specific commands by typing the `help <command>`
 
-      ![image-20220422112828465](./metrics-console.png)
+      ![Metrics console](./metrics-console.png)
 
   - `make test` or `make watch-test` Will run tests locally
+  
 
 ## Local setup
 
