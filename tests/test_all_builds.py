@@ -222,6 +222,15 @@ def exceptionconnectTimeoutCallback(request, uri, headers):
     raise requests.exceptions.ConnectionError("Dummy Connection Error")
 
 
+def create_timeout_on_call():
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://jenkins.test/" "job/test-job/api/json",
+        status=200,
+        body=exceptionconnectTimeoutCallback,
+    )
+
+
 @pytest.mark.filterwarnings("ignore")
 def test_jenkings_connect_timeout(capsys):
     create_timeout_on_call()
@@ -232,12 +241,3 @@ def test_jenkings_connect_timeout(capsys):
 
     assert len(all_builds.builds) == 0
     assert "Are you connected to the VPN‽" in captured.out
-
-
-def create_timeout_on_call():
-    httpretty.register_uri(
-        httpretty.GET,
-        "https://jenkins.test/" "job/test-job/api/json",
-        status=200,
-        body=exceptionconnectTimeoutCallback,
-    )
