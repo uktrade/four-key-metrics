@@ -12,3 +12,7 @@ install:
 test:
 	@echo "Run tests"	
 	poetry run pytest
+
+watch-test:
+	@make test --silent || exit 0
+	@poetry run watchmedo shell-command --patterns="*.py" --recursive --drop --command="make test --silent" .
