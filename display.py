@@ -54,7 +54,7 @@ class DisplayShell(Cmd):
         fileExtension = ".csv"
         if arg:
             fileExtension = arg
-        pprint("searching ", fileExtension)
+        pprint(f"searching {fileExtension}")
         remove_generated_reports(fileExtension)
 
     def do_close(self, line):
