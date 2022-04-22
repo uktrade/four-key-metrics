@@ -52,7 +52,7 @@ class DisplayShell(Cmd):
                 '.json, '.txt', '.xml' or other supported types
         """
         fileExtension = ".csv"
-        if arg:
+        if (arg):
             fileExtension = arg
         pprint("searching ", fileExtension)
         remove_generated_reports(fileExtension)
