@@ -26,8 +26,8 @@ def around_each():
     os.environ["GITHUB_USERNAME"] = "git_test"
     os.environ["GITHUB_TOKEN"] = "1234"
     os.environ["EXCLUDED_DEPLOYMENT_HASHES"] = '["1234"]'
-    yield
     httpretty.reset()
+    yield
     httpretty.disable()
 
 
@@ -137,7 +137,7 @@ def test_can_get_lead_time_for_three_builds_one_commit(capsys):
     httpretty_three_jenkins_builds()
     httpretty_one_github_requests()
     httpretty_one_github_requests("build-sha-2", "build-sha-3")
-    httpretty_one_github_requests("build-sha-3", "build-sha-1")
+    httpretty_one_github_requests("build-sha-1", "build-sha-3")
 
     projects = [
         {

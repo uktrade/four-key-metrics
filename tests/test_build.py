@@ -14,8 +14,8 @@ def around_each():
     httpretty.enable(allow_net_connect=False, verbose=True)
     os.environ["GITHUB_USERNAME"] = "testing"
     os.environ["GITHUB_TOKEN"] = "5678"
-    yield
     httpretty.reset()
+    yield
     httpretty.disable()
 
 

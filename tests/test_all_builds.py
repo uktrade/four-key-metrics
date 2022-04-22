@@ -26,8 +26,8 @@ def around_each():
     os.environ["GITHUB_USERNAME"] = "git_test"
     os.environ["GITHUB_TOKEN"] = "1234"
     os.environ["EXCLUDED_DEPLOYMENT_HASHES"] = '["1234"]'
-    yield
     httpretty.reset()
+    yield
     httpretty.disable()
 
 
