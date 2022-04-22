@@ -219,20 +219,13 @@ def test_can_not_get_lead_time_for_mismatched_environments():
 
 
 def exceptionconnectTimeoutCallback(request, uri, headers):
-    raise requests.exceptions.ConnectionError(
-        "Dummy Connection Error"
-    )
+    raise requests.exceptions.ConnectionError("Dummy Connection Error")
 
 
-@pytest.mark.filterwarnings('ignore')
+@pytest.mark.filterwarnings("ignore")
 def test_jenkings_connect_timeout(capsys):
     # Create timeout on call
-    httpretty.register_uri(
-        httpretty.GET,
-        "https://jenkins.test/" "job/test-job/api/json",
-        status=200,
-        body=exceptionconnectTimeoutCallback,
-    )
+    create_timeout_on_call()
 
     all_builds = AllBuilds("https://jenkins.test/")
     all_builds.get_jenkins_builds("test-job", "production")
@@ -240,3 +233,12 @@ def test_jenkings_connect_timeout(capsys):
 
     assert len(all_builds.builds) == 0
     assert "Are you connected to the VPN‽" in captured.out
+
+
+def create_timeout_on_call():
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://jenkins.test/" "job/test-job/api/json",
+        status=200,
+        body=exceptionconnectTimeoutCallback,
+    )
