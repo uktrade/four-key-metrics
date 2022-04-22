@@ -218,11 +218,10 @@ def test_can_not_get_lead_time_for_mismatched_environments():
     assert response["lead_time_standard_deviation"] is None
 
 
-def exceptionconnectTimeoutCallback(request, uri, headers):
-    raise requests.exceptions.ConnectionError("Dummy Connection Error")
-
-
 def create_timeout_on_call():
+    def exceptionconnectTimeoutCallback(request, uri, headers):
+        raise requests.exceptions.ConnectionError("Dummy Connection Error")
+
     httpretty.register_uri(
         httpretty.GET,
         "https://jenkins.test/" "job/test-job/api/json",
