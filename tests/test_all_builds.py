@@ -224,6 +224,7 @@ def exceptionconnectTimeoutCallback(request, uri, headers):
     )
 
 
+@pytest.mark.filterwarnings('ignore')
 def test_jenkings_connect_timeout(capsys):
     # Create timeout on call
     httpretty.register_uri(
