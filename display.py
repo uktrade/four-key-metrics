@@ -27,7 +27,7 @@ class DisplayShell(Cmd):
         """Generate lead time time metrics
 
         Args:
-            arg (json): TODO: Figure out what can be passed to make this more
+            arg (json): projects override through argumentss
             configurable
         """
         projects = [
@@ -42,6 +42,8 @@ class DisplayShell(Cmd):
                 "environment": "production",
             },
         ]
+        if arg:
+            projects = arg
         generate_lead_time_metrics(projects)
 
     def do_remove_reports(self, arg):
