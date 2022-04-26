@@ -1,6 +1,8 @@
 from cmd import Cmd
 from pprint import pprint
 from dotenv import load_dotenv
+from four_key_metrics.constants import DATAHUB_GIT_PROJECTS
+from four_key_metrics.data_presenters import CSVDataPresenter, JSONDataPresenter
 
 from four_key_metrics.file_utilities import remove_generated_reports
 from four_key_metrics.lead_time_metrics import generate_lead_time_metrics
@@ -18,8 +20,8 @@ class DisplayShell(Cmd):
         """Generate lead time time metrics
 
         Args:
-            arg (json): TODO: Figure out what can be passed to make this more
-            configurable
+            arg (string): outsput type defaulting to 'csv' but accepting
+            'json'
         """
         self.do_lead_time_metrics(arg)
 
@@ -27,24 +29,18 @@ class DisplayShell(Cmd):
         """Generate lead time time metrics
 
         Args:
-            arg (json): projects override through argumentss
-            configurable
+            arg (string): output type defaulting to 'csv' but accepting
+            'json',
         """
-        projects = [
-            {
-                "job": "datahub-api",
-                "repository": "data-hub-api",
-                "environment": "production",
-            },
-            {
-                "job": "datahub-fe",
-                "repository": "data-hub-frontend",
-                "environment": "production",
-            },
-        ]
-        if arg:
-            projects = arg
-        generate_lead_time_metrics(projects)
+        # TODO: Make this easier to pass and parse these values through the command line
+        projects = DATAHUB_GIT_PROJECTS
+        default_output = CSVDataPresenter.create()
+        data_presenter = {
+            "": default_output,
+            "csv": default_output,
+            "json": JSONDataPresenter.create(),
+        }[arg.lower()]
+        generate_lead_time_metrics(projects, data_presenter)
 
     def do_remove_reports(self, arg):
         """Clean up generated reports by supported output types, e.g. .csv
