@@ -63,6 +63,7 @@ class AllBuilds:
                 excluded_hashes,
                 build,
             )
+            last_build = build
 
     def _update_with_exclusion_builds_with_git_reference(
         self, github_organisation, github_repository, last_build, excluded_hashes, build
@@ -75,7 +76,6 @@ class AllBuilds:
                 head=build.git_reference,
             )
         build.set_last_build_git_reference(last_build.git_reference)
-        last_build = build
 
     def calculate_lead_times(self):
         for build in self.builds:
