@@ -1,0 +1,7 @@
+[run]
+branch = True
+source = four_key_metrics
+omit =
+    *tests*
+    *display*
+    *__init__.py    

@@ -4,6 +4,8 @@ import os
 import re
 import pprint
 import pytest
+from four_key_metrics.data_presenters import CSVDataPresenter
+from four_key_metrics.file_utilities import remove_generated_reports
 
 from four_key_metrics.lead_time_metrics import generate_lead_time_metrics
 
@@ -23,11 +25,11 @@ def around_each():
     httpretty.reset()
     yield
     httpretty.disable()
+    remove_generated_reports(".csv")
 
 
 def get_csv_filename_and_captured_outerr(capsys):
     captured = capsys.readouterr()
-    # Extract filename from output
     regex_filename = r"lead_time_metrics_[0-9]{2}-[0-9]{2}-[0-9]{4}_[0-9]{6}.csv"
     csv_filename = re.search(regex_filename, captured.out).group()
     return csv_filename, captured
@@ -44,14 +46,18 @@ def run_display_with_simple_builds():
         }
     ]
 
-    generate_lead_time_metrics(projects)
+    generate_lead_time_metrics(projects, CSVDataPresenter.create())
 
 
-def test_csv_created(capsys):
+def test_csv_created_and_removed(capsys):
     run_display_with_simple_builds()
     csv_filename, captured = get_csv_filename_and_captured_outerr(capsys)
-    assert "Detailed metrics stored in lead_time_metrics_" in captured.out
-    assert os.path.exists(csv_filename)
+    file_exists = os.path.exists(csv_filename)
+    assert "CSV metrics stored in lead_time_metrics_" in captured.out
+    assert file_exists
+    if file_exists:
+        remove_generated_reports(".csv")
+        assert os.path.exists(csv_filename) is False
 
 
 def test_column_names_in_csv_file(capsys):
@@ -121,7 +127,7 @@ def test_multiple_projects(capsys):
             "environment": "production",
         },
     ]
-    generate_lead_time_metrics(projects)
+    generate_lead_time_metrics(projects, CSVDataPresenter.create())
 
     csv_filename, captured = get_csv_filename_and_captured_outerr(capsys)
 
