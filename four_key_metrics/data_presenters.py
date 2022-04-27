@@ -10,7 +10,6 @@ class DataPresenter:
     def __init__(self, file_name: str, field_names: list[str]) -> None:
         self.file_name = file_name
         self.field_names = field_names
-        self.data_list = []
 
     @staticmethod
     def create(
@@ -20,13 +19,13 @@ class DataPresenter:
         return DataPresenter(file_name=file_name, field_names=field_names)
 
     def add(self, data: dict):
-        self.data_list.append(data)
+        pass
 
     def begin(self):
-        self.data_list = []
+        pass
 
     def end(self):
-        return self.data_list
+        pass
 
 
 class CSVDataPresenter(DataPresenter):
@@ -48,16 +47,13 @@ class CSVDataPresenter(DataPresenter):
         )
         self.writer = csv.DictWriter(self.csv_file, fieldnames=self.field_names)
         self.writer.writeheader()
-        super().begin()
 
     def add(self, data: dict):
         self.writer.writerow(data)
-        super().add(data)
 
     def end(self) -> list:
         self.csv_file.close()
         print("CSV metrics stored in", self.file_name)
-        return super().end()
 
 
 class JSONDataPresenter(DataPresenter):
@@ -69,8 +65,6 @@ class JSONDataPresenter(DataPresenter):
         file_name=f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.json",
         field_names=LTM_FIELD_NAMES,
     ):
-        if field_names is None:
-            field_names = LTM_FIELD_NAMES
         return JSONDataPresenter(file_name=file_name, field_names=field_names)
 
     def begin(self):
