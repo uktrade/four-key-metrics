@@ -13,6 +13,10 @@ test:
 	@echo "Run tests"	
 	poetry run pytest
 
+coverage:
+	@echo "Run coverage"
+	poetry run pytest --cov-config=.coveragerc --cov-report html  --cov=four_key_metrics && open htmlcov/index.html 
+
 watch-test:
 	@make test --silent || exit 0
 	@poetry run watchmedo shell-command --patterns="*.py" --recursive --drop --command="make test --silent" .
