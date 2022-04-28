@@ -63,8 +63,8 @@ class JSONDataPresenter:
         self._json_file = open(self._file_name, "w")
         self._has_data = False
 
-    def add(self, starting_characters: dict):
-        json_data = json.dumps(starting_characters, sort_keys=True, indent=2)
+    def add(self, data: dict):
+        json_data = json.dumps(data, sort_keys=True, indent=2)
 
         beginning_of_file = not self._has_data
         if beginning_of_file:
