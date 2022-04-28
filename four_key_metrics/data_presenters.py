@@ -68,11 +68,10 @@ class JSONDataPresenter:
 
         if not self._has_data:
             data = f"[{json_data}"
-            self._json_file.write(f"[{json_data}")
         else:
             data = f",{os.linesep}{json_data}"
-            self._json_file.write(f",{os.linesep}{json_data}")
 
+        self._json_file.write(data)
         self._has_data = True
 
     def end(self):
