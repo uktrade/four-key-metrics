@@ -67,11 +67,11 @@ class JSONDataPresenter:
         json_data = json.dumps(data, sort_keys=True, indent=2)
 
         if not self._has_data:
-            data = f"[{json_data}"
+            data = f"["
         else:
-            data = f",{os.linesep}{json_data}"
+            data = f",{os.linesep}"
 
-        self._json_file.write(f"{data}")
+        self._json_file.write(f"{data}{json_data}")
         self._has_data = True
 
     def end(self):
