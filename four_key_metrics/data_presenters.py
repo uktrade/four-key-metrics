@@ -20,7 +20,7 @@ class DataPresenter(Protocol):
 
 class CSVDataPresenter:
     def __init__(self, file_name: str, field_names: list[str]) -> None:
-        self.file_name = file_name
+        self._file_name = file_name
         self.field_names = field_names
 
     @staticmethod
@@ -32,7 +32,7 @@ class CSVDataPresenter:
 
     def begin(self):
         self._csv_file = open(
-            self.file_name,
+            self._file_name,
             "w",
             newline="",
         )
@@ -44,7 +44,7 @@ class CSVDataPresenter:
 
     def end(self) -> list:
         self._csv_file.close()
-        print("CSV metrics stored in", self.file_name)
+        print("CSV metrics stored in", self._file_name)
 
 
 class JSONDataPresenter:
