@@ -29,9 +29,6 @@ class DataPresenter:
 
 
 class CSVDataPresenter(DataPresenter):
-    def __init__(self, file_name: str, field_names: list[str]):
-        super().__init__(file_name, field_names)
-
     @staticmethod
     def create(
         file_name=f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.csv",
