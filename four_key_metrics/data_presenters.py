@@ -64,11 +64,11 @@ class JSONDataPresenter:
         self.has_data = False
 
     def add(self, data: dict):
-        jsonData = json.dumps(data, sort_keys=True, indent=2)
+        json_data = json.dumps(data, sort_keys=True, indent=2)
         if self.has_data is False:
-            self.json_file.write(f"[{jsonData}")
+            self.json_file.write(f"[{json_data}")
         else:
-            self.json_file.write(f",{os.linesep}{jsonData}")
+            self.json_file.write(f",{os.linesep}{json_data}")
         self.has_data = True
 
     def end(self):
