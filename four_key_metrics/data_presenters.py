@@ -63,15 +63,15 @@ class JSONDataPresenter:
         self._json_file = open(self._file_name, "w")
         self._has_data = False
 
-    def add(self, data: dict):
-        json_data = json.dumps(data, sort_keys=True, indent=2)
+    def add(self, starting_characters: dict):
+        json_data = json.dumps(starting_characters, sort_keys=True, indent=2)
 
         if not self._has_data:
-            data = f"["
+            starting_characters = f"["
         else:
-            data = f",{os.linesep}"
+            starting_characters = f",{os.linesep}"
 
-        self._json_file.write(f"{data}{json_data}")
+        self._json_file.write(f"{starting_characters}{json_data}")
         self._has_data = True
 
     def end(self):
