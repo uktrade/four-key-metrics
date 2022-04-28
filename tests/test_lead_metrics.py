@@ -32,6 +32,17 @@ def around_each():
     httpretty.disable()
 
 
+class DoNothingPresenter:
+    def add(self, data: dict):
+        pass
+
+    def begin(self):
+        pass
+
+    def end(self):
+        pass
+
+
 def test_average_and_standard_deviation_output(capsys):
     httpretty_two_jenkins_builds()
     httpretty_three_github_requests()
@@ -44,7 +55,7 @@ def test_average_and_standard_deviation_output(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, DataPresenter.create())
+    generate_lead_time_metrics(projects, DoNothingPresenter())
 
     captured = capsys.readouterr()
     assert "'project': 'test-repository'" in captured.out
