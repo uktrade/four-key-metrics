@@ -36,11 +36,11 @@ class CSVDataPresenter:
             "w",
             newline="",
         )
-        self.writer = csv.DictWriter(self._csv_file, fieldnames=self.field_names)
-        self.writer.writeheader()
+        self._writer = csv.DictWriter(self._csv_file, fieldnames=self.field_names)
+        self._writer.writeheader()
 
     def add(self, data: dict):
-        self.writer.writerow(data)
+        self._writer.writerow(data)
 
     def end(self) -> list:
         self._csv_file.close()
