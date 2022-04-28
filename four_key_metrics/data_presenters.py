@@ -31,19 +31,19 @@ class CSVDataPresenter:
         )
 
     def begin(self):
-        self.csv_file = open(
+        self._csv_file = open(
             self.file_name,
             "w",
             newline="",
         )
-        self.writer = csv.DictWriter(self.csv_file, fieldnames=self.field_names)
+        self.writer = csv.DictWriter(self._csv_file, fieldnames=self.field_names)
         self.writer.writeheader()
 
     def add(self, data: dict):
         self.writer.writerow(data)
 
     def end(self) -> list:
-        self.csv_file.close()
+        self._csv_file.close()
         print("CSV metrics stored in", self.file_name)
 
 
