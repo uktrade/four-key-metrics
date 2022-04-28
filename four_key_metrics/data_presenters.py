@@ -77,5 +77,5 @@ class JSONDataPresenter:
         beginning_of_file = not self._has_data
         if beginning_of_file:
             return f"["
-        else:
-            return f",{os.linesep}"
+
+        return f",{os.linesep}"
