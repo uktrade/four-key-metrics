@@ -49,8 +49,8 @@ class CSVDataPresenter:
 
 class JSONDataPresenter:
     def __init__(self, file_name: str, field_names: list[str]) -> None:
-        self.file_name = file_name
-        self.field_names = field_names
+        self._file_name = file_name
+        self._field_names = field_names
 
     @staticmethod
     def create():
@@ -60,7 +60,7 @@ class JSONDataPresenter:
         )
 
     def begin(self):
-        self._json_file = open(self.file_name, "w")
+        self._json_file = open(self._file_name, "w")
         self._has_data = False
 
     def add(self, data: dict):
@@ -74,4 +74,4 @@ class JSONDataPresenter:
     def end(self):
         self._json_file.write("]")
         self._json_file.close()
-        print("JSON metrics stored in", self.file_name)
+        print("JSON metrics stored in", self._file_name)
