@@ -7,10 +7,6 @@ from four_key_metrics.constants import LTM_FIELD_NAMES
 
 
 class DataPresenter:
-    def __init__(self, file_name: str, field_names: list[str]) -> None:
-        self.file_name = file_name
-        self.field_names = field_names
-
     def add(self, data: dict):
         pass
 
