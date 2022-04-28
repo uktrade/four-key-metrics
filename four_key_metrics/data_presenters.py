@@ -11,13 +11,6 @@ class DataPresenter:
         self.file_name = file_name
         self.field_names = field_names
 
-    @staticmethod
-    def create(
-        file_name=f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.txt",
-        field_names=LTM_FIELD_NAMES,
-    ):
-        return DataPresenter(file_name=file_name, field_names=field_names)
-
     def add(self, data: dict):
         pass
 
