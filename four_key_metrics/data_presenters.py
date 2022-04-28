@@ -66,7 +66,8 @@ class JSONDataPresenter:
     def add(self, starting_characters: dict):
         json_data = json.dumps(starting_characters, sort_keys=True, indent=2)
 
-        if not self._has_data:
+        beginning_of_file = not self._has_data
+        if beginning_of_file:
             starting_characters = f"["
         else:
             starting_characters = f",{os.linesep}"
