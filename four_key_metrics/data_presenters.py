@@ -29,6 +29,10 @@ class DataPresenter:
 
 
 class CSVDataPresenter(DataPresenter):
+    def __init__(self, file_name: str, field_names: list[str]) -> None:
+        self.file_name = file_name
+        self.field_names = field_names
+
     @staticmethod
     def create(
         file_name=f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.csv",
@@ -54,6 +58,10 @@ class CSVDataPresenter(DataPresenter):
 
 
 class JSONDataPresenter(DataPresenter):
+    def __init__(self, file_name: str, field_names: list[str]) -> None:
+        self.file_name = file_name
+        self.field_names = field_names
+
     @staticmethod
     def create(
         file_name=f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.json",
