@@ -2,7 +2,6 @@ import os
 
 import httpretty
 import pytest
-from four_key_metrics.data_presenters import DataPresenter
 
 from four_key_metrics.lead_time_metrics import generate_lead_time_metrics
 
