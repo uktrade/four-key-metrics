@@ -2,19 +2,20 @@ import csv
 from datetime import datetime
 import json
 import os
+from typing import Protocol
 
 from four_key_metrics.constants import LTM_FIELD_NAMES
 
 
-class DataPresenter:
+class DataPresenter(Protocol):
     def add(self, data: dict):
-        pass
+        ...
 
     def begin(self):
-        pass
+        ...
 
     def end(self):
-        pass
+        ...
 
 
 class CSVDataPresenter(DataPresenter):
