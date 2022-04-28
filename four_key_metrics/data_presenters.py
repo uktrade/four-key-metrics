@@ -60,18 +60,18 @@ class JSONDataPresenter:
         )
 
     def begin(self):
-        self.json_file = open(self.file_name, "w")
+        self._json_file = open(self.file_name, "w")
         self._has_data = False
 
     def add(self, data: dict):
         json_data = json.dumps(data, sort_keys=True, indent=2)
         if self._has_data is False:
-            self.json_file.write(f"[{json_data}")
+            self._json_file.write(f"[{json_data}")
         else:
-            self.json_file.write(f",{os.linesep}{json_data}")
+            self._json_file.write(f",{os.linesep}{json_data}")
         self._has_data = True
 
     def end(self):
-        self.json_file.write("]")
-        self.json_file.close()
+        self._json_file.write("]")
+        self._json_file.close()
         print("JSON metrics stored in", self.file_name)
