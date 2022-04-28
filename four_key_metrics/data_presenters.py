@@ -1,7 +1,7 @@
 import csv
-from datetime import datetime
 import json
 import os
+from datetime import datetime
 from typing import Protocol
 
 from four_key_metrics.constants import LTM_FIELD_NAMES
@@ -53,11 +53,11 @@ class JSONDataPresenter:
         self.field_names = field_names
 
     @staticmethod
-    def create(
-        file_name=f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.json",
-        field_names=LTM_FIELD_NAMES,
-    ):
-        return JSONDataPresenter(file_name=file_name, field_names=field_names)
+    def create():
+        return JSONDataPresenter(
+            f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.json",
+            LTM_FIELD_NAMES
+        )
 
     def begin(self):
         self.json_file = open(self.file_name, "w")
