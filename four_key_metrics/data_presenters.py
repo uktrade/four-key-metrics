@@ -18,7 +18,7 @@ class DataPresenter(Protocol):
         ...
 
 
-class CSVDataPresenter(DataPresenter):
+class CSVDataPresenter:
     def __init__(self, file_name: str, field_names: list[str]) -> None:
         self.file_name = file_name
         self.field_names = field_names
@@ -47,7 +47,7 @@ class CSVDataPresenter(DataPresenter):
         print("CSV metrics stored in", self.file_name)
 
 
-class JSONDataPresenter(DataPresenter):
+class JSONDataPresenter:
     def __init__(self, file_name: str, field_names: list[str]) -> None:
         self.file_name = file_name
         self.field_names = field_names
