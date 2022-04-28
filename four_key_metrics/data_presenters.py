@@ -65,7 +65,7 @@ class JSONDataPresenter:
 
     def add(self, data: dict):
         json_data = json.dumps(data, sort_keys=True, indent=2)
-        self._json_file.write(f"{self._starting_characters()}{json_data}")
+        self._json_file.write(f"{self._delimiter()}{json_data}")
         self._has_data = True
 
     def end(self):
@@ -73,7 +73,7 @@ class JSONDataPresenter:
         self._json_file.close()
         print("JSON metrics stored in", self._file_name)
 
-    def _starting_characters(self):
+    def _delimiter(self):
         beginning_of_file = not self._has_data
         if beginning_of_file:
             return f"["
