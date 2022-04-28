@@ -65,17 +65,17 @@ class JSONDataPresenter:
 
     def add(self, data: dict):
         json_data = json.dumps(data, sort_keys=True, indent=2)
-
-        beginning_of_file = not self._has_data
-        if beginning_of_file:
-            starting_characters = f"["
-        else:
-            starting_characters = f",{os.linesep}"
-
-        self._json_file.write(f"{starting_characters}{json_data}")
+        self._json_file.write(f"{self._starting_characters()}{json_data}")
         self._has_data = True
 
     def end(self):
         self._json_file.write("]")
         self._json_file.close()
         print("JSON metrics stored in", self._file_name)
+
+    def _starting_characters(self):
+        beginning_of_file = not self._has_data
+        if beginning_of_file:
+            return f"["
+        else:
+            return f",{os.linesep}"
