@@ -24,11 +24,11 @@ class CSVDataPresenter:
         self.field_names = field_names
 
     @staticmethod
-    def create(
-        file_name=f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.csv",
-        field_names=LTM_FIELD_NAMES,
-    ):
-        return CSVDataPresenter(file_name=file_name, field_names=field_names)
+    def create():
+        return CSVDataPresenter(
+            f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.csv",
+            LTM_FIELD_NAMES
+        )
 
     def begin(self):
         self.csv_file = open(
