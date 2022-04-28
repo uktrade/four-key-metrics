@@ -21,7 +21,7 @@ class DataPresenter(Protocol):
 class CSVDataPresenter:
     def __init__(self, file_name: str, field_names: list[str]) -> None:
         self._file_name = file_name
-        self.field_names = field_names
+        self._field_names = field_names
 
     @staticmethod
     def create():
@@ -36,7 +36,7 @@ class CSVDataPresenter:
             "w",
             newline="",
         )
-        self._writer = csv.DictWriter(self._csv_file, fieldnames=self.field_names)
+        self._writer = csv.DictWriter(self._csv_file, fieldnames=self._field_names)
         self._writer.writeheader()
 
     def add(self, data: dict):
