@@ -27,7 +27,7 @@ class CSVDataPresenter:
     def create():
         return CSVDataPresenter(
             f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.csv",
-            LTM_FIELD_NAMES
+            LTM_FIELD_NAMES,
         )
 
     def begin(self):
@@ -56,7 +56,7 @@ class JSONDataPresenter:
     def create():
         return JSONDataPresenter(
             f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.json",
-            LTM_FIELD_NAMES
+            LTM_FIELD_NAMES,
         )
 
     def begin(self):
