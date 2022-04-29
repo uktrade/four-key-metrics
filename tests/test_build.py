@@ -128,8 +128,8 @@ def test_can_request_different_comparisons():
     )
 
     assert (
-        httpretty.last_request().url
-        == "https://api.github.com/repos/123/456/compare/789...0"
+        "https://api.github.com/repos/123/456/compare/789...0"
+        in httpretty.last_request().url
     )
 
 
