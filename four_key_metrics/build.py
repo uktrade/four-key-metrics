@@ -25,7 +25,7 @@ class Build:
     def get_commits_between(self, organisation, repository, base, head):
 
         response = requests.get(
-            "https://api.github.com/repos/%s/%s/compare/%s...%s"
+            "https://api.github.com/repos/%s/%s/compare/%s...%s?per_page=10000"
             % (organisation, repository, base, head),
             auth=(os.environ["GITHUB_USERNAME"], os.environ["GITHUB_TOKEN"]),
             headers={"Accept": "application/vnd.github.v3+json"},
