@@ -17,12 +17,12 @@ class GenerateLeadTimeMetrics:
         try:
             self.data_presenter.begin()
             self._write_metrics_for_projects(
-                projects=projects, all_builds=self.all_builds, data_presenter=self.data_presenter
+                projects=projects, all_builds=self.all_builds
             )
         finally:
             self.data_presenter.end()
 
-    def _write_metrics_for_projects(self, projects, all_builds, data_presenter: DataPresenter):
+    def _write_metrics_for_projects(self, projects, all_builds):
         for project in projects:
             response = all_builds.add_project(
                 jenkins_job=project["job"],
@@ -44,7 +44,7 @@ class GenerateLeadTimeMetrics:
                 )
             else:
                 self._output_build_commit_metrics(
-                    data_presenter=self.data_presenter, project=project, response=response
+                    project=project, response=response
                 )
 
                 pprint(
@@ -61,7 +61,7 @@ class GenerateLeadTimeMetrics:
                     sort_dicts=False,
                 )
 
-    def _output_build_commit_metrics(self, data_presenter: DataPresenter, project, response):
+    def _output_build_commit_metrics(self, project, response):
         for build in response["builds"]:
             for commit in build.commits:
                 self.data_presenter.add(
