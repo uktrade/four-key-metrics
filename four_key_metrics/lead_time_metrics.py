@@ -5,4 +5,6 @@ from four_key_metrics.use_case.generate_lead_time_metrics import GenerateLeadTim
 
 
 def generate_lead_time_metrics(projects: dict, data_presenter: DataPresenter):
-    return GenerateLeadTimeMetrics().generate_lead_time_metrics(projects, data_presenter)
+    return GenerateLeadTimeMetrics().generate_lead_time_metrics(
+        projects, data_presenter
+    )

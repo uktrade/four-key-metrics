@@ -29,4 +29,3 @@ PINGDOM_CHECK_NAMES = [
     "Data Hub P1",
     "Data Hub P2",
 ]
-
