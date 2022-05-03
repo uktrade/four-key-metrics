@@ -27,8 +27,13 @@ def get_pingdom_id_for_check_names(pingdom_check_names):
     if len(body["checks"]) == 0:
         return {}
 
-    return {
+    check_ids = {
         check["name"]: check["id"]
         for check in body["checks"]
         if check["name"] in pingdom_check_names
     }
+
+    if len(check_ids) != len(pingdom_check_names):
+        print("WARNING: Not all Pingdom checks found. Check for typos.")
+
+    return check_ids

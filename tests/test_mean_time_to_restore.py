@@ -17,16 +17,43 @@ def around_each():
     httpretty.disable()
 
 
-def test_get_pingdom_id_for_check_names(capsys):
+@pytest.mark.parametrize(
+    "pingdom_check_names,expected_result,expected_terminal_output",
+    [
+        (
+            [
+                "uk.gov.trade.datahub.api",
+                "Data Hub P1",
+                "Data Hub P2",
+            ],
+            {
+                "uk.gov.trade.datahub.api": 3966721,
+                "Data Hub P1": 4946807,
+                "Data Hub P2": 5654644,
+            },
+            "",
+        ),
+        (
+            [
+                "uk.gov.trade.datahub.api",
+                "Can't find me",
+                "Data Hub P2",
+            ],
+            {
+                "uk.gov.trade.datahub.api": 3966721,
+                "Data Hub P2": 5654644,
+            },
+            "WARNING: Not all Pingdom checks found. Check for typos.",
+        ),
+    ],
+)
+def test_get_pingdom_id_for_check_names(
+    capsys, pingdom_check_names, expected_result, expected_terminal_output
+):
     httpretty_checks()
-    pingdom_check_names = [
-        "uk.gov.trade.datahub.api",
-        "Data Hub P1",
-        "Data Hub P2",
-    ]
-
     pingdom_info = get_pingdom_id_for_check_names(pingdom_check_names)
 
-    assert pingdom_info["uk.gov.trade.datahub.api"] == 3966721
-    assert pingdom_info["Data Hub P2"] == 5654644
-    assert pingdom_info["Data Hub P1"] == 4946807
+    captured = capsys.readouterr()
+
+    assert pingdom_info == expected_result
+    assert expected_terminal_output in captured.out
