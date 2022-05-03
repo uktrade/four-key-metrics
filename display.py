@@ -2,10 +2,13 @@ from cmd import Cmd
 from pprint import pprint
 from dotenv import load_dotenv
 from four_key_metrics.constants import DATAHUB_GIT_PROJECTS
+from four_key_metrics.constants import PINGDOM_CHECK_NAMES
 from four_key_metrics.data_presenters import CSVDataPresenter, JSONDataPresenter
 
 from four_key_metrics.file_utilities import remove_generated_reports
 from four_key_metrics.lead_time_metrics import generate_lead_time_metrics
+
+from four_key_metrics.mean_time_to_restore_metrics import get_pingdom_id_for_check_names
 
 load_dotenv()
 
@@ -41,6 +44,18 @@ class DisplayShell(Cmd):
             "json": JSONDataPresenter.create(),
         }[arg.lower()]
         generate_lead_time_metrics(projects, data_presenter)
+
+    def do_mtr(self, args):
+        """Generate mean time to restore metric"""
+
+        self.do_mean_time_to_restore(args)
+
+    def do_mean_time_to_restore(self, args):
+        """Generate mean time to restore metric"""
+
+        pingdom_check_names = PINGDOM_CHECK_NAMES
+
+        get_pingdom_id_for_check_names(pingdom_check_names)
 
     def do_remove_reports(self, arg):
         """Clean up generated reports by supported output types, e.g. .csv

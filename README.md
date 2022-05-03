@@ -60,3 +60,17 @@ A common reason for this is that you're trying to run tests with dependencies. I
 ## Data structure
 
 Jenkins returns a list of all builds for a project. The list of builds is checked against GitHub commits to calculate lead times.
+
+## Pingdom API
+Pingdom API token is stored in:
+https://passman.ci.uktrade.digital/secret/332d1a02-3816-4a9b-a751-135226c043fa/
+
+If required a new Pingdon API token can be generated at:
+https://my.pingdom.com/app/api-tokens
+
+Pingdom documentation:
+https://docs.pingdom.com/api/
+
+
+
+
