@@ -13,13 +13,14 @@ class GenerateLeadTimeMetrics:
         )
 
     def generate_lead_time_metrics(self, projects: dict, data_presenter: DataPresenter):
+        self.data_presenter = data_presenter
         try:
-            data_presenter.begin()
+            self.data_presenter.begin()
             self._write_metrics_for_projects(
-                projects=projects, all_builds=self.all_builds, data_presenter=data_presenter
+                projects=projects, all_builds=self.all_builds, data_presenter=self.data_presenter
             )
         finally:
-            data_presenter.end()
+            self.data_presenter.end()
 
     def _write_metrics_for_projects(self, projects, all_builds, data_presenter: DataPresenter):
         for project in projects:
@@ -43,7 +44,7 @@ class GenerateLeadTimeMetrics:
                 )
             else:
                 self._output_build_commit_metrics(
-                    data_presenter=data_presenter, project=project, response=response
+                    data_presenter=self.data_presenter, project=project, response=response
                 )
 
                 pprint(
@@ -63,7 +64,7 @@ class GenerateLeadTimeMetrics:
     def _output_build_commit_metrics(self, data_presenter: DataPresenter, project, response):
         for build in response["builds"]:
             for commit in build.commits:
-                data_presenter.add(
+                self.data_presenter.add(
                     {
                         "repository": project["repository"],
                         "build_commit_hash": build.git_reference,
