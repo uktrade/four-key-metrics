@@ -7,14 +7,16 @@ from four_key_metrics.data_presenters import DataPresenter
 
 
 class GenerateLeadTimeMetrics:
-    def generate_lead_time_metrics(self, projects: dict, data_presenter: DataPresenter):
-        all_builds = AllBuilds(
+    def __init__(self):
+        self.all_builds = AllBuilds(
             os.getenv("DIT_JENKINS_URI", "https://jenkins.ci.uktrade.digital/")
         )
+
+    def generate_lead_time_metrics(self, projects: dict, data_presenter: DataPresenter):
         try:
             data_presenter.begin()
             self._write_metrics_for_projects(
-                projects=projects, all_builds=all_builds, data_presenter=data_presenter
+                projects=projects, all_builds=self.all_builds, data_presenter=data_presenter
             )
         finally:
             data_presenter.end()
