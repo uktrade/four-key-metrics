@@ -5,6 +5,7 @@ from pprint import pprint
 from four_key_metrics.all_builds import AllBuilds
 from four_key_metrics.data_presenters import DataPresenter
 
+
 class GenerateLeadTimeMetrics:
     def generate_lead_time_metrics(self, projects: dict, data_presenter: DataPresenter):
         all_builds = AllBuilds(
