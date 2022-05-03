@@ -60,7 +60,6 @@ class GenerateLeadTimeMetrics:
 
     def _output_build_commit_metrics(self, data_presenter: DataPresenter, project, response):
         for build in response["builds"]:
-            build
             for commit in build.commits:
                 data_presenter.add(
                     {
