@@ -95,18 +95,10 @@ def test_get_pingdom_id_for_check_names(
 def test_get_analysis_for_pingdom_id(pingdom_check_id, expected_result):
     httpretty_checks()
     httpretty_analysis_p1()
-    #    httpretty_analysis_p1_1226770577()
-    #    httpretty_analysis_p1_1226773180()
-    #    httpretty_analysis_p1_1233552532()
 
     pingdom_info = get_pingdom_analysis(pingdom_check_id)
 
-    #   captured = capsys.readouterr()
-
     assert pingdom_info == expected_result
-
-
-#    assert expected_terminal_output in captured.out
 
 
 @pytest.mark.parametrize(
@@ -247,7 +239,7 @@ def test_get_analysis_for_pingdom_id(pingdom_check_id, expected_result):
         # (4946807, 1233552532),
     ],
 )
-def test_get_analysis_details_for_pingdom_id(
+def test_get_analysis_details_for_pingdom_id_and_analysis_id(
     pingdom_check_id, analysis_id, expected_result
 ):
     httpretty_checks()
@@ -258,9 +250,18 @@ def test_get_analysis_details_for_pingdom_id(
 
     pingdom_info = get_pingdom_analysis_details(pingdom_check_id, analysis_id)
 
-    #   captured = capsys.readouterr()
-
     assert pingdom_info == expected_result
 
 
-#    assert expected_terminal_output in captured.out
+def test_get_mean_time_to_restore_for_pingdom_id_and_analysis_id():
+    httpretty_checks()
+    httpretty_analysis_p1()
+    httpretty_analysis_p1_1226770577()
+    httpretty_analysis_p1_1226773180()
+    httpretty_analysis_p1_1233552532()
+
+    pingdom_info = get_mean_time_to_restore_for_pingdom_id_and_analysis_id(
+        pingdom_check_id, analysis_id
+    )
+
+    assert pingdom_info == expected_result

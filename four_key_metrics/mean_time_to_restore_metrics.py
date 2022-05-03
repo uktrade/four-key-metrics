@@ -79,3 +79,9 @@ def get_pingdom_analysis_details(pingdom_check_id, analysis_id):
     body = response.json()
 
     return body
+
+
+def get_mean_time_to_restore_for_pingdom_id_and_analysis_id(
+    pingdom_check_id, analysis_id
+):
+    analysis_details = get_pingdom_analysis_details(pingdom_check_id, analysis_id)
