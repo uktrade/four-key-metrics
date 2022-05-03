@@ -22,14 +22,14 @@ class GenerateLeadTimeMetrics:
     def _write_metrics_for_projects(self, projects, all_builds, data_presenter: DataPresenter):
         for project in projects:
             response = all_builds.add_project(
-                jenkins_job=project["job"],  # input("Jenkins job id (e.g. datahub-api)"),
-                github_organisation="uktrade",  # input("GitHub org (e.g. uktrade)"),
+                jenkins_job=project["job"],
+                github_organisation="uktrade",
                 github_repository=project[
                     "repository"
-                ],  # input("GitHub repository (e.g. data-hub-api)"),
+                ],
                 environment=project[
                     "environment"
-                ],  # input("Environment (e.g. production)")
+                ],
             )
             if not response["successful"]:
                 pprint(
