@@ -1,0 +1,2 @@
+class GenerateLeadTimeMetrics:
+    pass
