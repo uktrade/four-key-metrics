@@ -33,9 +33,9 @@ def around_each():
 
 def test_can_get_no_builds():
     all_builds = httpretty_no_jenkings_builds()
-    all_builds.get_jenkins_builds("test-job", "production")
+    builds = all_builds.get_jenkins_builds("test-job", "production")
 
-    assert len(all_builds.builds) == 0
+    assert len(builds) == 0
     expected_url = (
         "https://jenkins.test/job/test-job/api/json"
         "?tree=allBuilds%5Btimestamp%2Cresult%2Cduration%2C"
@@ -50,9 +50,9 @@ def test_can_get_no_builds():
 
 def test_can_get_one_build():
     all_builds = httpretty_one_jenkings_build()
-    all_builds.get_jenkins_builds("test-job", "production")
+    builds = all_builds.get_jenkins_builds("test-job", "production")
 
-    assert len(all_builds.builds) == 1
+    assert len(builds) == 1
 
     expected_url = (
         "https://jenkins.test/"
@@ -73,9 +73,9 @@ def test_can_get_one_build():
 
 def test_can_get_two_builds():
     all_builds = httpretty_two_jenkins_builds()
-    all_builds.get_jenkins_builds("test-job", "production")
+    builds = all_builds.get_jenkins_builds("test-job", "production")
 
-    assert len(all_builds.builds) == 2
+    assert len(builds) == 2
     assert all_builds.builds[0].started_at == 1643768542.0
     assert all_builds.builds[0].finished_at == 1643769142.0
     assert not all_builds.builds[0].successful
@@ -235,8 +235,8 @@ def test_can_tell_the_user_to_check_vpn_if_connection_issue(capsys):
     register_on_call_to_jenkins_a_connection_error_occurs()
 
     all_builds = AllBuilds("https://jenkins.test/")
-    all_builds.get_jenkins_builds("test-job", "production")
+    builds = all_builds.get_jenkins_builds("test-job", "production")
     captured = capsys.readouterr()
 
-    assert len(all_builds.builds) == 0
+    assert len(builds) == 0
     assert "Are you connected to the VPN‽" in captured.out
