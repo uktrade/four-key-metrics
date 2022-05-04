@@ -4,7 +4,7 @@ import ciso8601
 import requests
 from glom import glom, Path
 
-from four_key_metrics.domain_models import Build, GitCommit
+from four_key_metrics.domain_models import Build, GitCommit, PingdomError
 
 
 class JenkinsBuilds:
@@ -183,3 +183,9 @@ class PingdomErrors:
         body = response.json()
 
         return body
+
+    def get_pingdom_errors(pingdom_check_names):
+        pingdom_errors = []
+        for check in pingdom_check_names:
+            pingdom_errors.append(PingdomError(check_name=check))
+        return pingdom_errors
