@@ -35,13 +35,7 @@ class GenerateLeadTimeMetrics:
                 ],
             )
             if not response["successful"]:
-                pprint(
-                    {
-                        "project": project["repository"],
-                        "average": response["lead_time_mean_average"],
-                        "standard_deviation": response["lead_time_standard_deviation"],
-                    }
-                )
+                self.data_presenter.failure(project['repository'])
             else:
                 self._output_build_commit_metrics(
                     project=project, response=response

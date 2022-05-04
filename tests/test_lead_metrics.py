@@ -3,6 +3,7 @@ import os
 import httpretty
 import pytest
 
+from four_key_metrics.data_presenters import ConsolePresenter
 from four_key_metrics.lead_time_metrics import generate_lead_time_metrics
 
 from tests.mock_jenkins_request import httpretty_no_jenkings_builds
@@ -31,7 +32,7 @@ def around_each():
     httpretty.disable()
 
 
-class DoNothingPresenter:
+class DoNothingPresenter(ConsolePresenter):
     def add(self, data: dict):
         pass
 

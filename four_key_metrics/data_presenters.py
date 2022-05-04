@@ -2,6 +2,7 @@ import csv
 import json
 import os
 from datetime import datetime
+from pprint import pprint
 from typing import Protocol
 
 from four_key_metrics.constants import LTM_FIELD_NAMES
@@ -17,8 +18,21 @@ class DataPresenter(Protocol):
     def end(self):
         ...
 
+    def failure(self, project):
+        ...
 
-class CSVDataPresenter:
+class ConsolePresenter:
+    def failure(self, project):
+        pprint(
+            {
+                "project": project,
+                "average": None,
+                "standard_deviation": None,
+            }
+        )
+
+
+class CSVDataPresenter(ConsolePresenter):
     def __init__(self, file_name: str, field_names: list[str]) -> None:
         self._file_name = file_name
         self._field_names = field_names
@@ -47,7 +61,7 @@ class CSVDataPresenter:
         print("CSV metrics stored in", self._file_name)
 
 
-class JSONDataPresenter:
+class JSONDataPresenter(ConsolePresenter):
     def __init__(self, file_name: str, field_names: list[str]) -> None:
         self._file_name = file_name
         self._field_names = field_names
