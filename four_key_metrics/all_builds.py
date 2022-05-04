@@ -145,7 +145,6 @@ class AllBuilds:
         if len(body["allBuilds"]) == 0:
             return []
 
-        self.builds = []
         self.builds = self._update_build_with_github_commits(body)
         return list(
             filter(
@@ -155,6 +154,7 @@ class AllBuilds:
         )
 
     def _update_build_with_github_commits(self, body):
+        self.builds = []
         for build in body["allBuilds"]:
             started_at = build["timestamp"] / 1000
             self.builds.append(
