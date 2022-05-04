@@ -32,7 +32,7 @@ def around_each():
     httpretty.disable()
 
 
-class DoNothingPresenter(ConsolePresenter):
+class ConsoleOnlyPresenter(ConsolePresenter):
     def add(self, data: dict):
         pass
 
@@ -55,7 +55,7 @@ def test_average_and_standard_deviation_output(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, DoNothingPresenter())
+    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     assert "'project': 'test-repository'" in captured.out
@@ -74,7 +74,7 @@ def test_can_get_no_lead_time(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, DoNothingPresenter())
+    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     assert "'project': 'test-repository'" in captured.out
@@ -91,7 +91,7 @@ def test_can_not_get_lead_time_for_one_build(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, DoNothingPresenter())
+    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     print(captured.out)
@@ -113,7 +113,7 @@ def test_can_not_get_lead_time_for_mismatched_environments(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, DoNothingPresenter())
+    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     print(captured.out)
@@ -135,7 +135,7 @@ def test_can_get_lead_time_for_two_builds_one_commit(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, DoNothingPresenter())
+    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     print(captured.out)
@@ -159,7 +159,7 @@ def test_can_get_lead_time_for_three_builds_one_commit(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, DoNothingPresenter())
+    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     print(captured.out)
@@ -181,7 +181,7 @@ def test_can_get_lead_time_for_two_builds_two_commits(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, DoNothingPresenter())
+    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     print(captured.out)
@@ -204,7 +204,7 @@ def test_project_job_not_found(capsys):
             "environment": "production",
         }
     ]
-    generate_lead_time_metrics(projects, DoNothingPresenter())
+    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     assert "Not Found [404] whilst loading" in captured.out
