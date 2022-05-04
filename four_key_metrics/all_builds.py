@@ -31,12 +31,12 @@ class UseCaseyCode:
         )
 
     def calculate_lead_times(self, builds):
-        self._all_builds.lead_times = []
+        lead_times = []
         for build in builds:
             for commit in build.commits:
                 commit.lead_time = build.finished_at - commit.timestamp
-                self._all_builds.lead_times.append(commit.lead_time)
-        return self._all_builds.lead_times
+                lead_times.append(commit.lead_time)
+        return lead_times
 
     def _update_last_build_git_reference(
         self,
