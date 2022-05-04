@@ -114,7 +114,7 @@ class GitHubCommits:
 
 
 class PingdomErrors:
-    def get_pingdom_id_for_check_names(pingdom_check_names):
+    def _get_pingdom_id_for_check_names(pingdom_check_names):
         response = requests.get(
             "https://api.pingdom.com/api/3.1/checks/",
             headers={"Authorization": "Bearer " + (os.environ["PINGDOM_TOKEN"])},
@@ -144,7 +144,7 @@ class PingdomErrors:
 
         return check_ids
 
-    def get_pingdom_analysis(pingdom_check_id):
+    def _get_pingdom_analysis(pingdom_check_id):
         response = requests.get(
             f"https://api.pingdom.com/api/3.1/analysis/{pingdom_check_id}",
             headers={"Authorization": "Bearer " + (os.environ["PINGDOM_TOKEN"])},
@@ -165,7 +165,7 @@ class PingdomErrors:
 
         return body["analysis"]
 
-    def get_pingdom_analysis_details(pingdom_check_id, analysis_id):
+    def _get_pingdom_analysis_details(pingdom_check_id, analysis_id):
         response = requests.get(
             f"https://api.pingdom.com/api/3.1/analysis/{pingdom_check_id}/{analysis_id}",
             headers={"Authorization": "Bearer " + (os.environ["PINGDOM_TOKEN"])},

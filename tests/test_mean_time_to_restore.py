@@ -55,7 +55,7 @@ def test_get_pingdom_id_for_check_names(
     capsys, pingdom_check_names, expected_result, expected_terminal_output
 ):
     httpretty_checks()
-    pingdom_info = PingdomErrors.get_pingdom_id_for_check_names(pingdom_check_names)
+    pingdom_info = PingdomErrors._get_pingdom_id_for_check_names(pingdom_check_names)
 
     captured = capsys.readouterr()
 
@@ -92,7 +92,7 @@ def test_get_analysis_for_pingdom_id(pingdom_check_id, expected_result):
     httpretty_checks()
     httpretty_analysis_p1()
 
-    pingdom_info = PingdomErrors.get_pingdom_analysis(pingdom_check_id)
+    pingdom_info = PingdomErrors._get_pingdom_analysis(pingdom_check_id)
 
     assert pingdom_info == expected_result
 
@@ -244,7 +244,7 @@ def test_get_analysis_details_for_pingdom_id_and_analysis_id(
     httpretty_analysis_p1_1226773180()
     httpretty_analysis_p1_1233552532()
 
-    pingdom_info = PingdomErrors.get_pingdom_analysis_details(
+    pingdom_info = PingdomErrors._get_pingdom_analysis_details(
         pingdom_check_id, analysis_id
     )
 

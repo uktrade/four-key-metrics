@@ -58,7 +58,7 @@ class DisplayShell(Cmd):
 
         pingdom_check_names = PINGDOM_CHECK_NAMES
 
-        PingdomErrors.get_pingdom_id_for_check_names(pingdom_check_names)
+        PingdomErrors._get_pingdom_id_for_check_names(pingdom_check_names)
 
     def do_remove_reports(self, arg):
         """Clean up generated reports by supported output types, e.g. .csv
