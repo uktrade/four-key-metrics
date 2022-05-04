@@ -24,7 +24,7 @@ class GenerateLeadTimeMetricsPresenter(Protocol):
 
 class GenerateLeadTimeMetrics:
     def __init__(self):
-        self.all_builds = AllBuilds(
+        self._all_builds = AllBuilds(
             os.getenv("DIT_JENKINS_URI", "https://jenkins.ci.uktrade.digital/")
         )
 
@@ -33,7 +33,7 @@ class GenerateLeadTimeMetrics:
         try:
             self._presenter.begin()
             self._write_metrics_for_projects(
-                projects=projects, all_builds=self.all_builds
+                projects=projects, all_builds=self._all_builds
             )
         finally:
             self._presenter.end()
