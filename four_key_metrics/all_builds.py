@@ -145,11 +145,11 @@ class AllBuilds:
         if len(body["allBuilds"]) == 0:
             return []
 
-        self.builds = self._update_build_with_github_commits(body)
+        builds = self._update_build_with_github_commits(body)
         return list(
             filter(
                 lambda b: b.environment == environment,
-                [build for build in self.builds if build.git_reference],
+                [build for build in builds if build.git_reference],
             )
         )
 

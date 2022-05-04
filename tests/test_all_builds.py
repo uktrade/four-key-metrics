@@ -64,11 +64,11 @@ def test_can_get_one_build():
     )
     assert expected_url == httpretty.last_request().url
 
-    assert all_builds.builds[0].started_at == 1643768542.0
-    assert all_builds.builds[0].finished_at == 1643769155.613
-    assert all_builds.builds[0].successful
-    assert all_builds.builds[0].environment == "production"
-    assert all_builds.builds[0].git_reference == "1234"
+    assert builds[0].started_at == 1643768542.0
+    assert builds[0].finished_at == 1643769155.613
+    assert builds[0].successful
+    assert builds[0].environment == "production"
+    assert builds[0].git_reference == "1234"
 
 
 def test_can_get_two_builds():
@@ -76,17 +76,17 @@ def test_can_get_two_builds():
     builds = all_builds.get_jenkins_builds("test-job", "production")
 
     assert len(builds) == 2
-    assert all_builds.builds[0].started_at == 1643768542.0
-    assert all_builds.builds[0].finished_at == 1643769142.0
-    assert not all_builds.builds[0].successful
-    assert all_builds.builds[0].environment == "production"
-    assert all_builds.builds[0].git_reference == "build-sha-1"
+    assert builds[0].started_at == 1643768542.0
+    assert builds[0].finished_at == 1643769142.0
+    assert not builds[0].successful
+    assert builds[0].environment == "production"
+    assert builds[0].git_reference == "build-sha-1"
 
-    assert all_builds.builds[1].started_at == 1646278413.0
-    assert all_builds.builds[1].finished_at == 1646279013.0
-    assert all_builds.builds[1].successful
-    assert all_builds.builds[1].environment == "production"
-    assert all_builds.builds[1].git_reference == "build-sha-2"
+    assert builds[1].started_at == 1646278413.0
+    assert builds[1].finished_at == 1646279013.0
+    assert builds[1].successful
+    assert builds[1].environment == "production"
+    assert builds[1].git_reference == "build-sha-2"
 
 
 def test_can_get_environment_from_actions_list():
