@@ -25,7 +25,7 @@ class GenerateLeadTimeMetricsPresenter(Protocol):
 
 class GenerateLeadTimeMetrics:
     def __init__(self):
-        self._all_builds = JenkinsBuilds(
+        self._jenkins = JenkinsBuilds(
             os.getenv("DIT_JENKINS_URI", "https://jenkins.ci.uktrade.digital/")
         )
 
@@ -34,7 +34,7 @@ class GenerateLeadTimeMetrics:
         try:
             self._presenter.begin()
             self._write_metrics_for_projects(
-                projects=projects, all_builds=self._all_builds
+                projects=projects, all_builds=self._jenkins
             )
         finally:
             self._presenter.end()
@@ -89,13 +89,13 @@ class GenerateLeadTimeMetrics:
 
 class ProjectSummariser:
     def __init__(self, jenkins_builds):
-        self._jenkins_builds = jenkins_builds
+        self._jenkins = jenkins_builds
         self._github = GitHubCommits()
 
     def get_summary(
         self, jenkins_job, github_organisation, github_repository, environment
     ):
-        jenkins_builds = self._jenkins_builds.get_jenkins_builds(jenkins_job, environment)
+        jenkins_builds = self._jenkins.get_jenkins_builds(jenkins_job, environment)
         jenkins_builds.sort(key=lambda b: b.finished_at)
         if len(jenkins_builds) < 2:
             return self._build_summary()
