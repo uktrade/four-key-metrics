@@ -165,7 +165,7 @@ class PingdomErrors:
 
         return body["analysis"]
 
-    def _get_pingdom_analysis_details(pingdom_check_id, analysis_id):
+    def _get_pingdom_analysis_details(self, pingdom_check_id, analysis_id):
         response = requests.get(
             f"https://api.pingdom.com/api/3.1/analysis/{pingdom_check_id}/{analysis_id}",
             headers={"Authorization": "Bearer " + (os.environ["PINGDOM_TOKEN"])},
@@ -182,7 +182,10 @@ class PingdomErrors:
 
         body = response.json()
 
-        return body
+        return {
+            "down_timestamp": body["analysisresult"]["tasks"][0]["time_start"],
+            "up_timestamp": body["analysisresult"]["tasks"][0]["time_end"],
+        }
 
     def get_pingdom_errors(self, pingdom_check_names):
         pingdom_errors = []
@@ -190,6 +193,7 @@ class PingdomErrors:
         for name, id in pingdom_checks.items():
             analysis = self._get_pingdom_analysis(id)
             for a in analysis:
+                self._get_pingdom_analysis_details(id, a["id"])
                 pingdom_errors.append(
                     PingdomError(check_name=name, check_id=id, error_id=a["id"])
                 )
