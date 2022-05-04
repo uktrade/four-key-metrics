@@ -146,7 +146,7 @@ class AllBuilds:
             return []
 
         self.builds = []
-        self._update_build_with_github_commits(body)
+        self.builds = self._update_build_with_github_commits(body)
         return list(
             filter(
                 lambda b: b.environment == environment,
@@ -166,6 +166,7 @@ class AllBuilds:
                     git_reference=self._get_git_reference(build),
                 )
             )
+        return self.builds
 
     def _get_git_reference(self, build):
         return self.get_action(
