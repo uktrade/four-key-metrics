@@ -28,8 +28,8 @@ class GenerateLeadTimeMetrics:
             os.getenv("DIT_JENKINS_URI", "https://jenkins.ci.uktrade.digital/")
         )
 
-    def generate_lead_time_metrics(self, projects: dict, data_presenter: GenerateLeadTimeMetricsPresenter):
-        self.data_presenter = data_presenter
+    def generate_lead_time_metrics(self, projects: dict, presenter: GenerateLeadTimeMetricsPresenter):
+        self.data_presenter = presenter
         try:
             self.data_presenter.begin()
             self._write_metrics_for_projects(
