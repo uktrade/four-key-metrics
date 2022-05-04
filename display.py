@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from four_key_metrics.constants import DATAHUB_GIT_PROJECTS
 from four_key_metrics.constants import PINGDOM_CHECK_NAMES
 from four_key_metrics.file_utilities import remove_generated_reports
-from four_key_metrics.mean_time_to_restore_metrics import get_pingdom_id_for_check_names
+from four_key_metrics.gateways import PingdomErrors
 from four_key_metrics.presenters.lead_time_metrics import (
     CSVDataPresenter,
     JSONDataPresenter,
@@ -58,7 +58,7 @@ class DisplayShell(Cmd):
 
         pingdom_check_names = PINGDOM_CHECK_NAMES
 
-        get_pingdom_id_for_check_names(pingdom_check_names)
+        PingdomErrors.get_pingdom_id_for_check_names(pingdom_check_names)
 
     def do_remove_reports(self, arg):
         """Clean up generated reports by supported output types, e.g. .csv
