@@ -182,10 +182,10 @@ class PingdomErrors:
 
         body = response.json()
 
-        return {
-            "down_timestamp": body["analysisresult"]["tasks"][0]["time_start"],
-            "up_timestamp": body["analysisresult"]["tasks"][0]["time_end"],
-        }
+        return (
+            body["analysisresult"]["tasks"][0]["time_start"],
+            body["analysisresult"]["tasks"][0]["time_end"],
+        )
 
     def get_pingdom_errors(self, pingdom_check_names):
         pingdom_errors = []
@@ -193,8 +193,16 @@ class PingdomErrors:
         for name, id in pingdom_checks.items():
             analysis = self._get_pingdom_analysis(id)
             for a in analysis:
-                self._get_pingdom_analysis_details(id, a["id"])
+                down_timestamp, up_timestamp = self._get_pingdom_analysis_details(
+                    id, a["id"]
+                )
                 pingdom_errors.append(
-                    PingdomError(check_name=name, check_id=id, error_id=a["id"])
+                    PingdomError(
+                        check_name=name,
+                        check_id=id,
+                        error_id=a["id"],
+                        down_timestamp=down_timestamp,
+                        up_timestamp=up_timestamp,
+                    )
                 )
         return pingdom_errors

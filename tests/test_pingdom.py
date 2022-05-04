@@ -114,10 +114,10 @@ def test_get_analysis_for_pingdom_id(pingdom_check_id, expected_result, pingdom_
         (
             4946807,
             1226773180,
-            {
-                "down_timestamp": "1649109575",
-                "up_timestamp": "1649109578",
-            },
+            (
+                "1649109575",
+                "1649109578",
+            ),
         ),
     ],
 )
@@ -153,22 +153,22 @@ def test_get_pingdom_errors(pingdom_errors):
             check_name="Data Hub P1",
             check_id=4946807,
             error_id=1226774223,
-            # down_timestamp="1649108675",
-            # up_timestamp="1649108677",
+            down_timestamp="1649109752",
+            up_timestamp="1649109754",
         ),
         PingdomError(
             check_name="Data Hub P1",
             check_id=4946807,
             error_id=1226773180,
-            # down_timestamp="",
-            # up_timestamp="",
+            down_timestamp="1649109575",
+            up_timestamp="1649109578",
         ),
         PingdomError(
             check_name="Data Hub P1",
             check_id=4946807,
             error_id=1226770577,
-            # down_timestamp="",
-            # up_timestamp="",
+            down_timestamp="1649108675",
+            up_timestamp="1649108677",
         ),
     ]
     assert (
