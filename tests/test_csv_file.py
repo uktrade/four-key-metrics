@@ -8,7 +8,7 @@ import pytest
 
 from four_key_metrics.file_utilities import remove_generated_reports
 from four_key_metrics.presenters.lead_time_metrics import CSVDataPresenter
-from four_key_metrics.use_case.generate_lead_time_metrics import GenerateLeadTimeMetrics
+from four_key_metrics.use_case_factory import UseCaseFactory
 from tests.mock_github_request import httpretty_two_github_requests
 from tests.mock_jenkins_request import httpretty_two_jenkins_builds
 
@@ -46,7 +46,7 @@ def run_display_with_simple_builds():
         }
     ]
 
-    GenerateLeadTimeMetrics()(projects, CSVDataPresenter.create())
+    UseCaseFactory().create('generate_lead_time_metrics')(projects, CSVDataPresenter.create())
 
 
 def test_csv_created_and_removed(capsys):
@@ -127,7 +127,7 @@ def test_multiple_projects(capsys):
             "environment": "production",
         },
     ]
-    GenerateLeadTimeMetrics()(projects, CSVDataPresenter.create())
+    UseCaseFactory().create('generate_lead_time_metrics')(projects, CSVDataPresenter.create())
 
     csv_filename, captured = get_csv_filename_and_captured_outerr(capsys)
 
