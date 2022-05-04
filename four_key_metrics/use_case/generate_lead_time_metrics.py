@@ -29,14 +29,14 @@ class GenerateLeadTimeMetrics:
         )
 
     def generate_lead_time_metrics(self, projects: dict, presenter: GenerateLeadTimeMetricsPresenter):
-        self.data_presenter = presenter
+        self.presenter = presenter
         try:
-            self.data_presenter.begin()
+            self.presenter.begin()
             self._write_metrics_for_projects(
                 projects=projects, all_builds=self.all_builds
             )
         finally:
-            self.data_presenter.end()
+            self.presenter.end()
 
     def _write_metrics_for_projects(self, projects, all_builds):
         for project in projects:
@@ -51,12 +51,12 @@ class GenerateLeadTimeMetrics:
                 ],
             )
             if not response["successful"]:
-                self.data_presenter.failure(project['repository'])
+                self.presenter.failure(project['repository'])
             else:
                 self._output_build_commit_metrics(
                     project=project, response=response
                 )
-                self.data_presenter.success(
+                self.presenter.success(
                     project["repository"],
                     project["environment"],
                     response["lead_time_mean_average"],
@@ -66,7 +66,7 @@ class GenerateLeadTimeMetrics:
     def _output_build_commit_metrics(self, project, response):
         for build in response["builds"]:
             for commit in build.commits:
-                self.data_presenter.add(
+                self.presenter.add(
                     {
                         "repository": project["repository"],
                         "build_commit_hash": build.git_reference,
