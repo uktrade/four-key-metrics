@@ -22,16 +22,16 @@ class UseCaseyCode:
         self._update_last_build_git_reference(
             github_organisation, github_repository, jenkins_builds
         )
-        self.calculate_lead_times()
+        self.calculate_lead_times(jenkins_builds)
         return self._build_summary(
             True,
             self.get_lead_time_mean_average(),
             self.get_lead_time_standard_deviation(),
-            self._all_builds.builds,
+            jenkins_builds,
         )
 
-    def calculate_lead_times(self):
-        for build in self._all_builds.builds:
+    def calculate_lead_times(self, builds):
+        for build in builds:
             for commit in build.commits:
                 commit.lead_time = build.finished_at - commit.timestamp
                 self._all_builds.lead_times.append(commit.lead_time)
