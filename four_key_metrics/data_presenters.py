@@ -1,7 +1,7 @@
 import csv
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from pprint import pprint
 from typing import Protocol
 
@@ -21,6 +21,10 @@ class DataPresenter(Protocol):
     def failure(self, project):
         ...
 
+    def success(self, repository, environment, lead_time_mean_average, lead_time_standard_deviation):
+        ...
+
+
 class ConsolePresenter:
     def failure(self, project):
         pprint(
@@ -29,6 +33,21 @@ class ConsolePresenter:
                 "average": None,
                 "standard_deviation": None,
             }
+        )
+
+    def success(self, repository, environment, lead_time_mean_average, lead_time_standard_deviation):
+        pprint(
+            {
+                "project": repository,
+                "environment": environment,
+                "average": str(
+                    timedelta(seconds=lead_time_mean_average)
+                ),
+                "standard_deviation": str(
+                    timedelta(seconds=lead_time_standard_deviation)
+                ),
+            },
+            sort_dicts=False,
         )
 
 

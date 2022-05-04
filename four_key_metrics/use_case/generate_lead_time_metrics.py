@@ -40,19 +40,11 @@ class GenerateLeadTimeMetrics:
                 self._output_build_commit_metrics(
                     project=project, response=response
                 )
-
-                pprint(
-                    {
-                        "project": project["repository"],
-                        "environment": project["environment"],
-                        "average": str(
-                            timedelta(seconds=response["lead_time_mean_average"])
-                        ),
-                        "standard_deviation": str(
-                            timedelta(seconds=response["lead_time_standard_deviation"])
-                        ),
-                    },
-                    sort_dicts=False,
+                self.data_presenter.success(
+                    project["repository"],
+                    project["environment"],
+                    response["lead_time_mean_average"],
+                    response["lead_time_standard_deviation"]
                 )
 
     def _output_build_commit_metrics(self, project, response):
