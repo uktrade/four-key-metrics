@@ -22,9 +22,8 @@ class GenerateLeadTimeMetricsPresenter(Protocol):
 
 
 class GenerateLeadTimeMetrics:
-    def __init__(self, jenkins, project_summariser):
+    def __init__(self, project_summariser):
         self._project_summariser = project_summariser
-        self._jenkins = jenkins
 
     def __call__(self, projects, presenter: GenerateLeadTimeMetricsPresenter):
         self._presenter = presenter
