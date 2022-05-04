@@ -25,8 +25,8 @@ class UseCaseyCode:
         self.calculate_lead_times()
         return self._build_summary(
             True,
-            self._all_builds.get_lead_time_mean_average(),
-            self._all_builds.get_lead_time_standard_deviation(),
+            self.get_lead_time_mean_average(),
+            self.get_lead_time_standard_deviation(),
             self._all_builds.builds,
         )
 
@@ -80,6 +80,19 @@ class UseCaseyCode:
             "lead_time_standard_deviation": lead_time_standard_deviation,
             "builds": builds,
         }
+
+    def get_lead_time_mean_average(self):
+        if self._no_builds():
+            return None
+        return sum(self._all_builds.lead_times) / len(self._all_builds.lead_times)
+
+    def get_lead_time_standard_deviation(self):
+        if self._no_builds():
+            return None
+        return statistics.pstdev(self._all_builds.lead_times)
+
+    def _no_builds(self) -> bool:
+        return len(self._all_builds.builds) == 0
 
 
 class AllBuilds:
@@ -154,16 +167,6 @@ class AllBuilds:
                 )
             )
 
-    def get_lead_time_mean_average(self):
-        if self._no_builds():
-            return None
-        return sum(self.lead_times) / len(self.lead_times)
-
-    def get_lead_time_standard_deviation(self):
-        if self._no_builds():
-            return None
-        return statistics.pstdev(self.lead_times)
-
     def _get_git_reference(self, build):
         return self.get_action(
             "hudson.plugins.git.util.BuildData",
@@ -184,6 +187,3 @@ class AllBuilds:
             return glom(a, Path(0, *parameter_path))
         else:
             return None
-
-    def _no_builds(self) -> bool:
-        return len(self.builds) == 0
