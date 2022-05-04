@@ -114,7 +114,7 @@ class GitHubCommits:
 
 
 class PingdomErrors:
-    def _get_pingdom_id_for_check_names(pingdom_check_names):
+    def _get_pingdom_id_for_check_names(self, pingdom_check_names):
         response = requests.get(
             "https://api.pingdom.com/api/3.1/checks/",
             headers={"Authorization": "Bearer " + (os.environ["PINGDOM_TOKEN"])},
@@ -184,8 +184,9 @@ class PingdomErrors:
 
         return body
 
-    def get_pingdom_errors(pingdom_check_names):
+    def get_pingdom_errors(self, pingdom_check_names):
         pingdom_errors = []
-        for check in pingdom_check_names:
-            pingdom_errors.append(PingdomError(check_name=check))
+        pingdom_checks = self._get_pingdom_id_for_check_names(pingdom_check_names)
+        for name, id in pingdom_checks.items():
+            pingdom_errors.append(PingdomError(check_name=name, check_id=id))
         return pingdom_errors

@@ -22,6 +22,11 @@ def around_each():
     httpretty.disable()
 
 
+@pytest.fixture()
+def pingdom_errors():
+    return PingdomErrors()
+
+
 @pytest.mark.parametrize(
     "pingdom_check_names,expected_result,expected_terminal_output",
     [
@@ -53,10 +58,14 @@ def around_each():
     ],
 )
 def test_get_pingdom_id_for_check_names(
-    capsys, pingdom_check_names, expected_result, expected_terminal_output
+    capsys,
+    pingdom_check_names,
+    expected_result,
+    expected_terminal_output,
+    pingdom_errors,
 ):
     httpretty_checks()
-    pingdom_info = PingdomErrors._get_pingdom_id_for_check_names(pingdom_check_names)
+    pingdom_info = pingdom_errors._get_pingdom_id_for_check_names(pingdom_check_names)
 
     captured = capsys.readouterr()
 
@@ -252,25 +261,41 @@ def test_get_analysis_details_for_pingdom_id_and_analysis_id(
     assert pingdom_info == expected_result
 
 
-def test_get_pingdom_errors():
+def test_get_pingdom_errors(pingdom_errors):
+
+    httpretty_checks()
+    httpretty_analysis_p1()
+    httpretty_analysis_p1_1226770577()
+    httpretty_analysis_p1_1226773180()
+    httpretty_analysis_p1_1233552532()
+
     pingdom_check_names = [
-        "uk.gov.trade.datahub.api",
         "Data Hub P1",
     ]
     expected_result = [
         PingdomError(
-            check_name="uk.gov.trade.datahub.api",
+            check_name="Data Hub P1",
+            check_id=4946807
+            # error_id=1226774223,
+            # down_timestamp="1649108675",
+            # up_timestamp="1649108677",
         ),
         PingdomError(
             check_name="Data Hub P1",
+            check_id=4946807
+            # error_id=1226773180,
+            # down_timestamp="",
+            # up_timestamp="",
+        ),
+        PingdomError(
+            check_name="Data Hub P1",
+            check_id=4946807
+            # error_id=1226770577,
+            # down_timestamp="",
+            # up_timestamp="",
         ),
     ]
-    # -> list[PingdomError()]
     assert (
-        PingdomErrors.get_pingdom_errors(pingdom_check_names)[0].__dict__
+        pingdom_errors.get_pingdom_errors(pingdom_check_names)[0].__dict__
         == expected_result[0].__dict__
-    )
-    assert (
-        PingdomErrors.get_pingdom_errors(pingdom_check_names)[1].__dict__
-        == expected_result[1].__dict__
     )

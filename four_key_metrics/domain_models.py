@@ -26,5 +26,7 @@ class GitCommit:
 
 
 class PingdomError:
-    def __init__(self, check_name):
+    def __init__(self, check_name, check_id):
         self.check_name = check_name
+        self.check_id = check_id
+        # self.error_id = error_id
