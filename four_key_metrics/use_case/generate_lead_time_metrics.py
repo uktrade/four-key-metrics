@@ -3,6 +3,7 @@ import statistics
 from datetime import datetime, timedelta
 from typing import Protocol
 
+from four_key_metrics.domain_models import GitHubCommits
 from four_key_metrics.gateways import JenkinsBuilds
 
 
@@ -139,7 +140,7 @@ class ProjectSummariser:
         self, github_organisation, github_repository, last_build, excluded_hashes, build
     ):
         if build.git_reference not in excluded_hashes:
-            build.commits = build.get_commits_between(
+            build.commits = GitHubCommits().get_commits_between(
                 organisation=github_organisation,
                 repository=github_repository,
                 base=last_build.git_reference,

@@ -4,7 +4,7 @@ import os
 import httpretty
 import pytest
 
-from four_key_metrics.domain_models import Build
+from four_key_metrics.domain_models import Build, GitHubCommits
 from tests.authorization_assertions import assert_authorization_is
 
 
@@ -45,7 +45,7 @@ def test_can_get_comparison_with_one_commit():
         git_reference="sha1-git-reference",
     )
 
-    commits = build.get_commits_between(
+    commits = GitHubCommits().get_commits_between(
         organisation="uktrade",
         repository="data-hub-frontend",
         base="v9.19.0",
@@ -89,7 +89,7 @@ def test_can_get_comparison_with_two_commits():
         git_reference="sha1-git-reference",
     )
 
-    commits = build.get_commits_between(
+    commits = GitHubCommits().get_commits_between(
         organisation="uktrade",
         repository="data-hub-frontend",
         base="v9.19.0",
@@ -120,7 +120,7 @@ def test_can_request_different_comparisons():
         git_reference="sha1-git-reference",
     )
 
-    build.get_commits_between(
+    GitHubCommits().get_commits_between(
         organisation="123",
         repository="456",
         base="789",
@@ -150,7 +150,7 @@ def test_can_use_authentication():
         git_reference="sha1-git-reference",
     )
 
-    build.get_commits_between(
+    GitHubCommits().get_commits_between(
         organisation="123",
         repository="456",
         base="789",
