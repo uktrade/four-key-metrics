@@ -1,4 +1,5 @@
 import os
+import statistics
 from datetime import datetime, timedelta
 from typing import Protocol
 
@@ -40,7 +41,7 @@ class GenerateLeadTimeMetrics:
 
     def _write_metrics_for_projects(self, projects, all_builds):
         for project in projects:
-            response = all_builds.add_project(
+            response = UseCaseyCode(all_builds).add_project(
                 jenkins_job=project["job"],
                 github_organisation="uktrade",
                 github_repository=project[
@@ -84,3 +85,93 @@ class GenerateLeadTimeMetrics:
                         "previous_build_commit_hash": build.last_build_git_reference,
                     }
                 )
+
+
+class UseCaseyCode:
+    """temporary location for code that really belongs in a use case not here"""
+
+    def __init__(self, all_builds):
+        self._all_builds = all_builds
+
+    def add_project(
+        self, jenkins_job, github_organisation, github_repository, environment
+    ):
+        jenkins_builds = self._all_builds.get_jenkins_builds(jenkins_job, environment)
+        jenkins_builds.sort(key=lambda b: b.finished_at)
+        if len(jenkins_builds) < 2:
+            return self._build_summary()
+        self._update_last_build_git_reference(
+            github_organisation, github_repository, jenkins_builds
+        )
+        lead_times = self.calculate_lead_times(jenkins_builds)
+        return self._build_summary(
+            True,
+            self.get_lead_time_mean_average(jenkins_builds, lead_times),
+            self.get_lead_time_standard_deviation(jenkins_builds, lead_times),
+            jenkins_builds,
+        )
+
+    def calculate_lead_times(self, builds):
+        lead_times = []
+        for build in builds:
+            for commit in build.commits:
+                commit.lead_time = build.finished_at - commit.timestamp
+                lead_times.append(commit.lead_time)
+        return lead_times
+
+    def _update_last_build_git_reference(
+        self,
+        github_organisation,
+        github_repository,
+        jenkins_builds,
+    ):
+        last_build = jenkins_builds.pop(0)
+        excluded_hashes = os.environ["EXCLUDED_DEPLOYMENT_HASHES"]
+        for build in jenkins_builds:
+            self._update_with_exclusion_builds_with_git_reference(
+                github_organisation,
+                github_repository,
+                last_build,
+                excluded_hashes,
+                build,
+            )
+            last_build = build
+
+    def _update_with_exclusion_builds_with_git_reference(
+        self, github_organisation, github_repository, last_build, excluded_hashes, build
+    ):
+        if build.git_reference not in excluded_hashes:
+            build.get_commits_between(
+                organisation=github_organisation,
+                repository=github_repository,
+                base=last_build.git_reference,
+                head=build.git_reference,
+            )
+        build.set_last_build_git_reference(last_build.git_reference)
+
+    def _build_summary(
+        self,
+        is_success: bool = False,
+        lead_time_mean_average: str | None = None,
+        lead_time_standard_deviation: str | None = None,
+        builds: list = None,
+    ):
+        return {
+            "successful": is_success,
+            "lead_time_mean_average": lead_time_mean_average,
+            "lead_time_standard_deviation": lead_time_standard_deviation,
+            "builds": builds,
+        }
+
+    def get_lead_time_mean_average(self, builds, lead_times):
+        if self._no_builds(builds):
+            return None
+        return sum(lead_times) / len(lead_times)
+
+    def get_lead_time_standard_deviation(self, builds, lead_times):
+        if self._no_builds(builds):
+            return None
+        return statistics.pstdev(lead_times)
+
+    def _no_builds(self, builds) -> bool:
+        return len(builds) == 0

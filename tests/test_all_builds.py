@@ -5,6 +5,7 @@ import pytest
 import requests
 
 from four_key_metrics.all_builds import AllBuilds
+from four_key_metrics.use_case.generate_lead_time_metrics import UseCaseyCode
 
 from tests.mock_jenkins_request import httpretty_404_no_job_jenkings_builds
 from tests.mock_jenkins_request import httpretty_no_jenkings_builds
@@ -140,7 +141,7 @@ def test_add_project_fails_without_schema():
     assert all_builds
 
     with pytest.raises(requests.exceptions.MissingSchema) as exception_info:
-        all_builds.add_project("", "", "", "")
+        all_builds.get_jenkins_builds("", "")
     assert "Invalid URL 'job//api/json': No scheme supplied. "
     "Perhaps you meant http://job//api/json?" in str(exception_info.value)
 
@@ -157,7 +158,7 @@ def test_empty_add_project(capsys):
     all_builds = httpretty_no_jenkings_builds()
 
     all_builds.get_jenkins_builds("test-job", "production")
-    metrics = all_builds.add_project("", "", "", "")
+    metrics = UseCaseyCode(all_builds).add_project("", "", "", "")
 
     captured = capsys.readouterr()
     assert all_builds
@@ -175,8 +176,7 @@ def test_empty_add_project(capsys):
 
 def test_can_get_no_lead_time():
     all_builds = httpretty_no_jenkings_builds()
-
-    response = all_builds.add_project(
+    response = UseCaseyCode(all_builds).add_project(
         jenkins_job="test-job",
         github_organisation="has-no-commits",
         github_repository="commit-less",
@@ -191,7 +191,7 @@ def test_can_get_no_lead_time():
 def test_can_not_get_lead_time_for_one_build():
     all_builds = httpretty_two_jenkins_builds()
 
-    response = all_builds.add_project(
+    response = UseCaseyCode(all_builds).add_project(
         jenkins_job="test-job",
         github_organisation="has-no-commits",
         github_repository="commit-less",
@@ -206,7 +206,7 @@ def test_can_not_get_lead_time_for_one_build():
 def test_can_not_get_lead_time_for_mismatched_environments():
     all_builds = httpretty_two_jenkins_builds_one_production_one_development()
 
-    response = all_builds.add_project(
+    response = UseCaseyCode(all_builds).add_project(
         jenkins_job="test-job",
         github_organisation="has-no-commits",
         github_repository="commit-less",
