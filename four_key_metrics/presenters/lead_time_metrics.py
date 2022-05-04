@@ -1,7 +1,7 @@
 import csv
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import timedelta, datetime
 from pprint import pprint
 
 from four_key_metrics.constants import LTM_FIELD_NAMES

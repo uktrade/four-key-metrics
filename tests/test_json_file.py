@@ -6,7 +6,7 @@ import httpretty
 import pytest
 
 from four_key_metrics.file_utilities import remove_generated_reports
-from four_key_metrics.lead_time_metrics_presenters import JSONDataPresenter
+from four_key_metrics.presenters.lead_time_metrics import JSONDataPresenter
 from four_key_metrics.use_case.generate_lead_time_metrics import GenerateLeadTimeMetrics
 from tests.mock_github_request import httpretty_two_github_requests
 from tests.mock_jenkins_request import httpretty_two_jenkins_builds

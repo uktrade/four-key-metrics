@@ -3,7 +3,7 @@ import os
 import httpretty
 import pytest
 
-from four_key_metrics.lead_time_metrics_presenters import ConsolePresenter
+from four_key_metrics.presenters.lead_time_metrics import ConsolePresenter
 from four_key_metrics.use_case.generate_lead_time_metrics import GenerateLeadTimeMetrics
 from tests.mock_github_request import httpretty_one_github_requests
 from tests.mock_github_request import httpretty_three_github_requests
