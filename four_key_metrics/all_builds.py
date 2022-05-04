@@ -6,10 +6,33 @@ from glom import glom, Path
 
 from four_key_metrics.build import Build
 
+class UseCaseyCode:
+    """temporary location for code that really belongs in a use case not here"""
+
+    def __init__(self, all_builds):
+        self._all_builds = all_builds
+
+    def add_project(
+        self, jenkins_job, github_organisation, github_repository, environment
+    ):
+        jenkins_builds = self._all_builds.get_jenkins_builds(jenkins_job, environment)
+        jenkins_builds.sort(key=lambda b: b.finished_at)
+        if len(jenkins_builds) < 2:
+            return self._all_builds._build_summary()
+        self._all_builds._update_last_build_git_reference(
+            github_organisation, github_repository, jenkins_builds
+        )
+        self._all_builds.calculate_lead_times()
+        return self._all_builds._build_summary(
+            True,
+            self._all_builds.get_lead_time_mean_average(),
+            self._all_builds.get_lead_time_standard_deviation(),
+            self._all_builds.builds,
+        )
+
+
 
 class AllBuilds:
-    """Class that extracts all builds from Jenkins based on project name."""
-
     def __init__(self, host):
         self.host = host
         self.builds = []
@@ -18,20 +41,7 @@ class AllBuilds:
     def add_project(
         self, jenkins_job, github_organisation, github_repository, environment
     ):
-        jenkins_builds = self.get_jenkins_builds(jenkins_job, environment)
-        jenkins_builds.sort(key=lambda b: b.finished_at)
-        if len(jenkins_builds) < 2:
-            return self._build_summary()
-        self._update_last_build_git_reference(
-            github_organisation, github_repository, jenkins_builds
-        )
-        self.calculate_lead_times()
-        return self._build_summary(
-            True,
-            self.get_lead_time_mean_average(),
-            self.get_lead_time_standard_deviation(),
-            self.builds,
-        )
+        return UseCaseyCode(self).add_project(jenkins_job, github_organisation, github_repository, environment)
 
     def _build_summary(
         self,
