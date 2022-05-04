@@ -2,8 +2,6 @@ import os
 import ciso8601
 import requests
 
-from four_key_metrics.git_commit import GitCommit
-
 
 class Build:
     def __init__(
@@ -40,3 +38,9 @@ class Build:
 
     def set_last_build_git_reference(self, last_build_git_reference):
         self.last_build_git_reference = last_build_git_reference
+
+
+class GitCommit:
+    def __init__(self, sha, timestamp):
+        self.sha = sha
+        self.timestamp = timestamp
