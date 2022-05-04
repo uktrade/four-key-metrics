@@ -1,11 +1,5 @@
 import os
 import requests
-from datetime import timedelta, datetime
-from pprint import pprint
-from four_key_metrics.all_builds import AllBuilds
-from four_key_metrics.data_presenters import (
-    DataPresenter,
-)
 
 
 def get_pingdom_id_for_check_names(pingdom_check_names):

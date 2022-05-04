@@ -1,7 +1,4 @@
-from four_key_metrics.data_presenters import (
-    DataPresenter,
-)
-from four_key_metrics.use_case.generate_lead_time_metrics import GenerateLeadTimeMetrics
+from four_key_metrics.use_case.generate_lead_time_metrics import GenerateLeadTimeMetrics, DataPresenter
 
 
 def generate_lead_time_metrics(projects: dict, data_presenter: DataPresenter):

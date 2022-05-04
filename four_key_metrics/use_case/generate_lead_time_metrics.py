@@ -1,9 +1,25 @@
 import os
 from datetime import datetime, timedelta
-from pprint import pprint
+from typing import Protocol
 
 from four_key_metrics.all_builds import AllBuilds
-from four_key_metrics.data_presenters import DataPresenter
+
+
+class DataPresenter(Protocol):
+    def add(self, data: dict):
+        ...
+
+    def begin(self):
+        ...
+
+    def end(self):
+        ...
+
+    def failure(self, project):
+        ...
+
+    def success(self, repository, environment, lead_time_mean_average, lead_time_standard_deviation):
+        ...
 
 
 class GenerateLeadTimeMetrics:
