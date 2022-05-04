@@ -4,6 +4,7 @@ import httpretty
 import pytest
 
 from four_key_metrics.gateways import PingdomErrors
+from four_key_metrics.domain_models import PingdomError
 
 from tests.mock_pingdom_request import httpretty_checks
 from tests.mock_pingdom_request import httpretty_analysis_p1
@@ -249,3 +250,27 @@ def test_get_analysis_details_for_pingdom_id_and_analysis_id(
     )
 
     assert pingdom_info == expected_result
+
+
+def test_get_pingdom_errors():
+    pingdom_check_names = [
+        "uk.gov.trade.datahub.api",
+        "Data Hub P1",
+    ]
+    expected_result = [
+        PingdomError(
+            check_name="uk.gov.trade.datahub.api",
+        ),
+        PingdomError(
+            check_name="Data Hub P1",
+        ),
+    ]
+    # -> list[PingdomError()]
+    assert (
+        PingdomErrors.get_pingdom_errors(pingdom_check_names)[0].__dict__
+        == expected_result[0].__dict__
+    )
+    assert (
+        PingdomErrors.get_pingdom_errors(pingdom_check_names)[1].__dict__
+        == expected_result[1].__dict__
+    )
