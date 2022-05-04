@@ -88,14 +88,14 @@ class GenerateLeadTimeMetrics:
 
 
 class ProjectSummariser:
-    def __init__(self, all_builds):
-        self._all_builds = all_builds
+    def __init__(self, jenkins_builds):
+        self._jenkins_builds = jenkins_builds
         self._github = GitHubCommits()
 
     def get_summary(
         self, jenkins_job, github_organisation, github_repository, environment
     ):
-        jenkins_builds = self._all_builds.get_jenkins_builds(jenkins_job, environment)
+        jenkins_builds = self._jenkins_builds.get_jenkins_builds(jenkins_job, environment)
         jenkins_builds.sort(key=lambda b: b.finished_at)
         if len(jenkins_builds) < 2:
             return self._build_summary()
