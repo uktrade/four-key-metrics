@@ -5,7 +5,7 @@ from typing import Protocol
 from four_key_metrics.all_builds import AllBuilds
 
 
-class DataPresenter(Protocol):
+class GenerateLeadTimeMetricsPresenter(Protocol):
     def add(self, data: dict):
         ...
 
@@ -28,7 +28,7 @@ class GenerateLeadTimeMetrics:
             os.getenv("DIT_JENKINS_URI", "https://jenkins.ci.uktrade.digital/")
         )
 
-    def generate_lead_time_metrics(self, projects: dict, data_presenter: DataPresenter):
+    def generate_lead_time_metrics(self, projects: dict, data_presenter: GenerateLeadTimeMetricsPresenter):
         self.data_presenter = data_presenter
         try:
             self.data_presenter.begin()
