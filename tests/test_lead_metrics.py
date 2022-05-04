@@ -134,7 +134,7 @@ def test_can_get_lead_time_for_two_builds_one_commit(capsys):
         }
     ]
 
-    GenerateLeadTimeMetrics().__call__(projects, ConsoleOnlyPresenter())
+    GenerateLeadTimeMetrics()(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     print(captured.out)
