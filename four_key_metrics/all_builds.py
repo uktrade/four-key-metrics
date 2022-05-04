@@ -18,30 +18,17 @@ class UseCaseyCode:
         jenkins_builds = self._all_builds.get_jenkins_builds(jenkins_job, environment)
         jenkins_builds.sort(key=lambda b: b.finished_at)
         if len(jenkins_builds) < 2:
-            return self._all_builds._build_summary()
+            return self._build_summary()
         self._all_builds._update_last_build_git_reference(
             github_organisation, github_repository, jenkins_builds
         )
         self._all_builds.calculate_lead_times()
-        return self._all_builds._build_summary(
+        return self._build_summary(
             True,
             self._all_builds.get_lead_time_mean_average(),
             self._all_builds.get_lead_time_standard_deviation(),
             self._all_builds.builds,
         )
-
-
-
-class AllBuilds:
-    def __init__(self, host):
-        self.host = host
-        self.builds = []
-        self.lead_times = []
-
-    def add_project(
-        self, jenkins_job, github_organisation, github_repository, environment
-    ):
-        return UseCaseyCode(self).add_project(jenkins_job, github_organisation, github_repository, environment)
 
     def _build_summary(
         self,
@@ -56,6 +43,20 @@ class AllBuilds:
             "lead_time_standard_deviation": lead_time_standard_deviation,
             "builds": builds,
         }
+
+
+class AllBuilds:
+    def __init__(self, host):
+        self.host = host
+        self.builds = []
+        self.lead_times = []
+
+    def add_project(
+        self, jenkins_job, github_organisation, github_repository, environment
+    ):
+        return UseCaseyCode(self).add_project(jenkins_job, github_organisation, github_repository, environment)
+
+
 
     def _update_last_build_git_reference(
         self,
