@@ -3,7 +3,7 @@ import statistics
 from datetime import datetime, timedelta
 from typing import Protocol
 
-from four_key_metrics.gateways import JenkinsBuilds, GitHubCommits
+from four_key_metrics.gateways import GitHubCommits
 
 
 class GenerateLeadTimeMetricsPresenter(Protocol):
@@ -24,7 +24,8 @@ class GenerateLeadTimeMetricsPresenter(Protocol):
 
 
 class GenerateLeadTimeMetrics:
-    def __init__(self, jenkins):
+    def __init__(self, jenkins, project_summariser):
+        self._project_summariser = project_summariser
         self._jenkins = jenkins
 
     def __call__(self, projects, presenter: GenerateLeadTimeMetricsPresenter):
@@ -37,7 +38,7 @@ class GenerateLeadTimeMetrics:
 
     def _write_metrics_for_projects(self, projects):
         for project in projects:
-            response = ProjectSummariser(self._jenkins).get_summary(
+            response = self._project_summariser.get_summary(
                 jenkins_job=project["job"],
                 github_organisation="uktrade",
                 github_repository=project[
