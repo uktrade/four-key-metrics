@@ -144,7 +144,7 @@ class PingdomErrors:
 
         return check_ids
 
-    def _get_pingdom_analysis(pingdom_check_id):
+    def _get_pingdom_analysis(self, pingdom_check_id):
         response = requests.get(
             f"https://api.pingdom.com/api/3.1/analysis/{pingdom_check_id}",
             headers={"Authorization": "Bearer " + (os.environ["PINGDOM_TOKEN"])},
@@ -188,5 +188,9 @@ class PingdomErrors:
         pingdom_errors = []
         pingdom_checks = self._get_pingdom_id_for_check_names(pingdom_check_names)
         for name, id in pingdom_checks.items():
-            pingdom_errors.append(PingdomError(check_name=name, check_id=id))
+            analysis = self._get_pingdom_analysis(id)
+            for a in analysis:
+                pingdom_errors.append(
+                    PingdomError(check_name=name, check_id=id, error_id=a["id"])
+                )
         return pingdom_errors
