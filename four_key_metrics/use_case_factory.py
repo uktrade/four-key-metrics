@@ -21,4 +21,8 @@ class UseCaseFactory:
                 )
             )
         }
+
+        if name not in use_cases:
+            raise Exception(f"Use Case {name} not found. Check UseCaseFactory")
+
         return use_cases[name]
