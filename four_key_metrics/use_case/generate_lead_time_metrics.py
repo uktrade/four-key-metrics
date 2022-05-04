@@ -33,15 +33,13 @@ class GenerateLeadTimeMetrics:
         self._presenter = presenter
         try:
             self._presenter.begin()
-            self._write_metrics_for_projects(
-                projects=projects, all_builds=self._jenkins
-            )
+            self._write_metrics_for_projects(projects)
         finally:
             self._presenter.end()
 
-    def _write_metrics_for_projects(self, projects, all_builds):
+    def _write_metrics_for_projects(self, projects):
         for project in projects:
-            response = ProjectSummariser(all_builds).get_summary(
+            response = ProjectSummariser(self._jenkins).get_summary(
                 jenkins_job=project["job"],
                 github_organisation="uktrade",
                 github_repository=project[
