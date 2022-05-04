@@ -41,7 +41,7 @@ class GenerateLeadTimeMetrics:
 
     def _write_metrics_for_projects(self, projects, all_builds):
         for project in projects:
-            response = UseCaseyCode(all_builds).add_project(
+            response = ProjectSummariser(all_builds).add_project(
                 jenkins_job=project["job"],
                 github_organisation="uktrade",
                 github_repository=project[
@@ -87,9 +87,7 @@ class GenerateLeadTimeMetrics:
                 )
 
 
-class UseCaseyCode:
-    """temporary location for code that really belongs in a use case not here"""
-
+class ProjectSummariser:
     def __init__(self, all_builds):
         self._all_builds = all_builds
 
