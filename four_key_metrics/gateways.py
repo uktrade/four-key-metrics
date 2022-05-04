@@ -3,7 +3,7 @@ import os
 import requests
 from glom import glom, Path
 
-from four_key_metrics.build import Build
+from four_key_metrics.domain_models import Build
 
 
 class JenkinsBuilds:
