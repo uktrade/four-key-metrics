@@ -154,10 +154,10 @@ class AllBuilds:
         )
 
     def _update_build_with_github_commits(self, body):
-        self.builds = []
+        builds = []
         for build in body["allBuilds"]:
             started_at = build["timestamp"] / 1000
-            self.builds.append(
+            builds.append(
                 Build(
                     started_at=started_at,
                     finished_at=started_at + build["duration"] / 1000,
@@ -166,7 +166,7 @@ class AllBuilds:
                     git_reference=self._get_git_reference(build),
                 )
             )
-        return self.builds
+        return builds
 
     def _get_git_reference(self, build):
         return self.get_action(
