@@ -25,8 +25,8 @@ class UseCaseyCode:
         self.calculate_lead_times(jenkins_builds)
         return self._build_summary(
             True,
-            self.get_lead_time_mean_average(),
-            self.get_lead_time_standard_deviation(),
+            self.get_lead_time_mean_average(jenkins_builds),
+            self.get_lead_time_standard_deviation(jenkins_builds),
             jenkins_builds,
         )
 
@@ -81,18 +81,18 @@ class UseCaseyCode:
             "builds": builds,
         }
 
-    def get_lead_time_mean_average(self):
-        if self._no_builds():
+    def get_lead_time_mean_average(self, builds):
+        if self._no_builds(builds):
             return None
         return sum(self._all_builds.lead_times) / len(self._all_builds.lead_times)
 
-    def get_lead_time_standard_deviation(self):
-        if self._no_builds():
+    def get_lead_time_standard_deviation(self, builds):
+        if self._no_builds(builds):
             return None
         return statistics.pstdev(self._all_builds.lead_times)
 
-    def _no_builds(self) -> bool:
-        return len(self._all_builds.builds) == 0
+    def _no_builds(self, builds) -> bool:
+        return len(builds) == 0
 
 
 class AllBuilds:
