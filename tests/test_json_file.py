@@ -45,7 +45,7 @@ def run_display_with_simple_builds():
         }
     ]
 
-    GenerateLeadTimeMetrics().generate_lead_time_metrics(projects, JSONDataPresenter.create())
+    GenerateLeadTimeMetrics()(projects, JSONDataPresenter.create())
 
 
 def test_json_is_created_and_then_successfully_removed(capsys):

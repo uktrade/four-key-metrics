@@ -43,7 +43,7 @@ class DisplayShell(Cmd):
             "csv": default_output,
             "json": JSONDataPresenter.create(),
         }[arg.lower()]
-        GenerateLeadTimeMetrics().generate_lead_time_metrics(projects, data_presenter)
+        GenerateLeadTimeMetrics()(projects, data_presenter)
 
     def do_mtr(self, args):
         """Generate mean time to restore metric"""
