@@ -4,7 +4,7 @@ import httpretty
 import pytest
 import requests
 
-from four_key_metrics.jenkins_builds import JenkinsBuilds
+from four_key_metrics.gateways import JenkinsBuilds
 from four_key_metrics.use_case.generate_lead_time_metrics import ProjectSummariser
 
 from tests.mock_jenkins_request import httpretty_404_no_job_jenkings_builds

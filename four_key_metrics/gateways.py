@@ -1,7 +1,7 @@
 import os
+
 import requests
 from glom import glom, Path
-
 
 from four_key_metrics.build import Build
 
@@ -17,13 +17,13 @@ class JenkinsBuilds:
                 jenkins_url,
                 params={
                     "tree": "allBuilds["
-                    "timestamp,result,duration,"
-                    "actions["
-                    "parameters[*],"
-                    "lastBuiltRevision[branch[*]]"
-                    "],"
-                    "changeSet[items[*]]"
-                    "]"
+                            "timestamp,result,duration,"
+                            "actions["
+                            "parameters[*],"
+                            "lastBuiltRevision[branch[*]]"
+                            "],"
+                            "changeSet[items[*]]"
+                            "]"
                 },
                 auth=(
                     os.environ["DIT_JENKINS_USER"],

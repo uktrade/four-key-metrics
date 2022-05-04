@@ -3,7 +3,7 @@ import statistics
 from datetime import datetime, timedelta
 from typing import Protocol
 
-from four_key_metrics.jenkins_builds import JenkinsBuilds
+from four_key_metrics.gateways import JenkinsBuilds
 
 
 class GenerateLeadTimeMetricsPresenter(Protocol):

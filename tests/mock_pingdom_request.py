@@ -1,7 +1,7 @@
 import httpretty
 import json
 
-from four_key_metrics.jenkins_builds import JenkinsBuilds
+from four_key_metrics.gateways import JenkinsBuilds
 
 
 def httpretty_checks():
