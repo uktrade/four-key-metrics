@@ -90,6 +90,7 @@ class GenerateLeadTimeMetrics:
 class ProjectSummariser:
     def __init__(self, all_builds):
         self._all_builds = all_builds
+        self._github = GitHubCommits()
 
     def get_summary(
         self, jenkins_job, github_organisation, github_repository, environment
@@ -139,7 +140,7 @@ class ProjectSummariser:
         self, github_organisation, github_repository, last_build, excluded_hashes, build
     ):
         if build.git_reference not in excluded_hashes:
-            build.commits = GitHubCommits().get_commits_between(
+            build.commits = self._github.get_commits_between(
                 organisation=github_organisation,
                 repository=github_repository,
                 base=last_build.git_reference,
