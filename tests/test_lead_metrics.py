@@ -8,7 +8,7 @@ from four_key_metrics.use_case_factory import UseCaseFactory
 from tests.mock_github_request import httpretty_one_github_requests
 from tests.mock_github_request import httpretty_three_github_requests
 from tests.mock_github_request import httpretty_two_github_requests
-from tests.mock_jenkins_request import httpretty_no_jenkings_builds
+from tests.mock_jenkins_request import httpretty_no_jenkins_builds
 from tests.mock_jenkins_request import httpretty_one_jenkings_build
 from tests.mock_jenkins_request import httpretty_three_jenkins_builds
 from tests.mock_jenkins_request import httpretty_two_jenkins_builds
@@ -63,7 +63,7 @@ def test_average_and_standard_deviation_output(capsys):
 
 
 def test_can_get_no_lead_time(capsys):
-    httpretty_no_jenkings_builds()
+    httpretty_no_jenkins_builds()
 
     projects = [
         {

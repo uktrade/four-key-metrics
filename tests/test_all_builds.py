@@ -8,7 +8,7 @@ from four_key_metrics.gateways import JenkinsBuilds, GitHubCommits
 from four_key_metrics.use_case.generate_lead_time_metrics import ProjectSummariser
 
 from tests.mock_jenkins_request import httpretty_404_no_job_jenkings_builds
-from tests.mock_jenkins_request import httpretty_no_jenkings_builds
+from tests.mock_jenkins_request import httpretty_no_jenkins_builds
 from tests.mock_jenkins_request import httpretty_one_jenkings_build
 from tests.mock_jenkins_request import httpretty_two_jenkins_builds
 from tests.mock_jenkins_request import (
@@ -33,7 +33,7 @@ def around_each():
 
 
 def test_can_get_no_builds():
-    all_builds = httpretty_no_jenkings_builds()
+    all_builds = httpretty_no_jenkins_builds()
     builds = all_builds.get_jenkins_builds("test-job", "production")
 
     assert len(builds) == 0
@@ -147,7 +147,7 @@ def test_add_project_fails_without_schema():
 
 
 def test_no_jenkins_job(capsys):
-    all_builds = httpretty_no_jenkings_builds()
+    all_builds = httpretty_no_jenkins_builds()
     all_builds.get_jenkins_builds("test-job", "production")
 
     assert all_builds
@@ -155,7 +155,7 @@ def test_no_jenkins_job(capsys):
 
 def test_empty_add_project(capsys):
     httpretty_404_no_job_jenkings_builds()
-    all_builds = httpretty_no_jenkings_builds()
+    all_builds = httpretty_no_jenkins_builds()
 
     all_builds.get_jenkins_builds("test-job", "production")
     metrics = ProjectSummariser(all_builds, GitHubCommits()).get_summary("", "", "", "")
@@ -175,7 +175,7 @@ def test_empty_add_project(capsys):
 
 
 def test_can_get_no_lead_time():
-    all_builds = httpretty_no_jenkings_builds()
+    all_builds = httpretty_no_jenkins_builds()
     response = ProjectSummariser(all_builds, GitHubCommits()).get_summary(
         jenkins_job="test-job",
         github_organisation="has-no-commits",

@@ -11,7 +11,7 @@ def httpretty_404_no_job_jenkings_builds():
     return
 
 
-def httpretty_no_jenkings_builds():
+def httpretty_no_jenkins_builds():
     jenkins = {"allBuilds": []}
 
     httpretty.register_uri(
