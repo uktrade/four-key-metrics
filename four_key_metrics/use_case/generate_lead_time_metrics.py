@@ -24,10 +24,8 @@ class GenerateLeadTimeMetricsPresenter(Protocol):
 
 
 class GenerateLeadTimeMetrics:
-    def __init__(self):
-        self._jenkins = JenkinsBuilds(
-            os.getenv("DIT_JENKINS_URI", "https://jenkins.ci.uktrade.digital/")
-        )
+    def __init__(self, jenkins):
+        self._jenkins = jenkins
 
     def __call__(self, projects, presenter: GenerateLeadTimeMetricsPresenter):
         self._presenter = presenter
