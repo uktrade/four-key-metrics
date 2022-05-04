@@ -18,13 +18,13 @@ class JenkinsBuilds:
                 jenkins_url,
                 params={
                     "tree": "allBuilds["
-                            "timestamp,result,duration,"
-                            "actions["
-                            "parameters[*],"
-                            "lastBuiltRevision[branch[*]]"
-                            "],"
-                            "changeSet[items[*]]"
-                            "]"
+                    "timestamp,result,duration,"
+                    "actions["
+                    "parameters[*],"
+                    "lastBuiltRevision[branch[*]]"
+                    "],"
+                    "changeSet[items[*]]"
+                    "]"
                 },
                 auth=(
                     os.environ["DIT_JENKINS_USER"],

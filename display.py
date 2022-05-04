@@ -7,7 +7,10 @@ from four_key_metrics.constants import DATAHUB_GIT_PROJECTS
 from four_key_metrics.constants import PINGDOM_CHECK_NAMES
 from four_key_metrics.file_utilities import remove_generated_reports
 from four_key_metrics.mean_time_to_restore_metrics import get_pingdom_id_for_check_names
-from four_key_metrics.presenters.lead_time_metrics import CSVDataPresenter, JSONDataPresenter
+from four_key_metrics.presenters.lead_time_metrics import (
+    CSVDataPresenter,
+    JSONDataPresenter,
+)
 from four_key_metrics.use_case_factory import UseCaseFactory
 
 load_dotenv()
@@ -43,7 +46,7 @@ class DisplayShell(Cmd):
             "csv": default_output,
             "json": JSONDataPresenter.create(),
         }[arg.lower()]
-        UseCaseFactory().create('generate_lead_time_metrics')(projects, data_presenter)
+        UseCaseFactory().create("generate_lead_time_metrics")(projects, data_presenter)
 
     def do_mtr(self, args):
         """Generate mean time to restore metric"""
