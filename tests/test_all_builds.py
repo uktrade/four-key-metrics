@@ -4,7 +4,7 @@ import httpretty
 import pytest
 import requests
 
-from four_key_metrics.all_builds import AllBuilds
+from four_key_metrics.jenkins_builds import JenkinsBuilds
 from four_key_metrics.use_case.generate_lead_time_metrics import ProjectSummariser
 
 from tests.mock_jenkins_request import httpretty_404_no_job_jenkings_builds
@@ -120,7 +120,7 @@ def test_can_get_environment_from_actions_list():
         },
     ]
 
-    all_builds = AllBuilds("https://jenkins.ci.uktrade.digital/")
+    all_builds = JenkinsBuilds("https://jenkins.ci.uktrade.digital/")
 
     sha1 = all_builds.get_action(
         "hudson.plugins.git.util.BuildData",
@@ -136,7 +136,7 @@ def test_can_get_environment_from_actions_list():
 
 
 def test_add_project_fails_without_schema():
-    all_builds = AllBuilds("")
+    all_builds = JenkinsBuilds("")
 
     assert all_builds
 
@@ -234,7 +234,7 @@ def register_on_call_to_jenkins_a_connection_error_occurs():
 def test_can_tell_the_user_to_check_vpn_if_connection_issue(capsys):
     register_on_call_to_jenkins_a_connection_error_occurs()
 
-    all_builds = AllBuilds("https://jenkins.test/")
+    all_builds = JenkinsBuilds("https://jenkins.test/")
     builds = all_builds.get_jenkins_builds("test-job", "production")
     captured = capsys.readouterr()
 

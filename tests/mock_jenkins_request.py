@@ -1,7 +1,7 @@
 import httpretty
 import json
 
-from four_key_metrics.all_builds import AllBuilds
+from four_key_metrics.jenkins_builds import JenkinsBuilds
 
 
 def httpretty_404_no_job_jenkings_builds():
@@ -20,7 +20,7 @@ def httpretty_no_jenkings_builds():
         body=json.dumps(jenkins),
     )
 
-    all_builds = AllBuilds("https://jenkins.test/")
+    all_builds = JenkinsBuilds("https://jenkins.test/")
     return all_builds
 
 
@@ -58,7 +58,7 @@ def httpretty_one_jenkings_build():
         "https://jenkins.test/" "job/test-job/api/json",
         body=json.dumps(jenkins),
     )
-    all_builds = AllBuilds("https://jenkins.test/")
+    all_builds = JenkinsBuilds("https://jenkins.test/")
     return all_builds
 
 
@@ -119,7 +119,7 @@ def httpretty_two_jenkins_builds():
         "https://jenkins.test/" "job/test-job/api/json",
         body=json.dumps(jenkins),
     )
-    return AllBuilds("https://jenkins.test/")
+    return JenkinsBuilds("https://jenkins.test/")
 
 
 def httpretty_two_jenkins_builds_one_production_one_development():
@@ -179,7 +179,7 @@ def httpretty_two_jenkins_builds_one_production_one_development():
         "https://jenkins.test/" "job/test-job/api/json",
         body=json.dumps(jenkins),
     )
-    return AllBuilds("https://jenkins.test/")
+    return JenkinsBuilds("https://jenkins.test/")
 
 
 def httpretty_three_jenkins_builds():
@@ -262,4 +262,4 @@ def httpretty_three_jenkins_builds():
         "https://jenkins.test/" "job/test-job/api/json",
         body=json.dumps(jenkins),
     )
-    return AllBuilds("https://jenkins.test/")
+    return JenkinsBuilds("https://jenkins.test/")

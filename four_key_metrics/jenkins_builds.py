@@ -6,7 +6,7 @@ from glom import glom, Path
 from four_key_metrics.build import Build
 
 
-class AllBuilds:
+class JenkinsBuilds:
     def __init__(self, host):
         self.host = host
 

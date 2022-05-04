@@ -3,7 +3,7 @@ import statistics
 from datetime import datetime, timedelta
 from typing import Protocol
 
-from four_key_metrics.all_builds import AllBuilds
+from four_key_metrics.jenkins_builds import JenkinsBuilds
 
 
 class GenerateLeadTimeMetricsPresenter(Protocol):
@@ -25,7 +25,7 @@ class GenerateLeadTimeMetricsPresenter(Protocol):
 
 class GenerateLeadTimeMetrics:
     def __init__(self):
-        self._all_builds = AllBuilds(
+        self._all_builds = JenkinsBuilds(
             os.getenv("DIT_JENKINS_URI", "https://jenkins.ci.uktrade.digital/")
         )
 
