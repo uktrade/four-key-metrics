@@ -38,9 +38,8 @@ class Build:
         self.last_build_git_reference = None
 
     def get_commits_between(self, organisation, repository, base, head):
-        self.commits = GitHubCommits()\
+        return GitHubCommits()\
             .get_commits_between(organisation, repository, base, head)
-        return self.commits
 
     def set_last_build_git_reference(self, last_build_git_reference):
         self.last_build_git_reference = last_build_git_reference

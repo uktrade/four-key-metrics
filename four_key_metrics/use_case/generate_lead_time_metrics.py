@@ -139,7 +139,7 @@ class ProjectSummariser:
         self, github_organisation, github_repository, last_build, excluded_hashes, build
     ):
         if build.git_reference not in excluded_hashes:
-            build.get_commits_between(
+            build.commits = build.get_commits_between(
                 organisation=github_organisation,
                 repository=github_repository,
                 base=last_build.git_reference,
