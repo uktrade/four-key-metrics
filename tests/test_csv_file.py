@@ -1,16 +1,16 @@
 import csv
-import httpretty
 import os
-import re
 import pprint
+import re
+
+import httpretty
 import pytest
-from four_key_metrics.lead_time_metrics_presenters import CSVDataPresenter
+
 from four_key_metrics.file_utilities import remove_generated_reports
-
-from four_key_metrics.lead_time_metrics import generate_lead_time_metrics
-
-from tests.mock_jenkins_request import httpretty_two_jenkins_builds
+from four_key_metrics.lead_time_metrics_presenters import CSVDataPresenter
+from four_key_metrics.use_case.generate_lead_time_metrics import GenerateLeadTimeMetrics
 from tests.mock_github_request import httpretty_two_github_requests
+from tests.mock_jenkins_request import httpretty_two_jenkins_builds
 
 
 @pytest.fixture(autouse=True)
@@ -46,7 +46,7 @@ def run_display_with_simple_builds():
         }
     ]
 
-    generate_lead_time_metrics(projects, CSVDataPresenter.create())
+    GenerateLeadTimeMetrics().generate_lead_time_metrics(projects, CSVDataPresenter.create())
 
 
 def test_csv_created_and_removed(capsys):
@@ -127,7 +127,7 @@ def test_multiple_projects(capsys):
             "environment": "production",
         },
     ]
-    generate_lead_time_metrics(projects, CSVDataPresenter.create())
+    GenerateLeadTimeMetrics().generate_lead_time_metrics(projects, CSVDataPresenter.create())
 
     csv_filename, captured = get_csv_filename_and_captured_outerr(capsys)
 

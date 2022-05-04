@@ -4,18 +4,17 @@ import httpretty
 import pytest
 
 from four_key_metrics.lead_time_metrics_presenters import ConsolePresenter
-from four_key_metrics.lead_time_metrics import generate_lead_time_metrics
-
+from four_key_metrics.use_case.generate_lead_time_metrics import GenerateLeadTimeMetrics
+from tests.mock_github_request import httpretty_one_github_requests
+from tests.mock_github_request import httpretty_three_github_requests
+from tests.mock_github_request import httpretty_two_github_requests
 from tests.mock_jenkins_request import httpretty_no_jenkings_builds
 from tests.mock_jenkins_request import httpretty_one_jenkings_build
+from tests.mock_jenkins_request import httpretty_three_jenkins_builds
 from tests.mock_jenkins_request import httpretty_two_jenkins_builds
 from tests.mock_jenkins_request import (
     httpretty_two_jenkins_builds_one_production_one_development,
 )
-from tests.mock_jenkins_request import httpretty_three_jenkins_builds
-from tests.mock_github_request import httpretty_one_github_requests
-from tests.mock_github_request import httpretty_two_github_requests
-from tests.mock_github_request import httpretty_three_github_requests
 
 
 @pytest.fixture(autouse=True)
@@ -55,7 +54,7 @@ def test_average_and_standard_deviation_output(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
+    GenerateLeadTimeMetrics().generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     assert "'project': 'test-repository'" in captured.out
@@ -74,7 +73,7 @@ def test_can_get_no_lead_time(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
+    GenerateLeadTimeMetrics().generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     assert "'project': 'test-repository'" in captured.out
@@ -91,7 +90,7 @@ def test_can_not_get_lead_time_for_one_build(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
+    GenerateLeadTimeMetrics().generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     print(captured.out)
@@ -113,7 +112,7 @@ def test_can_not_get_lead_time_for_mismatched_environments(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
+    GenerateLeadTimeMetrics().generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     print(captured.out)
@@ -135,7 +134,7 @@ def test_can_get_lead_time_for_two_builds_one_commit(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
+    GenerateLeadTimeMetrics().generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     print(captured.out)
@@ -159,7 +158,7 @@ def test_can_get_lead_time_for_three_builds_one_commit(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
+    GenerateLeadTimeMetrics().generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     print(captured.out)
@@ -181,7 +180,7 @@ def test_can_get_lead_time_for_two_builds_two_commits(capsys):
         }
     ]
 
-    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
+    GenerateLeadTimeMetrics().generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     print(captured.out)
@@ -204,7 +203,7 @@ def test_project_job_not_found(capsys):
             "environment": "production",
         }
     ]
-    generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
+    GenerateLeadTimeMetrics().generate_lead_time_metrics(projects, ConsoleOnlyPresenter())
 
     captured = capsys.readouterr()
     assert "Not Found [404] whilst loading" in captured.out
