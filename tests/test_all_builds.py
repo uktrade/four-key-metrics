@@ -158,7 +158,7 @@ def test_empty_add_project(capsys):
     all_builds = httpretty_no_jenkings_builds()
 
     all_builds.get_jenkins_builds("test-job", "production")
-    metrics = ProjectSummariser(all_builds).add_project("", "", "", "")
+    metrics = ProjectSummariser(all_builds).get_summary("", "", "", "")
 
     captured = capsys.readouterr()
     assert all_builds
@@ -176,7 +176,7 @@ def test_empty_add_project(capsys):
 
 def test_can_get_no_lead_time():
     all_builds = httpretty_no_jenkings_builds()
-    response = ProjectSummariser(all_builds).add_project(
+    response = ProjectSummariser(all_builds).get_summary(
         jenkins_job="test-job",
         github_organisation="has-no-commits",
         github_repository="commit-less",
@@ -191,7 +191,7 @@ def test_can_get_no_lead_time():
 def test_can_not_get_lead_time_for_one_build():
     all_builds = httpretty_two_jenkins_builds()
 
-    response = ProjectSummariser(all_builds).add_project(
+    response = ProjectSummariser(all_builds).get_summary(
         jenkins_job="test-job",
         github_organisation="has-no-commits",
         github_repository="commit-less",
@@ -206,7 +206,7 @@ def test_can_not_get_lead_time_for_one_build():
 def test_can_not_get_lead_time_for_mismatched_environments():
     all_builds = httpretty_two_jenkins_builds_one_production_one_development()
 
-    response = ProjectSummariser(all_builds).add_project(
+    response = ProjectSummariser(all_builds).get_summary(
         jenkins_job="test-job",
         github_organisation="has-no-commits",
         github_repository="commit-less",
