@@ -99,7 +99,6 @@ class UseCaseyCode:
 class AllBuilds:
     def __init__(self, host):
         self.host = host
-        self.lead_times = []
 
     def add_project(
         self, jenkins_job, github_organisation, github_repository, environment
