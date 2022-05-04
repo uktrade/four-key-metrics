@@ -17,14 +17,18 @@ class ConsolePresenter:
             }
         )
 
-    def success(self, repository, environment, lead_time_mean_average, lead_time_standard_deviation):
+    def success(
+        self,
+        repository,
+        environment,
+        lead_time_mean_average,
+        lead_time_standard_deviation,
+    ):
         pprint(
             {
                 "project": repository,
                 "environment": environment,
-                "average": str(
-                    timedelta(seconds=lead_time_mean_average)
-                ),
+                "average": str(timedelta(seconds=lead_time_mean_average)),
                 "standard_deviation": str(
                     timedelta(seconds=lead_time_standard_deviation)
                 ),
