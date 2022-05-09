@@ -78,11 +78,21 @@ def test_get_pingdom_id_for_check_names(
 
 @pytest.mark.freeze_time("2022-05-09")
 @pytest.mark.parametrize(
-    "pingdom_check_id, expected_from_timestamp, expected_result",
+    "pingdom_check_id, from_timestamp_arg, expected_from_timestamp, expected_result",
     [
         (
             4946807,
+            None,
             1636502400,
+            [
+                {"down_timestamp": 1637168609, "up_timestamp": 1637172329},
+                {"down_timestamp": 1641082949, "up_timestamp": 1641083189},
+            ],
+        ),
+        (
+            4946807,
+            1620571206,
+            1620571206,
             [
                 {"down_timestamp": 1637168609, "up_timestamp": 1637172329},
                 {"down_timestamp": 1641082949, "up_timestamp": 1641083189},
@@ -92,6 +102,7 @@ def test_get_pingdom_id_for_check_names(
 )
 def test_get_summary_outage_for_check_id(
     pingdom_check_id,
+    from_timestamp_arg,
     expected_from_timestamp,
     expected_result,
     pingdom_errors,
@@ -99,7 +110,9 @@ def test_get_summary_outage_for_check_id(
     httpretty_checks()
     httpretty_summary_outage_p1()
 
-    pingdom_info = pingdom_errors._get_pingdom_outage_summary(pingdom_check_id)
+    pingdom_info = pingdom_errors._get_pingdom_outage_summary(
+        pingdom_check_id, from_timestamp_arg
+    )
 
     assert pingdom_info == expected_result
     assert (
