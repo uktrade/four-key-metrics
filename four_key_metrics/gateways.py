@@ -1,5 +1,5 @@
 import os
-
+from datetime import datetime, timedelta
 import ciso8601
 import requests
 from glom import glom, Path
@@ -144,6 +144,32 @@ class PingdomErrors:
 
         return check_ids
 
+    def _get_pingdom_outage_summary(self, pingdom_check_id, from_timestamp=None):
+        print(f"pingdom_check_id:{pingdom_check_id}")
+        if not from_timestamp:
+            from_timestamp = datetime.timestamp(datetime.now() - timedelta(days=180))
+        response = requests.get(
+            f"https://api.pingdom.com/api/3.1/summary.outage/{pingdom_check_id}?from={from_timestamp}",
+            headers={"Authorization": "Bearer " + (os.environ["PINGDOM_TOKEN"])},
+            timeout=5,
+        )
+        if response.status_code != 200:
+            print(
+                f"{response.reason} [{response.status_code}] "
+                f"whilst loading {response.url}"
+            )
+            if response.status_code == 404:
+                print("Check your pingdom check id.")
+            return {}
+
+        body = response.json()
+
+        return [
+            {"down_timestamp": outage["timefrom"], "up_timestamp": outage["timeto"]}
+            for outage in body["summary"]["states"]
+            if outage["status"] == "down"
+        ]
+
     def _get_pingdom_analysis(self, pingdom_check_id):
         response = requests.get(
             f"https://api.pingdom.com/api/3.1/analysis/{pingdom_check_id}",
@@ -166,6 +192,7 @@ class PingdomErrors:
         return body["analysis"]
 
     def _get_pingdom_analysis_details(self, pingdom_check_id, analysis_id):
+        print(f"    pingdom_check_id:{analysis_id}")
         response = requests.get(
             f"https://api.pingdom.com/api/3.1/analysis/{pingdom_check_id}/{analysis_id}",
             headers={"Authorization": "Bearer " + (os.environ["PINGDOM_TOKEN"])},

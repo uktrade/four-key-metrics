@@ -145,6 +145,27 @@ def httpretty_checks_p1():
     return
 
 
+def httpretty_summary_outage_p1():
+    pingdom = {
+        "summary": {
+            "states": [
+                {"status": "up", "timefrom": 1636377304, "timeto": 1637168609},
+                {"status": "down", "timefrom": 1637168609, "timeto": 1637172329},
+                {"status": "up", "timefrom": 1637172329, "timeto": 1641082589},
+                {"status": "unknown", "timefrom": 1641082589, "timeto": 1641082949},
+                {"status": "down", "timefrom": 1641082949, "timeto": 1641083189},
+            ]
+        }
+    }
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://api.pingdom.com/" "api/3.1/summary.outage/4946807",
+        body=json.dumps(pingdom),
+    )
+    return
+
+
 def httpretty_analysis_p1():
     pingdom = {
         "analysis": [

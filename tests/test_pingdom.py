@@ -6,11 +6,14 @@ import pytest
 from four_key_metrics.gateways import PingdomErrors
 from four_key_metrics.domain_models import PingdomError
 
-from tests.mock_pingdom_request import httpretty_checks
-from tests.mock_pingdom_request import httpretty_analysis_p1
-from tests.mock_pingdom_request import httpretty_analysis_p1_1226770577
-from tests.mock_pingdom_request import httpretty_analysis_p1_1226773180
-from tests.mock_pingdom_request import httpretty_analysis_p1_1233552532
+from tests.mock_pingdom_request import (
+    httpretty_checks,
+    httpretty_summary_outage_p1,
+    httpretty_analysis_p1,
+    httpretty_analysis_p1_1226770577,
+    httpretty_analysis_p1_1226773180,
+    httpretty_analysis_p1_1233552532,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -79,30 +82,19 @@ def test_get_pingdom_id_for_check_names(
         (
             4946807,
             [
-                {
-                    "id": 1226774223,
-                    "timefirsttest": 1649109749,
-                    "timeconfirmtest": 1649109750,
-                },
-                {
-                    "id": 1226773180,
-                    "timefirsttest": 1649109569,
-                    "timeconfirmtest": 1649109572,
-                },
-                {
-                    "id": 1226770577,
-                    "timefirsttest": 1649108669,
-                    "timeconfirmtest": 1649108672,
-                },
+                {"down_timestamp": 1637168609, "up_timestamp": 1637172329},
+                {"down_timestamp": 1641082949, "up_timestamp": 1641083189},
             ],
         ),
     ],
 )
-def test_get_analysis_for_pingdom_id(pingdom_check_id, expected_result, pingdom_errors):
+def test_get_summary_outage_for_check_id(
+    pingdom_check_id, expected_result, pingdom_errors
+):
     httpretty_checks()
-    httpretty_analysis_p1()
+    httpretty_summary_outage_p1()
 
-    pingdom_info = pingdom_errors._get_pingdom_analysis(pingdom_check_id)
+    pingdom_info = pingdom_errors._get_pingdom_outage_summary(pingdom_check_id)
 
     assert pingdom_info == expected_result
 
@@ -148,6 +140,7 @@ def test_get_pingdom_errors(pingdom_errors):
     pingdom_check_names = [
         "Data Hub P1",
     ]
+
     expected_result = [
         PingdomError(
             check_name="Data Hub P1",
