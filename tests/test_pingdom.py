@@ -9,6 +9,7 @@ from four_key_metrics.domain_models import PingdomError
 from tests.mock_pingdom_request import (
     httpretty_checks,
     httpretty_summary_outage_p1,
+    httpretty_summary_outage_blank,
 )
 
 
@@ -115,6 +116,14 @@ def test_get_summary_outage_for_check_id(
         httpretty.last_request().url
         == f"https://api.pingdom.com/api/3.1/summary.outage/4946807?from={expected_from_timestamp}"
     )
+
+
+def test_get_summary_outage_no_outages(pingdom_errors):
+    httpretty_checks()
+    httpretty_summary_outage_blank()
+
+    pingdom_info = pingdom_errors._get_pingdom_outage_summary(4946807)
+    assert pingdom_info == []
 
 
 def test_get_pingdom_errors(pingdom_errors):

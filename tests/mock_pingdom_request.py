@@ -164,3 +164,14 @@ def httpretty_summary_outage_p1():
         body=json.dumps(pingdom),
     )
     return
+
+
+def httpretty_summary_outage_blank():
+    pingdom = {"summary": {"states": []}}
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://api.pingdom.com/" "api/3.1/summary.outage/4946807",
+        body=json.dumps(pingdom),
+    )
+    return
