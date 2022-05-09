@@ -154,10 +154,7 @@ def test_get_analysis_details_for_pingdom_id_and_analysis_id(
 def test_get_pingdom_errors(pingdom_errors):
 
     httpretty_checks()
-    httpretty_analysis_p1()
-    httpretty_analysis_p1_1226770577()
-    httpretty_analysis_p1_1226773180()
-    httpretty_analysis_p1_1233552532()
+    httpretty_summary_outage_p1()
 
     pingdom_check_names = [
         "Data Hub P1",
@@ -167,23 +164,14 @@ def test_get_pingdom_errors(pingdom_errors):
         PingdomError(
             check_name="Data Hub P1",
             check_id=4946807,
-            error_id=1226774223,
-            down_timestamp="1649109752",
-            up_timestamp="1649109754",
+            down_timestamp=1637168609,
+            up_timestamp=1637172329,
         ),
         PingdomError(
             check_name="Data Hub P1",
             check_id=4946807,
-            error_id=1226773180,
-            down_timestamp="1649109575",
-            up_timestamp="1649109578",
-        ),
-        PingdomError(
-            check_name="Data Hub P1",
-            check_id=4946807,
-            error_id=1226770577,
-            down_timestamp="1649108675",
-            up_timestamp="1649108677",
+            down_timestamp=1641082949,
+            up_timestamp=1641083189,
         ),
     ]
     assert (

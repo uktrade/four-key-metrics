@@ -220,18 +220,14 @@ class PingdomErrors:
         pingdom_errors = []
         pingdom_checks = self._get_pingdom_id_for_check_names(pingdom_check_names)
         for name, id in pingdom_checks.items():
-            analysis = self._get_pingdom_analysis(id)
-            for a in analysis:
-                down_timestamp, up_timestamp = self._get_pingdom_analysis_details(
-                    id, a["id"]
-                )
+            outages = self._get_pingdom_outage_summary(id)
+            for outage in outages:
                 pingdom_errors.append(
                     PingdomError(
                         check_name=name,
                         check_id=id,
-                        error_id=a["id"],
-                        down_timestamp=down_timestamp,
-                        up_timestamp=up_timestamp,
+                        down_timestamp=outage["down_timestamp"],
+                        up_timestamp=outage["up_timestamp"],
                     )
                 )
         return pingdom_errors
