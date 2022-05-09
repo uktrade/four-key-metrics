@@ -162,5 +162,4 @@ def test_calculate_time_to_restore():
         down_timestamp=1652114557,
         up_timestamp=1652114577,
     )
-    pingdomError.calculate_time_to_restore()
     assert pingdomError.seconds_to_restore == 20

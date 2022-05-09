@@ -31,8 +31,4 @@ class PingdomError:
         self.check_id = check_id
         self.down_timestamp = down_timestamp
         self.up_timestamp = up_timestamp
-        self.seconds_to_restore = None
-
-    def calculate_time_to_restore(self):
         self.seconds_to_restore = self.up_timestamp - self.down_timestamp
-        return None
