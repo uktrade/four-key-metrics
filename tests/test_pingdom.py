@@ -9,10 +9,6 @@ from four_key_metrics.domain_models import PingdomError
 from tests.mock_pingdom_request import (
     httpretty_checks,
     httpretty_summary_outage_p1,
-    httpretty_analysis_p1,
-    httpretty_analysis_p1_1226770577,
-    httpretty_analysis_p1_1226773180,
-    httpretty_analysis_p1_1233552532,
 )
 
 
@@ -119,36 +115,6 @@ def test_get_summary_outage_for_check_id(
         httpretty.last_request().url
         == f"https://api.pingdom.com/api/3.1/summary.outage/4946807?from={expected_from_timestamp}"
     )
-
-
-@pytest.mark.parametrize(
-    "pingdom_check_id, analysis_id, expected_result",
-    [
-        # (4946807, 1226770577),
-        (
-            4946807,
-            1226773180,
-            (
-                "1649109575",
-                "1649109578",
-            ),
-        ),
-    ],
-)
-def test_get_analysis_details_for_pingdom_id_and_analysis_id(
-    pingdom_check_id, analysis_id, expected_result, pingdom_errors
-):
-    httpretty_checks()
-    httpretty_analysis_p1()
-    httpretty_analysis_p1_1226770577()
-    httpretty_analysis_p1_1226773180()
-    httpretty_analysis_p1_1233552532()
-
-    pingdom_info = pingdom_errors._get_pingdom_analysis_details(
-        pingdom_check_id, analysis_id
-    )
-
-    assert pingdom_info == expected_result
 
 
 def test_get_pingdom_errors(pingdom_errors):
