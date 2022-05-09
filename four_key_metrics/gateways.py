@@ -147,7 +147,9 @@ class PingdomErrors:
     def _get_pingdom_outage_summary(self, pingdom_check_id, from_timestamp=None):
         print(f"pingdom_check_id:{pingdom_check_id}")
         if not from_timestamp:
-            from_timestamp = datetime.timestamp(datetime.now() - timedelta(days=180))
+            from_timestamp = int(
+                datetime.timestamp(datetime.now() - timedelta(days=180))
+            )
         response = requests.get(
             f"https://api.pingdom.com/api/3.1/summary.outage/{pingdom_check_id}?from={from_timestamp}",
             headers={"Authorization": "Bearer " + (os.environ["PINGDOM_TOKEN"])},
