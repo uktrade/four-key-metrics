@@ -145,7 +145,6 @@ class PingdomErrors:
         return check_ids
 
     def _get_pingdom_outage_summary(self, pingdom_check_id, from_timestamp=None):
-        print(f"pingdom_check_id:{pingdom_check_id}")
         if not from_timestamp:
             from_timestamp = int(
                 datetime.timestamp(datetime.now() - timedelta(days=180))
@@ -171,50 +170,6 @@ class PingdomErrors:
             for outage in body["summary"]["states"]
             if outage["status"] == "down"
         ]
-
-    def _get_pingdom_analysis(self, pingdom_check_id):
-        response = requests.get(
-            f"https://api.pingdom.com/api/3.1/analysis/{pingdom_check_id}",
-            headers={"Authorization": "Bearer " + (os.environ["PINGDOM_TOKEN"])},
-            timeout=5,
-        )
-        if response.status_code != 200:
-            print(
-                f"{response.reason} [{response.status_code}] "
-                f"whilst loading {response.url}"
-            )
-            if response.status_code == 404:
-                print("Check your pingdom check id.")
-            return {}
-
-        body = response.json()
-        if len(body["analysis"]) == 0:
-            return {}
-
-        return body["analysis"]
-
-    def _get_pingdom_analysis_details(self, pingdom_check_id, analysis_id):
-        print(f"    pingdom_check_id:{analysis_id}")
-        response = requests.get(
-            f"https://api.pingdom.com/api/3.1/analysis/{pingdom_check_id}/{analysis_id}",
-            headers={"Authorization": "Bearer " + (os.environ["PINGDOM_TOKEN"])},
-            timeout=5,
-        )
-        if response.status_code != 200:
-            print(
-                f"{response.reason} [{response.status_code}] "
-                f"whilst loading {response.url}"
-            )
-            if response.status_code == 404:
-                print("Check your pingdom check id.")
-            return {}
-
-        body = response.json()
-
-        return (
-            body["analysisresult"]["tasks"][0]["time_start"],
-            body["analysisresult"]["tasks"][0]["time_end"],
-        )
 
     def get_pingdom_errors(self, pingdom_check_names):
         pingdom_errors = []
