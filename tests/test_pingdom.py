@@ -153,3 +153,14 @@ def test_get_pingdom_errors(pingdom_errors):
         pingdom_errors.get_pingdom_errors(pingdom_check_names)[0].__dict__
         == expected_result[0].__dict__
     )
+
+
+def test_calculate_time_to_restore():
+    pingdomError = PingdomError(
+        check_name="Test check",
+        check_id=123,
+        down_timestamp=1652114557,
+        up_timestamp=1652114577,
+    )
+    pingdomError.calculate_time_to_restore()
+    assert pingdomError.seconds_to_restore == 20
