@@ -9,13 +9,15 @@ from four_key_metrics.constants import MTR_FIELD_NAMES
 
 class ConsolePresenter:
     def failure(self, source):
-        pprint({"source": source, "average": None, "count": None})
+        pprint(
+            {"source": source, "mean time to restore in seconds": None, "count": None}
+        )
 
     def success(self, source, mean_time_to_restore_average, outages_count):
         pprint(
             {
                 "source": source,
-                "average": mean_time_to_restore_average,
+                "mean time to restore in seconds": mean_time_to_restore_average,
                 "count": outages_count,
             },
             sort_dicts=False,
