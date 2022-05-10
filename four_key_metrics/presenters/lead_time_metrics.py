@@ -73,7 +73,7 @@ class CSVDataPresenter(ConsolePresenter):
                     "%d/%m/%Y %H:%M:%S"
                 ),
                 "commit_lead_time_days": data['commit_lead_time_days'],
-                "commit_lead_time": data['commit_lead_time'],
+                "commit_lead_time": str(timedelta(seconds=data['commit_lead_time'])),
                 "previous_build_commit_hash": data['previous_build_commit_hash'],
             }
         )
@@ -114,7 +114,7 @@ class JSONDataPresenter(ConsolePresenter):
                     "%d/%m/%Y %H:%M:%S"
                 ),
                 "commit_lead_time_days": data['commit_lead_time_days'],
-                "commit_lead_time": data['commit_lead_time'],
+                "commit_lead_time": str(timedelta(seconds=data['commit_lead_time'])),
                 "previous_build_commit_hash": data['previous_build_commit_hash'],
             },
             sort_keys=True,
