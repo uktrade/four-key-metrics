@@ -7,10 +7,12 @@ from four_key_metrics.constants import DATAHUB_GIT_PROJECTS
 from four_key_metrics.constants import PINGDOM_CHECK_NAMES
 from four_key_metrics.file_utilities import remove_generated_reports
 from four_key_metrics.presenters.lead_time_metrics import (
-    CSVDataPresenter as MeanTimeCSVPresenter,
+    CSVDataPresenter as LeadTimeCSVDataPresenter,
     JSONDataPresenter,
 )
-from four_key_metrics.presenters.mean_time_to_restore import CSVDataPresenter
+from four_key_metrics.presenters.mean_time_to_restore import (
+    CSVDataPresenter as MeanTimeCSVDataPresenter,
+)
 from four_key_metrics.use_case_factory import UseCaseFactory
 
 load_dotenv()
@@ -40,7 +42,7 @@ class DisplayShell(Cmd):
         """
         # TODO: Make this easier to pass and parse these values through the command line
         projects = DATAHUB_GIT_PROJECTS
-        default_output = CSVDataPresenter.create()
+        default_output = LeadTimeCSVDataPresenter.create()
         data_presenter = {
             "": default_output,
             "csv": default_output,
@@ -58,8 +60,8 @@ class DisplayShell(Cmd):
 
         pingdom_check_names = PINGDOM_CHECK_NAMES
 
-        UseCaseFactory().create("generate_lead_time_metrics")(
-            pingdom_check_names, MeanTimeCSVPresenter.create()
+        UseCaseFactory().create("generate_mean_time_to_restore")(
+            pingdom_check_names, MeanTimeCSVDataPresenter.create()
         )
 
     def do_remove_reports(self, arg):
