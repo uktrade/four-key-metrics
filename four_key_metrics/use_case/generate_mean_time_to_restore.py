@@ -59,6 +59,6 @@ class GenerateMeanTimeToRestore:
             self._presenter.failure("pingdom")
             return None
 
-        mean_time_to_restore = total_time_to_restore / len(all_outages)
+        mean_time_to_restore = round(total_time_to_restore / len(all_outages))
         self._presenter.success("pingdom", mean_time_to_restore, len(all_outages))
-        return int(mean_time_to_restore)
+        return mean_time_to_restore
