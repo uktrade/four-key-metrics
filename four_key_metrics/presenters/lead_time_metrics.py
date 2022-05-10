@@ -88,7 +88,9 @@ class JSONDataPresenter(ConsolePresenter):
                 "repository": data['repository'],
                 "build_commit_hash": data['build_commit_hash'],
                 "build_timestamp": data['build_timestamp'],
-                "build_time": data['build_time'],
+                "build_time": datetime.fromtimestamp(data['build_timestamp']).strftime(
+                    "%d/%m/%Y %H:%M:%S"
+                ),
                 "commit_hash": data['commit_hash'],
                 "commit_timestamp": data['commit_timestamp'],
                 "commit_time": data['commit_time'],
