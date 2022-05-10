@@ -69,7 +69,9 @@ class CSVDataPresenter(ConsolePresenter):
                 ),
                 "commit_hash": data['commit_hash'],
                 "commit_timestamp": data['commit_timestamp'],
-                "commit_time": data['commit_time'],
+                "commit_time": datetime.fromtimestamp(data['commit_timestamp']).strftime(
+                    "%d/%m/%Y %H:%M:%S"
+                ),
                 "commit_lead_time_days": data['commit_lead_time_days'],
                 "commit_lead_time": data['commit_lead_time'],
                 "previous_build_commit_hash": data['previous_build_commit_hash'],
@@ -108,7 +110,9 @@ class JSONDataPresenter(ConsolePresenter):
                 ),
                 "commit_hash": data['commit_hash'],
                 "commit_timestamp": data['commit_timestamp'],
-                "commit_time": data['commit_time'],
+                "commit_time": datetime.fromtimestamp(data['commit_timestamp']).strftime(
+                    "%d/%m/%Y %H:%M:%S"
+                ),
                 "commit_lead_time_days": data['commit_lead_time_days'],
                 "commit_lead_time": data['commit_lead_time'],
                 "previous_build_commit_hash": data['previous_build_commit_hash'],

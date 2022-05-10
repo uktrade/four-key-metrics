@@ -68,9 +68,6 @@ class GenerateLeadTimeMetrics:
                         "build_timestamp": build.finished_at,
                         "commit_hash": commit.sha,
                         "commit_timestamp": commit.timestamp,
-                        "commit_time": datetime.fromtimestamp(commit.timestamp).strftime(
-                            "%d/%m/%Y %H:%M:%S"
-                        ),
                         "commit_lead_time_days": commit.lead_time / 86400,
                         "commit_lead_time": str(timedelta(seconds=commit.lead_time)),
                         "previous_build_commit_hash": build.last_build_git_reference,
