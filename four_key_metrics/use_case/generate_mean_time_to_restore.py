@@ -42,6 +42,11 @@ class GenerateMeanTimeToRestore:
         total_time_to_restore = 0
         for e in all_errors:
             total_time_to_restore += e.seconds_to_restore
+
+        if not all_errors:
+            self._presenter.failure("pingdom")
+            return None
+
         mean_time_to_restore = total_time_to_restore / len(all_errors)
         self._presenter.success("pingdom", mean_time_to_restore)
         return int(mean_time_to_restore)
