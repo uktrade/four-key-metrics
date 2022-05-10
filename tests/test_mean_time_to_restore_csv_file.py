@@ -93,3 +93,4 @@ def test_mean_time_to_restore_csv_content(capsys):
         assert csvreader_list[1]["up_timestamp"] == "1641083189"
         assert csvreader_list[1]["up_time"] == "02/01/2022 00:26:29"
         assert csvreader_list[1]["seconds_to_restore"] == "240"
+    clean_up_csv_file(csv_filename)
