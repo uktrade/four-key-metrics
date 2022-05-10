@@ -54,7 +54,7 @@ def test_csv_created(capsys):
     clean_up_csv_file(csv_filename)
 
 
-def test_mean_time_to_restore_csv(capsys):
+def test_mean_time_to_restore_csv_headers(capsys):
     generate_mean_time_to_restore_to_csv()
     csv_filename, captured = get_csv_filename_and_captured_outerr(capsys)
 
@@ -69,3 +69,27 @@ def test_mean_time_to_restore_csv(capsys):
         assert csvreader.fieldnames.__contains__("up_time")
         assert csvreader.fieldnames.__contains__("seconds_to_restore")
     clean_up_csv_file(csv_filename)
+
+
+def test_mean_time_to_restore_csv_content(capsys):
+    generate_mean_time_to_restore_to_csv()
+    csv_filename, captured = get_csv_filename_and_captured_outerr(capsys)
+
+    with open(csv_filename, newline="") as csvfile:
+        csvreader_list = list(csv.DictReader(csvfile))
+
+        assert csvreader_list[0]["source"] == "pingdom"
+        assert csvreader_list[0]["project"] == "Data Hub P1"
+        assert csvreader_list[0]["down_timestamp"] == "1637168609"
+        assert csvreader_list[0]["down_time"] == "17/11/2021 17:03:29"
+        assert csvreader_list[0]["up_timestamp"] == "1637172329"
+        assert csvreader_list[0]["up_time"] == "17/11/2021 18:05:29"
+        assert csvreader_list[0]["seconds_to_restore"] == "3720"
+
+        assert csvreader_list[1]["source"] == "pingdom"
+        assert csvreader_list[1]["project"] == "Data Hub P1"
+        assert csvreader_list[1]["down_timestamp"] == "1641082949"
+        assert csvreader_list[1]["down_time"] == "02/01/2022 00:22:29"
+        assert csvreader_list[1]["up_timestamp"] == "1641083189"
+        assert csvreader_list[1]["up_time"] == "02/01/2022 00:26:29"
+        assert csvreader_list[1]["seconds_to_restore"] == "240"
