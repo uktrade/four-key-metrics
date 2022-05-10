@@ -2,6 +2,7 @@ import os
 
 import httpretty
 import pytest
+from freezegun import freeze_time
 
 from four_key_metrics.gateways import PingdomOutages
 from four_key_metrics.domain_models import PingdomOutage
@@ -73,7 +74,7 @@ def test_get_pingdom_id_for_check_names(
     assert expected_terminal_output in captured.out
 
 
-@pytest.mark.freeze_time("2022-05-09")
+@freeze_time("2022-05-09")
 @pytest.mark.parametrize(
     "pingdom_check_id, from_timestamp_arg, expected_from_timestamp, expected_result",
     [
