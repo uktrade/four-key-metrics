@@ -18,11 +18,11 @@ class ConsolePresenter:
         )
 
     def success(
-        self,
-        repository,
-        environment,
-        lead_time_mean_average,
-        lead_time_standard_deviation,
+            self,
+            repository,
+            environment,
+            lead_time_mean_average,
+            lead_time_standard_deviation,
     ):
         pprint(
             {
@@ -83,7 +83,22 @@ class JSONDataPresenter(ConsolePresenter):
         self._has_data = False
 
     def add(self, data: dict):
-        json_data = json.dumps(data, sort_keys=True, indent=2)
+        json_data = json.dumps(
+            {
+                "repository": data['repository'],
+                "build_commit_hash": data['build_commit_hash'],
+                "build_timestamp": data['build_timestamp'],
+                "build_time": data['build_time'],
+                "commit_hash": data['commit_hash'],
+                "commit_timestamp": data['commit_timestamp'],
+                "commit_time": data['commit_time'],
+                "commit_lead_time_days": data['commit_lead_time_days'],
+                "commit_lead_time": data['commit_lead_time'],
+                "previous_build_commit_hash": data['previous_build_commit_hash'],
+            },
+            sort_keys=True,
+            indent=2
+        )
         self._json_file.write(f"{self._delimiter()}{json_data}")
         self._has_data = True
 
