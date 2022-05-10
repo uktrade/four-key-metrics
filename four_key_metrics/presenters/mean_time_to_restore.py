@@ -8,11 +8,10 @@ from four_key_metrics.constants import MTR_FIELD_NAMES
 
 
 class ConsolePresenter:
-    def failure(self, source, project):
+    def failure(self, source):
         pprint(
             {
                 "source": source,
-                "project": project,
                 "average": None,
             }
         )
@@ -20,13 +19,11 @@ class ConsolePresenter:
     def success(
         self,
         source,
-        project,
         mean_time_to_restore_average,
     ):
         pprint(
             {
                 "source": source,
-                "project": project,
                 "average": mean_time_to_restore_average,
             },
             sort_dicts=False,

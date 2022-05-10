@@ -15,7 +15,11 @@ class GenerateMeanTimeToRestorePresenter(Protocol):
     def failure(self, pingdom_check_names):
         ...
 
-    def success(self, repository, environment, mean_time_to_restore):
+    def success(
+        self,
+        source,
+        mean_time_to_restore_average,
+    ):
         ...
 
 
@@ -33,9 +37,11 @@ class GenerateMeanTimeToRestore:
         finally:
             self._presenter.end()
 
-    def _get_pingdom_mean_time_to_restore(self, check_names: List[str]) -> float:
+    def _get_pingdom_mean_time_to_restore(self, check_names: List[str]):
         all_errors = PingdomErrors().get_pingdom_errors(check_names)
         total_time_to_restore = 0
         for e in all_errors:
             total_time_to_restore += e.seconds_to_restore
-        return total_time_to_restore / len(all_errors)
+        mean_time_to_restore = total_time_to_restore / len(all_errors)
+        self._presenter.success("pingdom", mean_time_to_restore)
+        return int(mean_time_to_restore)

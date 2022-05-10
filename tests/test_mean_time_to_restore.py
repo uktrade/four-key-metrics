@@ -14,6 +14,17 @@ from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outag
 from display import DisplayShell
 
 
+class ConsoleOnlyPresenter(ConsolePresenter):
+    def add(self, data: dict):
+        pass
+
+    def begin(self):
+        pass
+
+    def end(self):
+        pass
+
+
 @pytest.fixture(autouse=True)
 def around_each():
     httpretty.enable(allow_net_connect=False, verbose=True)
@@ -23,18 +34,7 @@ def around_each():
     httpretty.disable()
 
 
-def test_get_pingdom_mean_time_to_restore():
-    httpretty_checks()
-    httpretty_summary_outage_p1()
-
-    generate_mean_time_to_restore = GenerateMeanTimeToRestore()
-    assert (
-        generate_mean_time_to_restore._get_pingdom_mean_time_to_restore(["Data Hub P1"])
-        == 1980
-    )
-
-
-def xtest_mean_time_to_restore_output():
+def test_mean_time_to_restore_output(capsys):
     httpretty_checks()
     httpretty_summary_outage_p1()
     check_names = ["Data Hub P1"]
@@ -43,14 +43,9 @@ def xtest_mean_time_to_restore_output():
         check_names, ConsoleOnlyPresenter()
     )
 
-    expect_result = {
-        "source": "pingdom",
-        "project": "Data Hub P1",
-        "average": 1980,
-    }
-
     captured = capsys.readouterr()
-    assert expect_result in captured.out
+    assert "'source': 'pingdom'" in captured.out
+    assert "'average': 1980" in captured.out
 
 
 def xtest_do_mean_time_to_restore():
