@@ -10,6 +10,7 @@ from four_key_metrics.presenters.lead_time_metrics import JSONDataPresenter
 from four_key_metrics.use_case_factory import UseCaseFactory
 from tests.mock_github_request import httpretty_two_github_requests
 from tests.mock_jenkins_request import httpretty_two_jenkins_builds
+from tests.utilities import get_filename_and_captured_outerr
 
 
 @pytest.fixture(autouse=True)
@@ -28,10 +29,7 @@ def around_each():
 
 
 def get_json_filename_and_captured_outerr(capsys):
-    captured = capsys.readouterr()
-    regex_filename = r"lead_time_metrics_[0-9]{2}-[0-9]{2}-[0-9]{4}_[0-9]{6}.json"
-    json_filename = re.search(regex_filename, captured.out).group()
-    return json_filename, captured
+    return get_filename_and_captured_outerr(capsys, "lead_time_metrics_", "json")
 
 
 def run_display_with_simple_builds():
