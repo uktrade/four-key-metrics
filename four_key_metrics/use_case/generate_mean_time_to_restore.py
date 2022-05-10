@@ -18,6 +18,12 @@ class GenerateMeanTimeToRestorePresenter(Protocol):
     def success(
         self,
         source,
+        project,
+        down_timestamp,
+        down_time,
+        up_timestamp,
+        up_time,
+        seconds_to_restore,
         mean_time_to_restore_average,
     ):
         ...
@@ -48,5 +54,7 @@ class GenerateMeanTimeToRestore:
             return None
 
         mean_time_to_restore = total_time_to_restore / len(all_errors)
+        # this calls success on the console presenter AND csv presenter, as csv presenter class extends from console class
+        # we need a way fo accessing all pingdomoutages at this point in order to pass them to CSV success method
         self._presenter.success("pingdom", mean_time_to_restore)
         return int(mean_time_to_restore)

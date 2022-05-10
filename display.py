@@ -6,11 +6,11 @@ from dotenv import load_dotenv
 from four_key_metrics.constants import DATAHUB_GIT_PROJECTS
 from four_key_metrics.constants import PINGDOM_CHECK_NAMES
 from four_key_metrics.file_utilities import remove_generated_reports
-from four_key_metrics.gateways import PingdomOutages
 from four_key_metrics.presenters.lead_time_metrics import (
-    CSVDataPresenter,
+    CSVDataPresenter as MeanTimeCSVPresenter,
     JSONDataPresenter,
 )
+from four_key_metrics.presenters.mean_time_to_restore import CSVDataPresenter
 from four_key_metrics.use_case_factory import UseCaseFactory
 
 load_dotenv()
@@ -59,7 +59,7 @@ class DisplayShell(Cmd):
         pingdom_check_names = PINGDOM_CHECK_NAMES
 
         UseCaseFactory().create("generate_lead_time_metrics")(
-            pingdom_check_names, data_presenter
+            pingdom_check_names, MeanTimeCSVPresenter.create()
         )
 
     def do_remove_reports(self, arg):
