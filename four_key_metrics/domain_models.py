@@ -25,7 +25,7 @@ class GitCommit:
         self.timestamp = timestamp
 
 
-class PingdomOutage:
+class PingdomOutage: #@todo This should probably just be "Outage", and not specific to Pingdom
     def __init__(self, check_name, check_id, down_timestamp, up_timestamp):
         self.check_name = check_name
         self.check_id = check_id
