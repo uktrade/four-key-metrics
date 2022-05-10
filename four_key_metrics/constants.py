@@ -11,6 +11,16 @@ LTM_FIELD_NAMES = [
     "previous_build_commit_hash",
 ]
 
+MTR_FIELD_NAMES = [
+    "source",
+    "project",
+    "down_timestamp",
+    "down_time",
+    "up_timestamp",
+    "up_time",
+    "seconds_to_restore",
+]
+
 DATAHUB_GIT_PROJECTS = [
     {
         "job": "datahub-api",
