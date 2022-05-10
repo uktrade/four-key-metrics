@@ -1,5 +1,6 @@
-import os
+import csv
 import httpretty
+import os
 import pytest
 
 from four_key_metrics.use_case.generate_mean_time_to_restore import (
@@ -19,6 +20,22 @@ def get_csv_filename_and_captured_outerr(capsys):
     return get_filename_and_captured_outerr(capsys, "mean_time_to_restore_", "csv")
 
 
+def generate_mean_time_to_restore_to_csv():
+    httpretty_checks()
+    httpretty_summary_outage_p1()
+    check_names = ["Data Hub P1"]
+
+    UseCaseFactory().create("generate_mean_time_to_restore")(
+        check_names, CSVDataPresenter.create()
+    )
+
+
+def clean_up_csv_file(csv_filename):
+    file_exists = os.path.exists(csv_filename)
+    if file_exists:
+        os.remove(csv_filename)
+
+
 @pytest.fixture(autouse=True)
 def around_each():
     httpretty.enable(allow_net_connect=False, verbose=True)
@@ -29,34 +46,26 @@ def around_each():
 
 
 def test_csv_created(capsys):
-    httpretty_checks()
-    httpretty_summary_outage_p1()
-    check_names = ["Data Hub P1"]
-
-    UseCaseFactory().create("generate_mean_time_to_restore")(
-        check_names, CSVDataPresenter.create()
-    )
-
+    generate_mean_time_to_restore_to_csv()
     csv_filename, captured = get_csv_filename_and_captured_outerr(capsys)
     file_exists = os.path.exists(csv_filename)
     assert "CSV metrics stored in mean_time_to_restore_" in captured.out
     assert file_exists
-    if file_exists:
-        os.remove(csv_filename)
-        assert os.path.exists(csv_filename) is False
+    clean_up_csv_file(csv_filename)
 
 
 def test_mean_time_to_restore_csv(capsys):
-    httpretty_checks()
-    httpretty_summary_outage_p1()
-    check_names = ["Data Hub P1"]
+    generate_mean_time_to_restore_to_csv()
+    csv_filename, captured = get_csv_filename_and_captured_outerr(capsys)
 
-    UseCaseFactory().create("generate_mean_time_to_restore")(
-        check_names, CSVDataPresenter.create()
-    )
+    with open(csv_filename, newline="") as csvfile:
+        csvreader = csv.DictReader(csvfile)
 
-    # Check
-    captured = capsys.readouterr()
-    assert "'source': 'pingdom'" in captured.out
-    assert "'average': 1980" in captured.out
-    assert "'count': 2" in captured.out
+        assert csvreader.fieldnames.__contains__("source")
+        assert csvreader.fieldnames.__contains__("project")
+        assert csvreader.fieldnames.__contains__("down_timestamp")
+        assert csvreader.fieldnames.__contains__("down_time")
+        assert csvreader.fieldnames.__contains__("up_timestamp")
+        assert csvreader.fieldnames.__contains__("up_time")
+        assert csvreader.fieldnames.__contains__("seconds_to_restore")
+    clean_up_csv_file(csv_filename)
