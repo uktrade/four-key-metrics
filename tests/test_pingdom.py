@@ -163,6 +163,3 @@ def test_calculate_time_to_restore():
         up_timestamp=1652114577,
     )
     assert pingdomOutage.seconds_to_restore == 20
-
-def test_circle():
-    assert False
