@@ -46,8 +46,9 @@ class GenerateMeanTimeToRestore:
     def _get_pingdom_mean_time_to_restore(self, check_names: List[str]):
         all_outages = PingdomOutages().get_pingdom_outages(check_names)
         total_time_to_restore = 0
-        for e in all_outages:
-            total_time_to_restore += e.seconds_to_restore
+        for outage in all_outages:
+            total_time_to_restore += outage.seconds_to_restore
+            self._presenter.add(outage)
 
         if not all_outages:
             self._presenter.failure("pingdom")
