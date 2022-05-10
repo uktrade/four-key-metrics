@@ -46,6 +46,7 @@ def test_mean_time_to_restore_output_failure(capsys):
     captured = capsys.readouterr()
     assert "'source': 'pingdom'" in captured.out
     assert "'average': None" in captured.out
+    assert "'count': None" in captured.out
 
 
 def test_mean_time_to_restore_output(capsys):
@@ -60,6 +61,7 @@ def test_mean_time_to_restore_output(capsys):
     captured = capsys.readouterr()
     assert "'source': 'pingdom'" in captured.out
     assert "'average': 1980" in captured.out
+    assert "'count': 2" in captured.out
 
 
 def xtest_do_mean_time_to_restore():

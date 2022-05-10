@@ -56,5 +56,5 @@ class GenerateMeanTimeToRestore:
         mean_time_to_restore = total_time_to_restore / len(all_outages)
         # this calls success on the console presenter AND csv presenter, as csv presenter class extends from console class
         # we need a way fo accessing all pingdomoutages at this point in order to pass them to CSV success method
-        self._presenter.success("pingdom", mean_time_to_restore)
+        self._presenter.success("pingdom", mean_time_to_restore, all_outages)
         return int(mean_time_to_restore)
