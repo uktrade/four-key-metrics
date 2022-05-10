@@ -59,7 +59,22 @@ class CSVDataPresenter(ConsolePresenter):
         self._writer.writeheader()
 
     def add(self, data: dict):
-        self._writer.writerow(data)
+        self._writer.writerow(
+            {
+                "repository": data['repository'],
+                "build_commit_hash": data['build_commit_hash'],
+                "build_timestamp": data['build_timestamp'],
+                "build_time": datetime.fromtimestamp(data['build_timestamp']).strftime(
+                    "%d/%m/%Y %H:%M:%S"
+                ),
+                "commit_hash": data['commit_hash'],
+                "commit_timestamp": data['commit_timestamp'],
+                "commit_time": data['commit_time'],
+                "commit_lead_time_days": data['commit_lead_time_days'],
+                "commit_lead_time": data['commit_lead_time'],
+                "previous_build_commit_hash": data['previous_build_commit_hash'],
+            }
+        )
 
     def end(self) -> list:
         self._csv_file.close()
