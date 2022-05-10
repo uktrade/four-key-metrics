@@ -7,12 +7,13 @@ import requests
 from four_key_metrics.gateways import JenkinsBuilds, GitHubCommits
 from four_key_metrics.use_case.generate_lead_time_metrics import ProjectSummariser
 from tests.authorization_assertions import assert_authorization_is
-from tests.mock_jenkins_request import httpretty_404_no_job_jenkings_builds
-from tests.mock_jenkins_request import httpretty_no_jenkins_builds
-from tests.mock_jenkins_request import httpretty_one_jenkings_build
-from tests.mock_jenkins_request import httpretty_two_jenkins_builds
 from tests.mock_jenkins_request import (
     httpretty_two_jenkins_builds_one_production_one_development,
+    httpretty_three_jenkins_builds_one_failure,
+    httpretty_404_no_job_jenkings_builds,
+    httpretty_no_jenkins_builds,
+    httpretty_one_jenkings_build,
+    httpretty_two_jenkins_builds,
 )
 
 
@@ -77,7 +78,7 @@ def test_can_get_two_builds():
     assert len(builds) == 2
     assert builds[0].started_at == 1643768542.0
     assert builds[0].finished_at == 1643769142.0
-    assert not builds[0].successful
+    assert builds[0].successful
     assert builds[0].environment == "production"
     assert builds[0].git_reference == "build-sha-1"
 
@@ -131,6 +132,13 @@ def test_can_get_environment_from_actions_list():
         "hudson.model.ParametersAction", ["parameters", 0, "value"], actions
     )
     assert "production" == environment
+
+
+def test_filter_out_failed_builds():
+    all_builds = httpretty_three_jenkins_builds_one_failure()
+    builds = all_builds.get_jenkins_builds("test-job", "production")
+    assert len(builds) == 2
+    assert all(b.successful for b in builds)
 
 
 def test_add_project_fails_without_schema():

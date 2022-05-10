@@ -69,7 +69,7 @@ def httpretty_two_jenkins_builds():
             {
                 "timestamp": 1643768542000,
                 "duration": 600000,
-                "result": "FAILURE",
+                "result": "SUCCESS",
                 "actions": [
                     {
                         "_class": "hudson.model.ParametersAction",
@@ -129,7 +129,7 @@ def httpretty_two_jenkins_builds_one_production_one_development():
             {
                 "timestamp": 1643768542000,
                 "duration": 600000,
-                "result": "FAILURE",
+                "result": "SUCCESS",
                 "actions": [
                     {
                         "_class": "hudson.model.ParametersAction",
@@ -184,6 +184,89 @@ def httpretty_two_jenkins_builds_one_production_one_development():
 
 
 def httpretty_three_jenkins_builds():
+    jenkins = {
+        "allBuilds": [
+            {
+                "timestamp": 1643768542000,
+                "duration": 600000,
+                "result": "SUCCESS",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-1",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+            {
+                "timestamp": 1646278413000,
+                "duration": 600000,
+                "result": "SUCCESS",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-2",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+            {
+                "timestamp": 1649047484000,
+                "duration": 600000,
+                "result": "SUCCESS",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-3",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+        ]
+    }
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://jenkins.test/" "job/test-job/api/json",
+        body=json.dumps(jenkins),
+    )
+    return JenkinsBuilds("https://jenkins.test/")
+
+
+def httpretty_three_jenkins_builds_one_failure():
     jenkins = {
         "allBuilds": [
             {

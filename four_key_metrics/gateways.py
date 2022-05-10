@@ -1,6 +1,5 @@
 import os
 from datetime import datetime, timedelta
-
 import ciso8601
 import requests
 from glom import glom, Path
@@ -52,9 +51,12 @@ class JenkinsBuilds:
             return []
 
         builds = self._update_build_with_github_commits(body)
+        return self._get_list_filtered_builds(builds, environment)
+
+    def _get_list_filtered_builds(self, builds, environment):
         return list(
             filter(
-                lambda b: b.environment == environment,
+                lambda b: b.environment == environment and b.successful,
                 [build for build in builds if build.git_reference],
             )
         )
