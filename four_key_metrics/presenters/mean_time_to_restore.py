@@ -11,12 +11,12 @@ class ConsolePresenter:
     def failure(self, source):
         pprint({"source": source, "average": None, "count": None})
 
-    def success(self, source, mean_time_to_restore_average, all_outages):
+    def success(self, source, mean_time_to_restore_average, outages_count):
         pprint(
             {
                 "source": source,
                 "average": mean_time_to_restore_average,
-                "count": len(all_outages),
+                "count": outages_count,
             },
             sort_dicts=False,
         )

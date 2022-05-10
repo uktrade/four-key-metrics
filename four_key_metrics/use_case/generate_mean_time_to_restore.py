@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Protocol
 from four_key_metrics.gateways import PingdomOutages
 
@@ -15,17 +16,7 @@ class GenerateMeanTimeToRestorePresenter(Protocol):
     def failure(self, pingdom_check_names):
         ...
 
-    def success(
-        self,
-        source,
-        project,
-        down_timestamp,
-        down_time,
-        up_timestamp,
-        up_time,
-        seconds_to_restore,
-        mean_time_to_restore_average,
-    ):
+    def success(self, source, mean_time_to_restore_average, outages_count):
         ...
 
 
@@ -48,14 +39,26 @@ class GenerateMeanTimeToRestore:
         total_time_to_restore = 0
         for outage in all_outages:
             total_time_to_restore += outage.seconds_to_restore
-            self._presenter.add(outage)
+            self._presenter.add(
+                {
+                    "source": "pingdom",
+                    "project": outage.check_name,
+                    "down_timestamp": outage.down_timestamp,
+                    "down_time": datetime.fromtimestamp(outage.down_timestamp).strftime(
+                        "%d/%m/%Y %H:%M:%S"
+                    ),
+                    "up_timestamp": outage.up_timestamp,
+                    "up_time": datetime.fromtimestamp(outage.up_timestamp).strftime(
+                        "%d/%m/%Y %H:%M:%S"
+                    ),
+                    "seconds_to_restore": outage.seconds_to_restore,
+                }
+            )
 
         if not all_outages:
             self._presenter.failure("pingdom")
             return None
 
         mean_time_to_restore = total_time_to_restore / len(all_outages)
-        # this calls success on the console presenter AND csv presenter, as csv presenter class extends from console class
-        # we need a way fo accessing all pingdomoutages at this point in order to pass them to CSV success method
-        self._presenter.success("pingdom", mean_time_to_restore, all_outages)
+        self._presenter.success("pingdom", mean_time_to_restore, len(all_outages))
         return int(mean_time_to_restore)

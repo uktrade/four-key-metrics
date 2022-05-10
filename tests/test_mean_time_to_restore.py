@@ -6,7 +6,10 @@ import pytest
 from four_key_metrics.use_case.generate_mean_time_to_restore import (
     GenerateMeanTimeToRestore,
 )
-from four_key_metrics.presenters.mean_time_to_restore import ConsolePresenter
+from four_key_metrics.presenters.mean_time_to_restore import (
+    ConsolePresenter,
+    CSVDataPresenter,
+)
 from four_key_metrics.use_case_factory import UseCaseFactory
 
 from four_key_metrics.gateways import PingdomOutages
@@ -64,8 +67,16 @@ def test_mean_time_to_restore_output(capsys):
     assert "'count': 2" in captured.out
 
 
-def xtest_do_mean_time_to_restore():
-    display_shell = DisplayShell()
-    display_shell.do_mean_time_to_restore(["Data Hub P1"])
+def xtest_mean_time_to_restore_csv(capsys):
+    httpretty_checks()
+    httpretty_summary_outage_p1()
+    check_names = ["Data Hub P1"]
 
-    assert false
+    UseCaseFactory().create("generate_mean_time_to_restore")(
+        check_names, CSVDataPresenter.create()
+    )
+
+    captured = capsys.readouterr()
+    assert "'source': 'pingdom'" in captured.out
+    assert "'average': 1980" in captured.out
+    assert "'count': 2" in captured.out
