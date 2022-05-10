@@ -44,16 +44,16 @@ class GenerateMeanTimeToRestore:
             self._presenter.end()
 
     def _get_pingdom_mean_time_to_restore(self, check_names: List[str]):
-        all_errors = PingdomOutages().get_pingdom_outages(check_names)
+        all_outages = PingdomOutages().get_pingdom_outages(check_names)
         total_time_to_restore = 0
-        for e in all_errors:
+        for e in all_outages:
             total_time_to_restore += e.seconds_to_restore
 
-        if not all_errors:
+        if not all_outages:
             self._presenter.failure("pingdom")
             return None
 
-        mean_time_to_restore = total_time_to_restore / len(all_errors)
+        mean_time_to_restore = total_time_to_restore / len(all_outages)
         # this calls success on the console presenter AND csv presenter, as csv presenter class extends from console class
         # we need a way fo accessing all pingdomoutages at this point in order to pass them to CSV success method
         self._presenter.success("pingdom", mean_time_to_restore)
