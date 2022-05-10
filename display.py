@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from four_key_metrics.constants import DATAHUB_GIT_PROJECTS
 from four_key_metrics.constants import PINGDOM_CHECK_NAMES
 from four_key_metrics.file_utilities import remove_generated_reports
-from four_key_metrics.gateways import PingdomErrors
+from four_key_metrics.gateways import PingdomOutages
 from four_key_metrics.presenters.lead_time_metrics import (
     CSVDataPresenter,
     JSONDataPresenter,

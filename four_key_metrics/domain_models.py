@@ -25,7 +25,7 @@ class GitCommit:
         self.timestamp = timestamp
 
 
-class PingdomError:
+class PingdomOutage:
     def __init__(self, check_name, check_id, down_timestamp, up_timestamp):
         self.check_name = check_name
         self.check_id = check_id

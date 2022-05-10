@@ -1,5 +1,5 @@
 from typing import List, Protocol
-from four_key_metrics.gateways import PingdomErrors
+from four_key_metrics.gateways import PingdomOutages
 
 
 class GenerateMeanTimeToRestorePresenter(Protocol):
@@ -38,7 +38,7 @@ class GenerateMeanTimeToRestore:
             self._presenter.end()
 
     def _get_pingdom_mean_time_to_restore(self, check_names: List[str]):
-        all_errors = PingdomErrors().get_pingdom_errors(check_names)
+        all_errors = PingdomOutages().get_pingdom_outages(check_names)
         total_time_to_restore = 0
         for e in all_errors:
             total_time_to_restore += e.seconds_to_restore

@@ -4,7 +4,7 @@ import ciso8601
 import requests
 from glom import glom, Path
 
-from four_key_metrics.domain_models import Build, GitCommit, PingdomError
+from four_key_metrics.domain_models import Build, GitCommit, PingdomOutage
 
 
 class JenkinsBuilds:
@@ -113,7 +113,7 @@ class GitHubCommits:
         return commits
 
 
-class PingdomErrors:
+class PingdomOutages:
     def _get_pingdom_id_for_check_names(self, pingdom_check_names):
         response = requests.get(
             "https://api.pingdom.com/api/3.1/checks/",
@@ -171,18 +171,19 @@ class PingdomErrors:
             if outage["status"] == "down"
         ]
 
-    def get_pingdom_errors(self, pingdom_check_names):
-        pingdom_errors = []
+    def get_pingdom_outages(self, pingdom_check_names):
+        pingdom_outages = []
         pingdom_checks = self._get_pingdom_id_for_check_names(pingdom_check_names)
         for name, id in pingdom_checks.items():
             outages = self._get_pingdom_outage_summary(id)
             for outage in outages:
-                pingdom_errors.append(
-                    PingdomError(
+                pingdom_outages.append(
+                    PingdomOutage(
                         check_name=name,
                         check_id=id,
                         down_timestamp=outage["down_timestamp"],
                         up_timestamp=outage["up_timestamp"],
                     )
                 )
-        return pingdom_errors
+        return pingdom_outages
+

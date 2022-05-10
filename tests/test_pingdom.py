@@ -3,8 +3,8 @@ import os
 import httpretty
 import pytest
 
-from four_key_metrics.gateways import PingdomErrors
-from four_key_metrics.domain_models import PingdomError
+from four_key_metrics.gateways import PingdomOutages
+from four_key_metrics.domain_models import PingdomOutage
 
 from tests.mock_pingdom_request import (
     httpretty_checks,
@@ -23,8 +23,8 @@ def around_each():
 
 
 @pytest.fixture()
-def pingdom_errors():
-    return PingdomErrors()
+def pingdom_outages():
+    return PingdomOutages()
 
 
 @pytest.mark.parametrize(
@@ -62,10 +62,10 @@ def test_get_pingdom_id_for_check_names(
     pingdom_check_names,
     expected_result,
     expected_terminal_output,
-    pingdom_errors,
+    pingdom_outages,
 ):
     httpretty_checks()
-    pingdom_info = pingdom_errors._get_pingdom_id_for_check_names(pingdom_check_names)
+    pingdom_info = pingdom_outages._get_pingdom_id_for_check_names(pingdom_check_names)
 
     captured = capsys.readouterr()
 
@@ -102,12 +102,12 @@ def test_get_summary_outage_for_check_id(
     from_timestamp_arg,
     expected_from_timestamp,
     expected_result,
-    pingdom_errors,
+    pingdom_outages,
 ):
     httpretty_checks()
     httpretty_summary_outage_p1()
 
-    pingdom_info = pingdom_errors._get_pingdom_outage_summary(
+    pingdom_info = pingdom_outages._get_pingdom_outage_summary(
         pingdom_check_id, from_timestamp_arg
     )
 
@@ -118,15 +118,15 @@ def test_get_summary_outage_for_check_id(
     )
 
 
-def test_get_summary_outage_no_outages(pingdom_errors):
+def test_get_summary_outage_no_outages(pingdom_outages):
     httpretty_checks()
     httpretty_summary_outage_blank()
 
-    pingdom_info = pingdom_errors._get_pingdom_outage_summary(4946807)
+    pingdom_info = pingdom_outages._get_pingdom_outage_summary(4946807)
     assert pingdom_info == []
 
 
-def test_get_pingdom_errors(pingdom_errors):
+def test_get_pingdom_outages(pingdom_outages):
 
     httpretty_checks()
     httpretty_summary_outage_p1()
@@ -136,13 +136,13 @@ def test_get_pingdom_errors(pingdom_errors):
     ]
 
     expected_result = [
-        PingdomError(
+        PingdomOutage(
             check_name="Data Hub P1",
             check_id=4946807,
             down_timestamp=1637168609,
             up_timestamp=1637172329,
         ),
-        PingdomError(
+        PingdomOutage(
             check_name="Data Hub P1",
             check_id=4946807,
             down_timestamp=1641082949,
@@ -150,16 +150,16 @@ def test_get_pingdom_errors(pingdom_errors):
         ),
     ]
     assert (
-        pingdom_errors.get_pingdom_errors(pingdom_check_names)[0].__dict__
+        pingdom_outages.get_pingdom_outages(pingdom_check_names)[0].__dict__
         == expected_result[0].__dict__
     )
 
 
 def test_calculate_time_to_restore():
-    pingdomError = PingdomError(
+    pingdomOutage = PingdomOutage(
         check_name="Test check",
         check_id=123,
         down_timestamp=1652114557,
         up_timestamp=1652114577,
     )
-    assert pingdomError.seconds_to_restore == 20
+    assert pingdomOutage.seconds_to_restore == 20
