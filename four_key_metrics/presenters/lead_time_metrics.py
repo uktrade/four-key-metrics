@@ -37,6 +37,25 @@ class ConsolePresenter:
         )
 
 
+def _to_output_dict(data):
+    return {
+        "repository": data['repository'],
+        "build_commit_hash": data['build_commit_hash'],
+        "build_timestamp": data['build_timestamp'],
+        "build_time": datetime.fromtimestamp(data['build_timestamp']).strftime(
+            "%d/%m/%Y %H:%M:%S"
+        ),
+        "commit_hash": data['commit_hash'],
+        "commit_timestamp": data['commit_timestamp'],
+        "commit_time": datetime.fromtimestamp(data['commit_timestamp']).strftime(
+            "%d/%m/%Y %H:%M:%S"
+        ),
+        "commit_lead_time_days": data['commit_lead_time'] / 86400,
+        "commit_lead_time": str(timedelta(seconds=data['commit_lead_time'])),
+        "previous_build_commit_hash": data['previous_build_commit_hash'],
+    }
+
+
 class CSVDataPresenter(ConsolePresenter):
     def __init__(self, file_name: str, field_names: list[str]) -> None:
         self._file_name = file_name
@@ -59,24 +78,7 @@ class CSVDataPresenter(ConsolePresenter):
         self._writer.writeheader()
 
     def add(self, data: dict):
-        self._writer.writerow(
-            {
-                "repository": data['repository'],
-                "build_commit_hash": data['build_commit_hash'],
-                "build_timestamp": data['build_timestamp'],
-                "build_time": datetime.fromtimestamp(data['build_timestamp']).strftime(
-                    "%d/%m/%Y %H:%M:%S"
-                ),
-                "commit_hash": data['commit_hash'],
-                "commit_timestamp": data['commit_timestamp'],
-                "commit_time": datetime.fromtimestamp(data['commit_timestamp']).strftime(
-                    "%d/%m/%Y %H:%M:%S"
-                ),
-                "commit_lead_time_days": data['commit_lead_time'] / 86400,
-                "commit_lead_time": str(timedelta(seconds=data['commit_lead_time'])),
-                "previous_build_commit_hash": data['previous_build_commit_hash'],
-            }
-        )
+        self._writer.writerow(_to_output_dict(data))
 
     def end(self) -> list:
         self._csv_file.close()
@@ -101,22 +103,7 @@ class JSONDataPresenter(ConsolePresenter):
 
     def add(self, data: dict):
         json_data = json.dumps(
-            {
-                "repository": data['repository'],
-                "build_commit_hash": data['build_commit_hash'],
-                "build_timestamp": data['build_timestamp'],
-                "build_time": datetime.fromtimestamp(data['build_timestamp']).strftime(
-                    "%d/%m/%Y %H:%M:%S"
-                ),
-                "commit_hash": data['commit_hash'],
-                "commit_timestamp": data['commit_timestamp'],
-                "commit_time": datetime.fromtimestamp(data['commit_timestamp']).strftime(
-                    "%d/%m/%Y %H:%M:%S"
-                ),
-                "commit_lead_time_days": data['commit_lead_time'] / 86400,
-                "commit_lead_time": str(timedelta(seconds=data['commit_lead_time'])),
-                "previous_build_commit_hash": data['previous_build_commit_hash'],
-            },
+            _to_output_dict(data),
             sort_keys=True,
             indent=2
         )
