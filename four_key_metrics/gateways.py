@@ -186,4 +186,3 @@ class PingdomOutages:
                     )
                 )
         return pingdom_outages
-
