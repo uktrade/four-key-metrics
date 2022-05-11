@@ -1,10 +1,16 @@
 import csv
-import json
-import os
-from datetime import timedelta, datetime
+from datetime import datetime
 from pprint import pprint
 
-from four_key_metrics.constants import MTR_FIELD_NAMES
+MTR_FIELD_NAMES = [
+    "source",
+    "project",
+    "down_timestamp",
+    "down_time",
+    "up_timestamp",
+    "up_time",
+    "seconds_to_restore",
+]
 
 
 class ConsolePresenter:
