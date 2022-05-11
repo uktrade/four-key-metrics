@@ -30,7 +30,7 @@ def around_each():
     httpretty.disable()
 
 
-def test_mean_time_to_restore_output_failure(capsys):
+def test_mean_time_to_restore_output_failure_pingdom(capsys):
     httpretty_checks()
     httpretty_summary_outage_p1()
     check_names = ["Failing"]
@@ -45,7 +45,7 @@ def test_mean_time_to_restore_output_failure(capsys):
     assert "'count': None" in captured.out
 
 
-def test_mean_time_to_restore_output(capsys):
+def test_mean_time_to_restore_output_pingdom(capsys):
     httpretty_checks()
     httpretty_summary_outage_p1()
     check_names = ["Data Hub P1"]
