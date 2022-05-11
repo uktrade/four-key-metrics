@@ -9,7 +9,7 @@ from four_key_metrics.presenters.mean_time_to_restore import (
 )
 from four_key_metrics.use_case_factory import UseCaseFactory
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
-from tests.utilities import clean_up_csv_file, get_filename_and_captured_outerr
+from tests.utilities import clean_up_test_file, get_filename_and_captured_outerr
 
 
 def get_csv_filename_and_captured_outerr(capsys):
@@ -35,7 +35,7 @@ class TestMeanTimeToRestoreCSVFile:
         generate_mean_time_to_restore_to_csv()
         self.filename, self.captured = get_csv_filename_and_captured_outerr(capsys)
         yield
-        clean_up_csv_file(self.filename)
+        clean_up_test_file(self.filename)
         httpretty.disable()
 
     def test_csv_created(self):

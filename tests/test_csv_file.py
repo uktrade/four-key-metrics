@@ -10,7 +10,7 @@ from four_key_metrics.presenters.lead_time_metrics import CSVDataPresenter
 from four_key_metrics.use_case_factory import UseCaseFactory
 from tests.mock_github_request import httpretty_two_github_requests
 from tests.mock_jenkins_request import httpretty_two_jenkins_builds
-from tests.utilities import clean_up_csv_file, get_filename_and_captured_outerr
+from tests.utilities import clean_up_test_file, get_filename_and_captured_outerr
 
 
 def get_csv_filename_and_captured_outerr(capsys):
@@ -44,7 +44,7 @@ class TestLeadTimeCSVFile:
         httpretty.reset()
         yield
         httpretty.disable()
-        clean_up_csv_file(self.filename)
+        clean_up_test_file(self.filename)
 
     def test_csv_created(self, capsys):
         run_display_with_simple_builds()

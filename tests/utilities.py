@@ -9,7 +9,7 @@ def get_filename_and_captured_outerr(capsys, prefix, filetype):
     return filename, captured
 
 
-def clean_up_csv_file(csv_filename):
-    file_exists = os.path.exists(csv_filename)
+def clean_up_test_file(filename):
+    file_exists = os.path.exists(filename)
     if file_exists:
-        os.remove(csv_filename)
+        os.remove(filename)
