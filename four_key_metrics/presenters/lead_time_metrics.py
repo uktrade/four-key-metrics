@@ -80,7 +80,7 @@ class CSVDataPresenter(ConsolePresenter):
     def add(self, data: dict):
         self._writer.writerow(_to_output_dict(data))
 
-    def end(self) -> list:
+    def end(self):
         self._csv_file.close()
         print("CSV metrics stored in", self._file_name)
 
