@@ -70,7 +70,3 @@ https://my.pingdom.com/app/api-tokens
 
 Pingdom documentation:
 https://docs.pingdom.com/api/
-
-
-
-
