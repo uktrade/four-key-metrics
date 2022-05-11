@@ -58,3 +58,12 @@ def test_mean_time_to_restore_output_pingdom(capsys):
     assert "'source': 'pingdom'" in captured.out
     assert "'mean time to restore in seconds': 1980" in captured.out
     assert "'count': 2" in captured.out
+
+
+def xtest_mean_time_to_restore_jenkins(capsys):
+    # TODO Generate mock jenkins data containing failure
+
+    # Call JekinsBuilds().get_jenkins_builds(job)
+
+    # Assert outage
+    pass
