@@ -43,9 +43,7 @@ def run_display_with_simple_builds():
         }
     ]
 
-    UseCaseFactory().create("generate_lead_time_metrics")(
-        projects, JSONDataPresenter()
-    )
+    UseCaseFactory().create("generate_lead_time_metrics")(projects, JSONDataPresenter())
 
 
 def test_json_is_created_and_then_successfully_removed(capsys):

@@ -1,16 +1,3 @@
-LTM_FIELD_NAMES = [
-    "repository",
-    "build_commit_hash",
-    "build_timestamp",
-    "build_time",
-    "commit_hash",
-    "commit_timestamp",
-    "commit_time",
-    "commit_lead_time_days",
-    "commit_lead_time",
-    "previous_build_commit_hash",
-]
-
 MTR_FIELD_NAMES = [
     "source",
     "project",
