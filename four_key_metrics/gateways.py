@@ -11,7 +11,7 @@ class JenkinsBuilds:
     def __init__(self, host):
         self.host = host
 
-    def get_jenkins_builds(self, job, environment):
+    def get_jenkins_builds(self, job):
         try:
             jenkins_url = self.host + "job/%s/api/json" % job
             response = requests.get(
@@ -50,10 +50,10 @@ class JenkinsBuilds:
         if len(body["allBuilds"]) == 0:
             return []
 
-        builds = self._update_build_with_github_commits(body)
-        return self._get_list_filtered_builds(builds, environment)
+        return self._update_build_with_github_commits(body)
 
-    def _get_list_filtered_builds(self, builds, environment):
+    def get_successful_production_builds(self, job, environment):
+        builds = self.get_jenkins_builds(job)
         return list(
             filter(
                 lambda b: b.environment == environment and b.successful,

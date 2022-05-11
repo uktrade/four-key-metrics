@@ -33,7 +33,7 @@ def around_each():
 
 def test_can_get_no_builds():
     all_builds = httpretty_no_jenkins_builds()
-    builds = all_builds.get_jenkins_builds("test-job", "production")
+    builds = all_builds.get_successful_production_builds("test-job", "production")
 
     assert len(builds) == 0
     expected_url = (
@@ -50,7 +50,7 @@ def test_can_get_no_builds():
 
 def test_can_get_one_build():
     all_builds = httpretty_one_jenkings_build()
-    builds = all_builds.get_jenkins_builds("test-job", "production")
+    builds = all_builds.get_successful_production_builds("test-job", "production")
 
     assert len(builds) == 1
 
@@ -73,7 +73,7 @@ def test_can_get_one_build():
 
 def test_can_get_two_builds():
     all_builds = httpretty_two_jenkins_builds()
-    builds = all_builds.get_jenkins_builds("test-job", "production")
+    builds = all_builds.get_successful_production_builds("test-job", "production")
 
     assert len(builds) == 2
     assert builds[0].started_at == 1643768542.0
@@ -136,7 +136,7 @@ def test_can_get_environment_from_actions_list():
 
 def test_filter_out_failed_builds():
     all_builds = httpretty_three_jenkins_builds_one_failure()
-    builds = all_builds.get_jenkins_builds("test-job", "production")
+    builds = all_builds.get_successful_production_builds("test-job", "production")
     assert len(builds) == 2
     assert all(b.successful for b in builds)
 
@@ -147,14 +147,14 @@ def test_add_project_fails_without_schema():
     assert all_builds
 
     with pytest.raises(requests.exceptions.MissingSchema) as exception_info:
-        all_builds.get_jenkins_builds("", "")
+        all_builds.get_successful_production_builds("", "")
     assert "Invalid URL 'job//api/json': No scheme supplied. "
     "Perhaps you meant http://job//api/json?" in str(exception_info.value)
 
 
 def test_no_jenkins_job(capsys):
     all_builds = httpretty_no_jenkins_builds()
-    all_builds.get_jenkins_builds("test-job", "production")
+    all_builds.get_successful_production_builds("test-job", "production")
 
     assert all_builds
 
@@ -163,7 +163,7 @@ def test_empty_add_project(capsys):
     httpretty_404_no_job_jenkings_builds()
     all_builds = httpretty_no_jenkins_builds()
 
-    all_builds.get_jenkins_builds("test-job", "production")
+    all_builds.get_successful_production_builds("test-job", "production")
     metrics = ProjectSummariser(all_builds, GitHubCommits()).get_summary("", "", "", "")
 
     captured = capsys.readouterr()
@@ -241,7 +241,7 @@ def test_can_tell_the_user_to_check_vpn_if_connection_issue(capsys):
     register_on_call_to_jenkins_a_connection_error_occurs()
 
     all_builds = JenkinsBuilds("https://jenkins.test/")
-    builds = all_builds.get_jenkins_builds("test-job", "production")
+    builds = all_builds.get_successful_production_builds("test-job", "production")
     captured = capsys.readouterr()
 
     assert len(builds) == 0

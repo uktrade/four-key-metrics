@@ -16,7 +16,13 @@ class GenerateLeadTimeMetricsPresenter(Protocol):
     def failure(self, project):
         ...
 
-    def success(self, repository, environment, lead_time_mean_average, lead_time_standard_deviation):
+    def success(
+        self,
+        repository,
+        environment,
+        lead_time_mean_average,
+        lead_time_standard_deviation,
+    ):
         ...
 
 
@@ -37,24 +43,18 @@ class GenerateLeadTimeMetrics:
             response = self._project_summariser.get_summary(
                 jenkins_job=project["job"],
                 github_organisation="uktrade",
-                github_repository=project[
-                    "repository"
-                ],
-                environment=project[
-                    "environment"
-                ],
+                github_repository=project["repository"],
+                environment=project["environment"],
             )
             if not response["successful"]:
-                self._presenter.failure(project['repository'])
+                self._presenter.failure(project["repository"])
             else:
-                self._output_build_commit_metrics(
-                    project=project, response=response
-                )
+                self._output_build_commit_metrics(project=project, response=response)
                 self._presenter.success(
                     project["repository"],
                     project["environment"],
                     response["lead_time_mean_average"],
-                    response["lead_time_standard_deviation"]
+                    response["lead_time_standard_deviation"],
                 )
 
     def _output_build_commit_metrics(self, project, response):
@@ -81,7 +81,9 @@ class ProjectSummariser:
     def get_summary(
         self, jenkins_job, github_organisation, github_repository, environment
     ):
-        jenkins_builds = self._jenkins.get_jenkins_builds(jenkins_job, environment)
+        jenkins_builds = self._jenkins.get_successful_production_builds(
+            jenkins_job, environment
+        )
         jenkins_builds.sort(key=lambda b: b.finished_at)
         if len(jenkins_builds) < 2:
             return self._build_summary()
