@@ -41,7 +41,7 @@ class GenerateMeanTimeToRestore:
             total_time_to_restore += outage.seconds_to_restore
             self._presenter.add(
                 {
-                    "source": "pingdom",
+                    "source": outage.source,
                     "project": outage.check_name,
                     "down_timestamp": outage.down_timestamp,
                     "down_time": datetime.fromtimestamp(outage.down_timestamp).strftime(
