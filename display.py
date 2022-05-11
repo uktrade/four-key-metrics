@@ -42,11 +42,11 @@ class DisplayShell(Cmd):
         """
         # TODO: Make this easier to pass and parse these values through the command line
         projects = DATAHUB_GIT_PROJECTS
-        default_output = LeadTimeCSVDataPresenter.create()
+        default_output = LeadTimeCSVDataPresenter()
         data_presenter = {
             "": default_output,
             "csv": default_output,
-            "json": JSONDataPresenter.create(),
+            "json": JSONDataPresenter(),
         }[arg.lower()]
         UseCaseFactory().create("generate_lead_time_metrics")(projects, data_presenter)
 

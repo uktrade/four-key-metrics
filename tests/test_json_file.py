@@ -44,7 +44,7 @@ def run_display_with_simple_builds():
     ]
 
     UseCaseFactory().create("generate_lead_time_metrics")(
-        projects, JSONDataPresenter.create()
+        projects, JSONDataPresenter()
     )
 
 

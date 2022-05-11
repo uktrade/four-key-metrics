@@ -45,7 +45,7 @@ def run_display_with_simple_builds():
     ]
 
     UseCaseFactory().create("generate_lead_time_metrics")(
-        projects, CSVDataPresenter.create()
+        projects, CSVDataPresenter()
     )
 
 
@@ -128,7 +128,7 @@ def test_multiple_projects(capsys):
         },
     ]
     UseCaseFactory().create("generate_lead_time_metrics")(
-        projects, CSVDataPresenter.create()
+        projects, CSVDataPresenter()
     )
 
     csv_filename, captured = get_csv_filename_and_captured_outerr(capsys)

@@ -61,10 +61,6 @@ class CSVDataPresenter(ConsolePresenter):
         self._file_name = f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.csv"
         self._field_names = LTM_FIELD_NAMES
 
-    @staticmethod
-    def create():
-        return CSVDataPresenter()
-
     def begin(self):
         self._csv_file = open(
             self._file_name,
@@ -86,10 +82,6 @@ class JSONDataPresenter(ConsolePresenter):
     def __init__(self) -> None:
         self._file_name = f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.json"
         self._field_names = LTM_FIELD_NAMES
-
-    @staticmethod
-    def create():
-        return JSONDataPresenter()
 
     def begin(self):
         self._json_file = open(self._file_name, "w")
