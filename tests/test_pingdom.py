@@ -5,7 +5,7 @@ import pytest
 from freezegun import freeze_time
 
 from four_key_metrics.gateways import PingdomOutages
-from four_key_metrics.domain_models import PingdomOutage
+from four_key_metrics.domain_models import Outage
 
 from tests.mock_pingdom_request import (
     httpretty_checks,
@@ -137,13 +137,13 @@ def test_get_pingdom_outages(pingdom_outages):
     ]
 
     expected_result = [
-        PingdomOutage(
+        Outage(
             check_name="Data Hub P1",
             check_id=4946807,
             down_timestamp=1637168609,
             up_timestamp=1637172329,
         ),
-        PingdomOutage(
+        Outage(
             check_name="Data Hub P1",
             check_id=4946807,
             down_timestamp=1641082949,
@@ -157,7 +157,7 @@ def test_get_pingdom_outages(pingdom_outages):
 
 
 def test_calculate_time_to_restore():
-    pingdomOutage = PingdomOutage(
+    pingdomOutage = Outage(
         check_name="Test check",
         check_id=123,
         down_timestamp=1652114557,

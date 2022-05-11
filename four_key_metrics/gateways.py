@@ -4,7 +4,7 @@ import ciso8601
 import requests
 from glom import glom, Path
 
-from four_key_metrics.domain_models import Build, GitCommit, PingdomOutage
+from four_key_metrics.domain_models import Build, GitCommit, Outage
 
 
 class JenkinsBuilds:
@@ -178,7 +178,7 @@ class PingdomOutages:
             outages = self._get_pingdom_outage_summary(id)
             for outage in outages:
                 pingdom_outages.append(
-                    PingdomOutage(
+                    Outage(
                         check_name=name,
                         check_id=id,
                         down_timestamp=outage["down_timestamp"],
