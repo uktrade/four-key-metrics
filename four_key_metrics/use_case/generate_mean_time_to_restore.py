@@ -39,6 +39,9 @@ class GenerateMeanTimeToRestore:
         all_outages = PingdomOutages().get_pingdom_outages(check_names)
         self._add_outages_to_presenter(all_outages, "pingdom")
 
+    def _get_jenkins_mean_time_to_restore(self):
+        pass
+
     def _add_outages_to_presenter(self, outages, source_name):
         total_time_to_restore = 0
         for outage in outages:

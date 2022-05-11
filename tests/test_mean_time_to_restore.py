@@ -3,10 +3,15 @@ import os
 import httpretty
 import pytest
 
+from four_key_metrics.gateways import JenkinsBuilds
+from four_key_metrics.use_case.generate_mean_time_to_restore import (
+    GenerateMeanTimeToRestore,
+)
 from four_key_metrics.presenters.mean_time_to_restore import (
     ConsolePresenter,
 )
 from four_key_metrics.use_case_factory import UseCaseFactory
+from tests.mock_jenkins_request import httpretty_four_jenkins_builds_two_failures
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
 
 
@@ -61,9 +66,23 @@ def test_mean_time_to_restore_output_pingdom(capsys):
 
 
 def xtest_mean_time_to_restore_jenkins(capsys):
-    # TODO Generate mock jenkins data containing failure
+    httpretty_four_jenkins_builds_two_failures()
+    ## Mock data for reference
+    # 1st FAILURE: 1643768542000
+    # 1st SUCCESS: 1646278413000
 
-    # Call JekinsBuilds().get_jenkins_builds(job)
+    # 2nd FAILURE: 1649047474000
+    # 2nd SUCCESS: 1649047484000
+    outages = GenerateMeanTimeToRestore()._get_jenkins_mean_time_to_restore("test-job")
+    assert len(outages) == 2
 
-    # Assert outage
-    pass
+    for o in outages:
+        assert o.source == "jenkins"
+        # assert o.project - how do we get the project is that the job that's passed in?
+
+    # assert down_timestamp (failure build timestamp)
+    # assert up_timestamp (next success build timestamp)
+    # assert environment in outage object (need to add to Outage class)
+    # assert check_id is the build commit hash (need to change name of check_id in Outage class)
+    assert outages[0].seconds_to_restore == 2509871000
+    assert outages[1].seconds_to_restore == 10000
