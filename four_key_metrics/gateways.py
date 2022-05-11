@@ -182,6 +182,7 @@ class PingdomOutages:
             for outage in outages:
                 pingdom_outages.append(
                     Outage(
+                        source="pingdom",
                         check_name=name,
                         check_id=id,
                         down_timestamp=outage["down_timestamp"],

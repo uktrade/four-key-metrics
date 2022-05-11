@@ -26,8 +26,8 @@ class GitCommit:
 
 
 class Outage:
-    def __init__(self, check_name, check_id, down_timestamp, up_timestamp):
-        self.source = "pingdom"
+    def __init__(self, source, check_name, check_id, down_timestamp, up_timestamp):
+        self.source = source
         self.check_name = check_name
         self.check_id = check_id
         self.down_timestamp = down_timestamp
