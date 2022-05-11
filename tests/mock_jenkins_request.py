@@ -266,7 +266,7 @@ def httpretty_three_jenkins_builds():
     return JenkinsBuilds("https://jenkins.test/")
 
 
-def httpretty_three_jenkins_builds_one_failure():
+def httpretty_four_jenkins_builds_two_failures():
     jenkins = {
         "allBuilds": [
             {
@@ -309,6 +309,29 @@ def httpretty_three_jenkins_builds_one_failure():
                             "branch": [
                                 {
                                     "SHA1": "build-sha-2",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+            {
+                "timestamp": 1649047474000,
+                "duration": 600000,
+                "result": "FAILURE",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-1",
                                 }
                             ]
                         },

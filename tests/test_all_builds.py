@@ -9,7 +9,7 @@ from four_key_metrics.use_case.generate_lead_time_metrics import ProjectSummaris
 from tests.authorization_assertions import assert_authorization_is
 from tests.mock_jenkins_request import (
     httpretty_two_jenkins_builds_one_production_one_development,
-    httpretty_three_jenkins_builds_one_failure,
+    httpretty_four_jenkins_builds_two_failures,
     httpretty_404_no_job_jenkings_builds,
     httpretty_no_jenkins_builds,
     httpretty_one_jenkings_build,
@@ -135,7 +135,7 @@ def test_can_get_environment_from_actions_list():
 
 
 def test_filter_out_failed_builds():
-    all_builds = httpretty_three_jenkins_builds_one_failure()
+    all_builds = httpretty_four_jenkins_builds_two_failures()
     builds = all_builds.get_successful_production_builds("test-job", "production")
     assert len(builds) == 2
     assert all(b.successful for b in builds)
