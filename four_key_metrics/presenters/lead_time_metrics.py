@@ -57,16 +57,13 @@ def _to_output_dict(data):
 
 
 class CSVDataPresenter(ConsolePresenter):
-    def __init__(self, file_name: str, field_names: list[str]) -> None:
-        self._file_name = file_name
-        self._field_names = field_names
+    def __init__(self) -> None:
+        self._file_name = f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.csv"
+        self._field_names = LTM_FIELD_NAMES
 
     @staticmethod
     def create():
-        return CSVDataPresenter(
-            f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.csv",
-            LTM_FIELD_NAMES,
-        )
+        return CSVDataPresenter()
 
     def begin(self):
         self._csv_file = open(
@@ -86,16 +83,13 @@ class CSVDataPresenter(ConsolePresenter):
 
 
 class JSONDataPresenter(ConsolePresenter):
-    def __init__(self, file_name: str, field_names: list[str]) -> None:
-        self._file_name = file_name
-        self._field_names = field_names
+    def __init__(self) -> None:
+        self._file_name = f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.json"
+        self._field_names = LTM_FIELD_NAMES
 
     @staticmethod
     def create():
-        return JSONDataPresenter(
-            f"lead_time_metrics_{datetime.now().strftime('%d-%m-%Y_%H%M%S')}.json",
-            LTM_FIELD_NAMES,
-        )
+        return JSONDataPresenter()
 
     def begin(self):
         self._json_file = open(self._file_name, "w")
