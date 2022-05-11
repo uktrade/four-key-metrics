@@ -33,7 +33,7 @@ pre-requisites:
 
 - poetry
 
-`poetry install`
+`poetry install --remove-untracked`
 
 ## Testing
 
