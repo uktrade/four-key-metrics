@@ -1,5 +1,6 @@
-import httpretty
 import json
+
+import httpretty
 
 from four_key_metrics.gateways import JenkinsBuilds
 

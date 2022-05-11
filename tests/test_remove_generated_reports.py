@@ -1,4 +1,5 @@
 import os
+
 from display import remove_generated_reports
 
 

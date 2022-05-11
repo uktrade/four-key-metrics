@@ -1,7 +1,6 @@
 import csv
 import os
 import pprint
-import re
 
 import httpretty
 import pytest

@@ -6,7 +6,7 @@ import requests
 
 from four_key_metrics.gateways import JenkinsBuilds, GitHubCommits
 from four_key_metrics.use_case.generate_lead_time_metrics import ProjectSummariser
-
+from tests.authorization_assertions import assert_authorization_is
 from tests.mock_jenkins_request import httpretty_404_no_job_jenkings_builds
 from tests.mock_jenkins_request import httpretty_no_jenkins_builds
 from tests.mock_jenkins_request import httpretty_one_jenkings_build
@@ -14,8 +14,6 @@ from tests.mock_jenkins_request import httpretty_two_jenkins_builds
 from tests.mock_jenkins_request import (
     httpretty_two_jenkins_builds_one_production_one_development,
 )
-
-from tests.authorization_assertions import assert_authorization_is
 
 
 @pytest.fixture(autouse=True)

@@ -3,18 +3,11 @@ import os
 import httpretty
 import pytest
 
-from four_key_metrics.use_case.generate_mean_time_to_restore import (
-    GenerateMeanTimeToRestore,
-)
 from four_key_metrics.presenters.mean_time_to_restore import (
     ConsolePresenter,
-    CSVDataPresenter,
 )
 from four_key_metrics.use_case_factory import UseCaseFactory
-
-from four_key_metrics.gateways import PingdomOutages
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
-from display import DisplayShell
 
 
 class ConsoleOnlyPresenter(ConsolePresenter):

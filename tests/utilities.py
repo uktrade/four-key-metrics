@@ -1,5 +1,4 @@
 import re
-import pytest
 
 
 def get_filename_and_captured_outerr(capsys, prefix, filetype):

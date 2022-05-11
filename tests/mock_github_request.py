@@ -1,5 +1,6 @@
-import httpretty
 import json
+
+import httpretty
 
 
 def httpretty_one_github_requests(base="build-sha-1", compare="build-sha-2"):

@@ -1,6 +1,5 @@
 import json
 import os
-import re
 
 import httpretty
 import pytest

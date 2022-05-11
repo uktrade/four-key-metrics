@@ -1,19 +1,15 @@
 import csv
-import httpretty
 import os
+
+import httpretty
 import pytest
 
-from four_key_metrics.use_case.generate_mean_time_to_restore import (
-    GenerateMeanTimeToRestore,
-)
 from four_key_metrics.presenters.mean_time_to_restore import (
-    ConsolePresenter,
     CSVDataPresenter,
 )
 from four_key_metrics.use_case_factory import UseCaseFactory
-from four_key_metrics.gateways import PingdomOutages
-from tests.utilities import get_filename_and_captured_outerr
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
+from tests.utilities import get_filename_and_captured_outerr
 
 
 def get_csv_filename_and_captured_outerr(capsys):

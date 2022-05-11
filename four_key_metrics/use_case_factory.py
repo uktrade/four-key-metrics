@@ -8,7 +8,6 @@ from four_key_metrics.use_case.generate_lead_time_metrics import (
 from four_key_metrics.use_case.generate_mean_time_to_restore import (
     GenerateMeanTimeToRestore,
 )
-from four_key_metrics.constants import PINGDOM_CHECK_NAMES
 
 
 class UseCaseFactory:

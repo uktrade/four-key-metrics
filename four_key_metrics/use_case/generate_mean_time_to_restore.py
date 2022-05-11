@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import List, Protocol
+
 from four_key_metrics.gateways import PingdomOutages
 
 
