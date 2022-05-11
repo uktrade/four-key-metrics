@@ -43,7 +43,7 @@ class GenerateMeanTimeToRestore:
             self._presenter.add(
                 {
                     "source": outage.source,
-                    "project": outage.check_name,
+                    "project": outage.project,
                     "down_timestamp": outage.down_timestamp,
                     "down_time": datetime.fromtimestamp(outage.down_timestamp).strftime(
                         "%d/%m/%Y %H:%M:%S"
