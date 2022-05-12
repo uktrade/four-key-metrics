@@ -204,14 +204,14 @@ class PingdomOutages:
     def get_pingdom_outages(self, pingdom_check_names):
         pingdom_outages = []
         pingdom_checks = self._get_pingdom_id_for_check_names(pingdom_check_names)
-        for name, id in pingdom_checks.items():
-            outages = self._get_pingdom_outage_summary(id)
+        for name, pingdom_check_id in pingdom_checks.items():
+            outages = self._get_pingdom_outage_summary(pingdom_check_id)
             for outage in outages:
                 pingdom_outages.append(
                     Outage(
                         source="pingdom",
                         project=name,
-                        check_id=id,
+                        check_id=pingdom_check_id,
                         down_timestamp=outage["down_timestamp"],
                         up_timestamp=outage["up_timestamp"],
                     )
