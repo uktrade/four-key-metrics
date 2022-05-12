@@ -1,7 +1,8 @@
 from datetime import datetime
+import os
 from typing import List, Protocol
 
-from four_key_metrics.gateways import PingdomOutages
+from four_key_metrics.gateways import PingdomOutages, JenkinsBuilds
 
 
 class GenerateMeanTimeToRestorePresenter(Protocol):
@@ -37,10 +38,14 @@ class GenerateMeanTimeToRestore:
 
     def _get_pingdom_mean_time_to_restore(self, check_names: List[str]):
         all_outages = PingdomOutages().get_pingdom_outages(check_names)
-        self._add_outages_to_presenter(all_outages, "pingdom")
+        return self._add_outages_to_presenter(all_outages, "pingdom")
 
-    def _get_jenkins_mean_time_to_restore(self):
-        pass
+    def _get_jenkins_mean_time_to_restore(self, projects: List[str]):
+        jenkins_builds = JenkinsBuilds(
+            os.getenv("DIT_JENKINS_URI", "https://jenkins.ci.uktrade.digital/")
+        )
+        all_outages = jenkins_builds.get_jenkins_outages(projects)
+        return self._add_outages_to_presenter(all_outages, "jenkins")
 
     def _add_outages_to_presenter(self, outages, source_name):
         total_time_to_restore = 0

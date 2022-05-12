@@ -97,6 +97,33 @@ class JenkinsBuilds:
         else:
             return None
 
+    def get_jenkins_outages(self, projects):
+        outages = []
+        for project in projects:
+            builds = self.get_jenkins_builds(project)
+            # Add filter for environment?
+            # Double check builds are sorted by date
+            status_ok = True
+            outage_start_build = None
+            for build in builds:
+                if not build.successful:
+                    if not outage_start_build:
+                        outage_start_build = build
+                    status_ok = False
+                else:
+                    outages.append(
+                        Outage(
+                            source="jenkins",
+                            project=project,
+                            check_id=outage_start_build.git_reference,
+                            down_timestamp=outage_start_build.started_at,
+                            up_timestamp=build.finished_at,
+                        )
+                    )
+                    status_ok = True
+                    outage_start_build = None
+        return outages
+
 
 class GitHubCommits:
     def get_commits_between(self, organisation, repository, base, head):

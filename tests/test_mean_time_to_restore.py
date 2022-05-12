@@ -29,6 +29,9 @@ class ConsoleOnlyPresenter(ConsolePresenter):
 @pytest.fixture(autouse=True)
 def around_each():
     httpretty.enable(allow_net_connect=False, verbose=True)
+    os.environ["DIT_JENKINS_USER"] = "test"
+    os.environ["DIT_JENKINS_TOKEN"] = "1234"
+    os.environ["DIT_JENKINS_URI"] = "https://jenkins.test/"
     os.environ["PINGDOM_TOKEN"] = "1234"
     httpretty.reset()
     yield
@@ -73,7 +76,11 @@ def xtest_mean_time_to_restore_jenkins(capsys):
 
     # 2nd FAILURE: 1649047474000
     # 2nd SUCCESS: 1649047484000
-    outages = GenerateMeanTimeToRestore()._get_jenkins_mean_time_to_restore("test-job")
+
+    # Need to add presentor to test
+    outages = GenerateMeanTimeToRestore()._get_jenkins_mean_time_to_restore(
+        ["test-job"]
+    )
     assert len(outages) == 2
 
     for o in outages:
@@ -86,3 +93,11 @@ def xtest_mean_time_to_restore_jenkins(capsys):
     # assert check_id is the build commit hash (need to change name of check_id in Outage class)
     assert outages[0].seconds_to_restore == 2509871000
     assert outages[1].seconds_to_restore == 10000
+
+
+def xtest_what_happens_if_the_latest_build_fails_and_there_is_no_success(capsys):
+    pass
+
+
+def xtest_two_failed_builds_in_a_row():
+    pass
