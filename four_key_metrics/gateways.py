@@ -117,6 +117,7 @@ class JenkinsBuilds:
                             environment=outage_start_build.environment,
                             project=project,
                             check_id=outage_start_build.git_reference,
+                            jenkins_failed_build_hash=outage_start_build.git_reference,
                             down_timestamp=outage_start_build.started_at,
                             up_timestamp=build.finished_at,
                         )

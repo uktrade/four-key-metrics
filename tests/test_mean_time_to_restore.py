@@ -79,12 +79,10 @@ def test_mean_time_to_restore_jenkins(capsys):
         assert o.environment == "production"
         assert o.project == "test-job"
 
-    # assert check_id is the build commit hash (need to change name of check_id in Outage class)
     assert outages[0].seconds_to_restore == 2511671.0
     assert outages[1].seconds_to_restore == 1210.0
-    # TODO make these pass
-    # assert outages[0].jenkins_failed__build_hash == "build-sha-1"
-    # assert outages[1].jenkins_failed__build_hash == "build-sha-4"
+    assert outages[0].jenkins_failed_build_hash == "build-sha-1"
+    assert outages[1].jenkins_failed_build_hash == "build-sha-4"
 
 
 def xtest_what_happens_if_the_latest_build_fails_and_there_is_no_success(capsys):

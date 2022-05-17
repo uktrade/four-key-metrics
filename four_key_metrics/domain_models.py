@@ -26,7 +26,7 @@ class GitCommit:
 
 
 class Outage:
-    def __init__(self, source, project, environment, check_id, down_timestamp, up_timestamp):
+    def __init__(self, source, project, environment, check_id,  down_timestamp, up_timestamp, jenkins_failed_build_hash = None,):
         self.source = source
         self.project = project
         self.environment = environment
@@ -34,4 +34,5 @@ class Outage:
         self.down_timestamp = down_timestamp
         self.up_timestamp = up_timestamp
         self.seconds_to_restore = self.up_timestamp - self.down_timestamp
+        self.jenkins_failed_build_hash = jenkins_failed_build_hash or None
         
