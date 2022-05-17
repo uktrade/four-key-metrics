@@ -114,6 +114,7 @@ class JenkinsBuilds:
                     outages.append(
                         Outage(
                             source="jenkins",
+                            environment=outage_start_build.environment,
                             project=project,
                             check_id=outage_start_build.git_reference,
                             down_timestamp=outage_start_build.started_at,

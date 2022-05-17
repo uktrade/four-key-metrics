@@ -76,7 +76,8 @@ def test_mean_time_to_restore_jenkins(capsys):
 
     for o in outages:
         assert o.source == "jenkins"
-        # assert o.environment == "production"
+        assert o.environment == "production"
+        assert o.project == "test-job"
 
         # assert o.project - how do we get the project is that the job that's passed in?
 
