@@ -138,6 +138,7 @@ def test_get_pingdom_outages(pingdom_outages):
     expected_result = [
         Outage(
             source="pingdom",
+            environment="production",
             project="Data Hub P1",
             check_id=4946807,
             down_timestamp=1637168609,
@@ -145,6 +146,7 @@ def test_get_pingdom_outages(pingdom_outages):
         ),
         Outage(
             source="pingdom",
+            environment="production",
             project="Data Hub P1",
             check_id=4946807,
             down_timestamp=1641082949,
@@ -160,6 +162,7 @@ def test_get_pingdom_outages(pingdom_outages):
 def test_calculate_time_to_restore():
     pingdomOutage = Outage(
         source="pingdom",
+        environment="production",
         project="Test check",
         check_id=123,
         down_timestamp=1652114557,

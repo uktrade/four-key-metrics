@@ -210,6 +210,7 @@ class PingdomOutages:
                 pingdom_outages.append(
                     Outage(
                         source="pingdom",
+                        environment="production",
                         project=name,
                         check_id=pingdom_check_id,
                         down_timestamp=outage["down_timestamp"],
