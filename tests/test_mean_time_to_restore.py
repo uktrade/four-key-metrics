@@ -68,31 +68,24 @@ def test_mean_time_to_restore_output_pingdom(capsys):
     assert "'count': 2" in captured.out
 
 
-def xtest_mean_time_to_restore_jenkins(capsys):
+def test_mean_time_to_restore_jenkins(capsys):
     httpretty_four_jenkins_builds_two_failures()
-    ## Mock data for reference
-    # 1st FAILURE: 1643768542000
-    # 1st SUCCESS: 1646278413000
-
-    # 2nd FAILURE: 1649047474000
-    # 2nd SUCCESS: 1649047484000
-
-    # Need to add presentor to test
-    outages = GenerateMeanTimeToRestore()._get_jenkins_mean_time_to_restore(
-        ["test-job"]
-    )
+   
+    outages = JenkinsBuilds("https://jenkins.test/").get_jenkins_outages(["test-job"])
     assert len(outages) == 2
 
     for o in outages:
         assert o.source == "jenkins"
+        # assert o.environment == "production"
+
         # assert o.project - how do we get the project is that the job that's passed in?
 
     # assert down_timestamp (failure build timestamp)
     # assert up_timestamp (next success build timestamp)
     # assert environment in outage object (need to add to Outage class)
     # assert check_id is the build commit hash (need to change name of check_id in Outage class)
-    assert outages[0].seconds_to_restore == 2509871000
-    assert outages[1].seconds_to_restore == 10000
+    assert outages[0].seconds_to_restore == 2511671.0
+    assert outages[1].seconds_to_restore == 1210.0
 
 
 def xtest_what_happens_if_the_latest_build_fails_and_there_is_no_success(capsys):

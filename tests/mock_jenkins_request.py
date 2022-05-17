@@ -293,7 +293,7 @@ def httpretty_four_jenkins_builds_two_failures():
                 ],
             },
             {
-                "timestamp": 1646278413000,
+                "timestamp": 1646279613000,
                 "duration": 600000,
                 "result": "SUCCESS",
                 "actions": [
@@ -339,7 +339,7 @@ def httpretty_four_jenkins_builds_two_failures():
                 ],
             },
             {
-                "timestamp": 1649047484000,
+                "timestamp": 1649048084000,
                 "duration": 600000,
                 "result": "SUCCESS",
                 "actions": [
