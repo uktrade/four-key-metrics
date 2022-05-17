@@ -331,7 +331,7 @@ def httpretty_four_jenkins_builds_two_failures():
                         "lastBuiltRevision": {
                             "branch": [
                                 {
-                                    "SHA1": "build-sha-1",
+                                    "SHA1": "build-sha-4",
                                 }
                             ]
                         },

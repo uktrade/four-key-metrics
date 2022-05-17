@@ -70,7 +70,7 @@ def test_mean_time_to_restore_output_pingdom(capsys):
 
 def test_mean_time_to_restore_jenkins(capsys):
     httpretty_four_jenkins_builds_two_failures()
-   
+
     outages = JenkinsBuilds("https://jenkins.test/").get_jenkins_outages(["test-job"])
     assert len(outages) == 2
 
@@ -79,14 +79,12 @@ def test_mean_time_to_restore_jenkins(capsys):
         assert o.environment == "production"
         assert o.project == "test-job"
 
-        # assert o.project - how do we get the project is that the job that's passed in?
-
-    # assert down_timestamp (failure build timestamp)
-    # assert up_timestamp (next success build timestamp)
-    # assert environment in outage object (need to add to Outage class)
     # assert check_id is the build commit hash (need to change name of check_id in Outage class)
     assert outages[0].seconds_to_restore == 2511671.0
     assert outages[1].seconds_to_restore == 1210.0
+    # TODO make these pass
+    # assert outages[0].jenkins_failed__build_hash == "build-sha-1"
+    # assert outages[1].jenkins_failed__build_hash == "build-sha-4"
 
 
 def xtest_what_happens_if_the_latest_build_fails_and_there_is_no_success(capsys):
