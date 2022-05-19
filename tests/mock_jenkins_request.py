@@ -559,3 +559,41 @@ def httpretty_four_jenkins_builds_two_failures_mixed_envs():
         body=json.dumps(jenkins),
     )
     return JenkinsBuilds("https://jenkins.test/")
+
+
+def httpretty_one_failed_jenkins_build():
+    jenkins = {
+        "allBuilds": [
+            {
+                "timestamp": 1643768542000,
+                "duration": 613613,
+                "result": "FAILED",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "1234",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            }
+        ]
+    }
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://jenkins.test/" "job/test-job/api/json",
+        body=json.dumps(jenkins),
+    )
+    all_builds = JenkinsBuilds("https://jenkins.test/")
+    return all_builds

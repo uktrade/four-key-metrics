@@ -16,6 +16,7 @@ from tests.mock_jenkins_request import (
     httpretty_four_jenkins_builds_two_failures,
     httpretty_two_jenkins_builds_failures_in_row,
     httpretty_four_jenkins_builds_two_failures_mixed_envs,
+    httpretty_one_failed_jenkins_build,
 )
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
 
@@ -142,8 +143,10 @@ def test_get_jenkins_outages_with_builds_from_different_environments():
     assert staging_outage.seconds_to_restore == 642
 
 
-def xtest_what_happens_if_the_latest_build_fails_and_there_is_no_success(capsys):
-    pass
+def test_get_jenkins_outages_with_failed_build_no_success():
+    httpretty_one_failed_jenkins_build()
+    outages = JenkinsBuilds("https://jenkins.test/").get_jenkins_outages(["test-job"])
+    assert outages == []
 
 
 def test_two_failed_builds_in_a_row():
