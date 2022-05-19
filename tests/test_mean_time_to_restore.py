@@ -11,7 +11,7 @@ from four_key_metrics.presenters.mean_time_to_restore import (
     ConsolePresenter,
 )
 from four_key_metrics.use_case_factory import UseCaseFactory
-from tests.mock_jenkins_request import httpretty_four_jenkins_builds_two_failures
+from tests.mock_jenkins_request import httpretty_four_jenkins_builds_two_failures, httpretty_two_jenkins_builds_failures_in_row
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
 
 
@@ -89,5 +89,9 @@ def xtest_what_happens_if_the_latest_build_fails_and_there_is_no_success(capsys)
     pass
 
 
-def xtest_two_failed_builds_in_a_row():
-    pass
+def test_two_failed_builds_in_a_row():
+    httpretty_two_jenkins_builds_failures_in_row()
+
+    outages = JenkinsBuilds("https://jenkins.test/").get_jenkins_outages(["test-job"])
+    assert len(outages) == 1
+    assert outages[0].seconds_to_restore == 5280142

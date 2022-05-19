@@ -370,3 +370,85 @@ def httpretty_four_jenkins_builds_two_failures():
         body=json.dumps(jenkins),
     )
     return JenkinsBuilds("https://jenkins.test/")
+
+def httpretty_two_jenkins_builds_failures_in_row():
+    jenkins = {
+        "allBuilds": [
+            {
+                "timestamp": 1643768542000,
+                "duration": 600000,
+                "result": "FAILURE",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-1",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+            {
+                "timestamp": 1649047474000,
+                "duration": 600000,
+                "result": "FAILURE",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-2",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+            {
+                "timestamp": 1649048084000,
+                "duration": 600000,
+                "result": "SUCCESS",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-3",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+        ]
+    }
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://jenkins.test/" "job/test-job/api/json",
+        body=json.dumps(jenkins),
+    )
+    return JenkinsBuilds("https://jenkins.test/")
