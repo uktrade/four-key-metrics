@@ -33,6 +33,7 @@ class GenerateMeanTimeToRestore:
         try:
             self._presenter.begin()
             self._get_pingdom_mean_time_to_restore(pingdom_check_names)
+            # TODO Call _get_jenkins_mean_time_to_restore from here, passing through projects
         finally:
             self._presenter.end()
 

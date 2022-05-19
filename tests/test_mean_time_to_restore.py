@@ -108,6 +108,11 @@ def test_mean_time_to_restore_output_pingdom(capsys):
 
 
 def test_get_jenkins_outages():
+    # TODO update the mock used in this test so that the builds are in reverse time order
+    # The current assertions are already testing the order is correct by checking the indexes
+
+    # TODO Then call the order_builds_by_ascending_timestamp method in get_jenkins_outages
+    # to make the tests pass with the new mock
     httpretty_four_jenkins_builds_two_failures()
 
     outages = JenkinsBuilds("https://jenkins.test/").get_jenkins_outages(["test-job"])

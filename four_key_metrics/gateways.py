@@ -104,6 +104,7 @@ class JenkinsBuilds:
             grouped_builds = self.group_builds_by_environment(builds)
             build_started_outage = None
             for environment, builds in grouped_builds.items():
+                # TODO sort the builds here?
                 for build in builds:
                     if not build.successful:
                         if not build_started_outage:
