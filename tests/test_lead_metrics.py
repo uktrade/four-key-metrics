@@ -9,7 +9,7 @@ from tests.mock_github_request import httpretty_one_github_requests
 from tests.mock_github_request import httpretty_three_github_requests
 from tests.mock_github_request import httpretty_two_github_requests
 from tests.mock_jenkins_request import httpretty_no_jenkins_builds
-from tests.mock_jenkins_request import httpretty_one_jenkings_build
+from tests.mock_jenkins_request import httpretty_one_jenkins_build
 from tests.mock_jenkins_request import httpretty_three_jenkins_builds
 from tests.mock_jenkins_request import httpretty_two_jenkins_builds
 from tests.mock_jenkins_request import (
@@ -84,7 +84,7 @@ def test_can_get_no_lead_time(capsys):
 
 
 def test_can_not_get_lead_time_for_one_build(capsys):
-    httpretty_one_jenkings_build()
+    httpretty_one_jenkins_build()
 
     projects = [
         {

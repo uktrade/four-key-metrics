@@ -5,7 +5,7 @@ import httpretty
 from four_key_metrics.gateways import JenkinsBuilds
 
 
-def httpretty_404_no_job_jenkings_builds():
+def httpretty_404_no_job_jenkins_builds():
     httpretty.register_uri(
         httpretty.GET, "https://jenkins.test/" "job//api/json", status=404
     )
@@ -25,7 +25,7 @@ def httpretty_no_jenkins_builds():
     return all_builds
 
 
-def httpretty_one_jenkings_build():
+def httpretty_one_jenkins_build():
     jenkins = {
         "allBuilds": [
             {

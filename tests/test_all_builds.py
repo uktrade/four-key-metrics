@@ -10,9 +10,9 @@ from tests.authorization_assertions import assert_authorization_is
 from tests.mock_jenkins_request import (
     httpretty_two_jenkins_builds_one_production_one_development,
     httpretty_four_jenkins_builds_two_failures,
-    httpretty_404_no_job_jenkings_builds,
+    httpretty_404_no_job_jenkins_builds,
     httpretty_no_jenkins_builds,
-    httpretty_one_jenkings_build,
+    httpretty_one_jenkins_build,
     httpretty_two_jenkins_builds,
 )
 
@@ -49,7 +49,7 @@ def test_can_get_no_builds():
 
 
 def test_can_get_one_build():
-    all_builds = httpretty_one_jenkings_build()
+    all_builds = httpretty_one_jenkins_build()
     builds = all_builds.get_successful_production_builds("test-job", "production")
 
     assert len(builds) == 1
@@ -160,7 +160,7 @@ def test_no_jenkins_job(capsys):
 
 
 def test_empty_add_project(capsys):
-    httpretty_404_no_job_jenkings_builds()
+    httpretty_404_no_job_jenkins_builds()
     all_builds = httpretty_no_jenkins_builds()
 
     all_builds.get_successful_production_builds("test-job", "production")
