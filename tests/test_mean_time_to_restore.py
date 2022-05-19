@@ -90,7 +90,6 @@ def test_get_jenkins_outages():
     assert outages[1].jenkins_failed_build_hash == "build-sha-4"
 
 
-
 def test_group_builds_by_environment():
     failing_dev_build = Build(
         started_at="2021-09-17T13:30:45Z",
@@ -127,6 +126,20 @@ def test_group_builds_by_environment():
         "development": [failing_dev_build, successful_dev_build],
         "staging": [failing_staging_build],
     }
+
+
+def test_get_jenkins_outages_with_builds_from_different_environments():
+    httpretty_four_jenkins_builds_two_failures_mixed_envs()
+    outages = JenkinsBuilds("https://jenkins.test/").get_jenkins_outages(["test-job"])
+    assert len(outages) == 2
+
+    development_outage = next(
+        (o for o in outages if o.environment == "development"), None
+    )
+    staging_outage = next((o for o in outages if o.environment == "staging"), None)
+
+    assert development_outage.seconds_to_restore == 640
+    assert staging_outage.seconds_to_restore == 642
 
 
 def xtest_what_happens_if_the_latest_build_fails_and_there_is_no_success(capsys):

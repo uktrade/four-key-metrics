@@ -101,29 +101,27 @@ class JenkinsBuilds:
         outages = []
         for project in projects:
             builds = self.get_jenkins_builds(project)
-            # Add filter for environment?
             # Double check builds are sorted by date
-            status_ok = True
-            outage_start_build = None
-            for build in builds:
-                if not build.successful:
-                    if not outage_start_build:
-                        outage_start_build = build
-                    status_ok = False
-                else:
-                    outages.append(
-                        Outage(
-                            source="jenkins",
-                            environment=outage_start_build.environment,
-                            project=project,
-                            check_id=outage_start_build.git_reference,
-                            jenkins_failed_build_hash=outage_start_build.git_reference,
-                            down_timestamp=outage_start_build.started_at,
-                            up_timestamp=build.finished_at,
+            grouped_builds = self.group_builds_by_environment(builds)
+            build_started_outage = None
+            for environment, builds in grouped_builds.items():
+                for build in builds:
+                    if not build.successful:
+                        if not build_started_outage:
+                            build_started_outage = build
+                    else:
+                        outages.append(
+                            Outage(
+                                source="jenkins",
+                                environment=environment,
+                                project=project,
+                                check_id=build_started_outage.git_reference,
+                                jenkins_failed_build_hash=build_started_outage.git_reference,
+                                down_timestamp=build_started_outage.started_at,
+                                up_timestamp=build.finished_at,
+                            )
                         )
-                    )
-                    status_ok = True
-                    outage_start_build = None
+                        build_started_outage = None
         return outages
 
     def group_builds_by_environment(self, builds):

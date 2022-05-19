@@ -552,3 +552,10 @@ def httpretty_four_jenkins_builds_two_failures_mixed_envs():
             },
         ]
     }
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://jenkins.test/" "job/test-job/api/json",
+        body=json.dumps(jenkins),
+    )
+    return JenkinsBuilds("https://jenkins.test/")
