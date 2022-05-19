@@ -101,7 +101,6 @@ class JenkinsBuilds:
         outages = []
         for project in projects:
             builds = self.get_jenkins_builds(project)
-            # Double check builds are sorted by date
             grouped_builds = self.group_builds_by_environment(builds)
             build_started_outage = None
             for environment, builds in grouped_builds.items():
@@ -132,6 +131,9 @@ class JenkinsBuilds:
         for build in builds:
             envs_dict[build.environment].append(build)
         return envs_dict
+
+    def order_builds_by_ascending_timestamp(self, builds):
+        return sorted(builds, key=(lambda build: build.started_at))
 
 
 class GitHubCommits:

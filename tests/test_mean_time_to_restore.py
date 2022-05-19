@@ -24,8 +24,8 @@ from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outag
 @pytest.fixture
 def failing_dev_build():
     return Build(
-        started_at="2021-09-17T13:30:45Z",
-        finished_at="2021-09-17T13:40:45Z",
+        started_at="1643768542000",
+        finished_at="1643768552000",
         successful=False,
         environment="development",
         git_reference="sha1-git-reference",
@@ -35,8 +35,8 @@ def failing_dev_build():
 @pytest.fixture
 def successful_dev_build():
     return Build(
-        started_at="2021-09-17T13:35:45Z",
-        finished_at="2021-09-17T13:37:45Z",
+        started_at="1643768562000",
+        finished_at="1643768742000",
         successful=True,
         environment="development",
         git_reference="sha1-git-reference",
@@ -46,8 +46,8 @@ def successful_dev_build():
 @pytest.fixture
 def failing_staging_build():
     return Build(
-        started_at="2021-09-17T13:30:45Z",
-        finished_at="2021-09-17T13:30:45Z",
+        started_at="1643768842000",
+        finished_at="1643768942000",
         successful=False,
         environment="staging",
         git_reference="sha1-git-reference",
@@ -140,6 +140,24 @@ def test_group_builds_by_environment(
         "development": [failing_dev_build, successful_dev_build],
         "staging": [failing_staging_build],
     }
+
+
+def test_order_builds_by_ascending_timestamp(
+    failing_dev_build, successful_dev_build, failing_staging_build
+):
+    builds = [
+        failing_staging_build,
+        successful_dev_build,
+        failing_dev_build,
+    ]
+    ordered_builds = JenkinsBuilds(
+        "https://jenkins.test/"
+    ).order_builds_by_ascending_timestamp(builds)
+    assert ordered_builds == [
+        failing_dev_build,
+        successful_dev_build,
+        failing_staging_build,
+    ]
 
 
 def test_get_jenkins_outages_with_builds_from_different_environments():
