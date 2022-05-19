@@ -68,7 +68,7 @@ def test_mean_time_to_restore_output_pingdom(capsys):
     assert "'count': 2" in captured.out
 
 
-def test_mean_time_to_restore_jenkins(capsys):
+def test_get_jenkins_outages():
     httpretty_four_jenkins_builds_two_failures()
 
     outages = JenkinsBuilds("https://jenkins.test/").get_jenkins_outages(["test-job"])
