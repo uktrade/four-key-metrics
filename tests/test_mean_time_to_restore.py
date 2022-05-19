@@ -3,6 +3,7 @@ import os
 import httpretty
 import pytest
 
+from four_key_metrics.domain_models import Build
 from four_key_metrics.gateways import JenkinsBuilds
 from four_key_metrics.use_case.generate_mean_time_to_restore import (
     GenerateMeanTimeToRestore,
@@ -11,7 +12,11 @@ from four_key_metrics.presenters.mean_time_to_restore import (
     ConsolePresenter,
 )
 from four_key_metrics.use_case_factory import UseCaseFactory
-from tests.mock_jenkins_request import httpretty_four_jenkins_builds_two_failures, httpretty_two_jenkins_builds_failures_in_row
+from tests.mock_jenkins_request import (
+    httpretty_four_jenkins_builds_two_failures,
+    httpretty_two_jenkins_builds_failures_in_row,
+    httpretty_four_jenkins_builds_two_failures_mixed_envs,
+)
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
 
 
@@ -83,6 +88,45 @@ def test_get_jenkins_outages():
     assert outages[1].seconds_to_restore == 1210.0
     assert outages[0].jenkins_failed_build_hash == "build-sha-1"
     assert outages[1].jenkins_failed_build_hash == "build-sha-4"
+
+
+
+def test_group_builds_by_environment():
+    failing_dev_build = Build(
+        started_at="2021-09-17T13:30:45Z",
+        finished_at="2021-09-17T13:40:45Z",
+        successful=False,
+        environment="development",
+        git_reference="sha1-git-reference",
+    )
+    successful_dev_build = Build(
+        started_at="2021-09-17T13:35:45Z",
+        finished_at="2021-09-17T13:37:45Z",
+        successful=True,
+        environment="development",
+        git_reference="sha1-git-reference",
+    )
+    failing_staging_build = Build(
+        started_at="2021-09-17T13:30:45Z",
+        finished_at="2021-09-17T13:30:45Z",
+        successful=False,
+        environment="staging",
+        git_reference="sha1-git-reference",
+    )
+
+    builds = [
+        failing_dev_build,
+        successful_dev_build,
+        failing_staging_build,
+    ]
+
+    grouped_builds = JenkinsBuilds("https://jenkins.test/").group_builds_by_environment(
+        builds
+    )
+    assert grouped_builds == {
+        "development": [failing_dev_build, successful_dev_build],
+        "staging": [failing_staging_build],
+    }
 
 
 def xtest_what_happens_if_the_latest_build_fails_and_there_is_no_success(capsys):

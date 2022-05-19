@@ -126,6 +126,15 @@ class JenkinsBuilds:
                     outage_start_build = None
         return outages
 
+    def group_builds_by_environment(self, builds):
+        envs_dict = {
+            environment: []
+            for environment in set(build.environment for build in builds)
+        }
+        for build in builds:
+            envs_dict[build.environment].append(build)
+        return envs_dict
+
 
 class GitHubCommits:
     def get_commits_between(self, organisation, repository, base, head):

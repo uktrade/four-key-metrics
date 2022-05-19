@@ -371,6 +371,7 @@ def httpretty_four_jenkins_builds_two_failures():
     )
     return JenkinsBuilds("https://jenkins.test/")
 
+
 def httpretty_two_jenkins_builds_failures_in_row():
     jenkins = {
         "allBuilds": [
@@ -452,3 +453,102 @@ def httpretty_two_jenkins_builds_failures_in_row():
         body=json.dumps(jenkins),
     )
     return JenkinsBuilds("https://jenkins.test/")
+
+
+def httpretty_four_jenkins_builds_two_failures_mixed_envs():
+    jenkins = {
+        "allBuilds": [
+            {
+                "timestamp": 1643768542000,
+                "duration": 600000,
+                "result": "FAILURE",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "development"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-1",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+            {
+                "timestamp": 1643768562000,
+                "duration": 600000,
+                "result": "FAILURE",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "staging"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-2",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+            {
+                "timestamp": 1643768582000,
+                "duration": 600000,
+                "result": "SUCCESS",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "development"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-4",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+            {
+                "timestamp": 1643768604000,
+                "duration": 600000,
+                "result": "SUCCESS",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "staging"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-3",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+        ]
+    }
