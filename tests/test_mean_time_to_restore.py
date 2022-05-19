@@ -21,6 +21,39 @@ from tests.mock_jenkins_request import (
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
 
 
+@pytest.fixture
+def failing_dev_build():
+    return Build(
+        started_at="2021-09-17T13:30:45Z",
+        finished_at="2021-09-17T13:40:45Z",
+        successful=False,
+        environment="development",
+        git_reference="sha1-git-reference",
+    )
+
+
+@pytest.fixture
+def successful_dev_build():
+    return Build(
+        started_at="2021-09-17T13:35:45Z",
+        finished_at="2021-09-17T13:37:45Z",
+        successful=True,
+        environment="development",
+        git_reference="sha1-git-reference",
+    )
+
+
+@pytest.fixture
+def failing_staging_build():
+    return Build(
+        started_at="2021-09-17T13:30:45Z",
+        finished_at="2021-09-17T13:30:45Z",
+        successful=False,
+        environment="staging",
+        git_reference="sha1-git-reference",
+    )
+
+
 class ConsoleOnlyPresenter(ConsolePresenter):
     def add(self, data: dict):
         pass
@@ -91,29 +124,9 @@ def test_get_jenkins_outages():
     assert outages[1].jenkins_failed_build_hash == "build-sha-4"
 
 
-def test_group_builds_by_environment():
-    failing_dev_build = Build(
-        started_at="2021-09-17T13:30:45Z",
-        finished_at="2021-09-17T13:40:45Z",
-        successful=False,
-        environment="development",
-        git_reference="sha1-git-reference",
-    )
-    successful_dev_build = Build(
-        started_at="2021-09-17T13:35:45Z",
-        finished_at="2021-09-17T13:37:45Z",
-        successful=True,
-        environment="development",
-        git_reference="sha1-git-reference",
-    )
-    failing_staging_build = Build(
-        started_at="2021-09-17T13:30:45Z",
-        finished_at="2021-09-17T13:30:45Z",
-        successful=False,
-        environment="staging",
-        git_reference="sha1-git-reference",
-    )
-
+def test_group_builds_by_environment(
+    failing_dev_build, successful_dev_build, failing_staging_build
+):
     builds = [
         failing_dev_build,
         successful_dev_build,
