@@ -8,6 +8,7 @@ from four_key_metrics.presenters.mean_time_to_restore import (
     CSVDataPresenter,
 )
 from four_key_metrics.use_case_factory import UseCaseFactory
+from tests.mock_jenkins_request import httpretty_four_jenkins_builds_two_failures
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
 from tests.utilities import clean_up_test_file, get_filename_and_captured_outerr
 
@@ -19,10 +20,12 @@ def get_csv_filename_and_captured_outerr(capsys):
 def generate_mean_time_to_restore_to_csv():
     httpretty_checks()
     httpretty_summary_outage_p1()
+    httpretty_four_jenkins_builds_two_failures()
     check_names = ["Data Hub P1"]
+    jenkins_jobs = ["test-job"]
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        check_names, [], CSVDataPresenter.create()
+        check_names, jenkins_jobs, CSVDataPresenter.create()
     )
 
 
@@ -49,6 +52,7 @@ class TestMeanTimeToRestoreCSVFile:
 
             assert csvreader.fieldnames.__contains__("source")
             assert csvreader.fieldnames.__contains__("project")
+            assert csvreader.fieldnames.__contains__("environment")
             assert csvreader.fieldnames.__contains__("down_timestamp")
             assert csvreader.fieldnames.__contains__("down_time")
             assert csvreader.fieldnames.__contains__("up_timestamp")
@@ -61,6 +65,7 @@ class TestMeanTimeToRestoreCSVFile:
 
             assert csvreader_list[0]["source"] == "pingdom"
             assert csvreader_list[0]["project"] == "Data Hub P1"
+            assert csvreader_list[0]["environment"] == "production"
             assert csvreader_list[0]["down_timestamp"] == "1637168609"
             assert csvreader_list[0]["down_time"] == "17/11/2021 17:03:29"
             assert csvreader_list[0]["up_timestamp"] == "1637172329"
@@ -69,6 +74,7 @@ class TestMeanTimeToRestoreCSVFile:
 
             assert csvreader_list[1]["source"] == "pingdom"
             assert csvreader_list[1]["project"] == "Data Hub P1"
+            assert csvreader_list[0]["environment"] == "production"
             assert csvreader_list[1]["down_timestamp"] == "1641082949"
             assert csvreader_list[1]["down_time"] == "02/01/2022 00:22:29"
             assert csvreader_list[1]["up_timestamp"] == "1641083189"
