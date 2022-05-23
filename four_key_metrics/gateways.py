@@ -1,5 +1,6 @@
 import os
 from datetime import datetime, timedelta
+from typing import List
 import ciso8601
 import requests
 from glom import glom, Path
@@ -102,25 +103,10 @@ class JenkinsBuilds:
         for project in projects:
             builds = self.get_jenkins_builds(project)
             grouped_builds = self.group_builds_by_environment(builds)
-            build_started_outage = None
             for environment, builds in grouped_builds.items():
-                ordered_builds = self.order_builds_by_ascending_timestamp(builds)
-                for build in ordered_builds:
-                    if not build.successful:
-                        if not build_started_outage:
-                            build_started_outage = build
-                    else:
-                        outages.append(
-                            Outage(
-                                source="jenkins",
-                                environment=environment,
-                                project=project,
-                                jenkins_failed_build_hash=build_started_outage.git_reference,
-                                down_timestamp=build_started_outage.started_at,
-                                up_timestamp=build.finished_at,
-                            )
-                        )
-                        build_started_outage = None
+                outages.extend(
+                    self.create_outages_for_environment(environment, builds, project)
+                )
         return outages
 
     def group_builds_by_environment(self, builds):
@@ -134,6 +120,31 @@ class JenkinsBuilds:
 
     def order_builds_by_ascending_timestamp(self, builds):
         return sorted(builds, key=(lambda build: build.started_at))
+
+    def create_outages_for_environment(
+        self, environment, builds, project
+    ) -> List[Outage]:
+        outages = []
+        build_started_outage = None
+        ordered_builds = self.order_builds_by_ascending_timestamp(builds)
+        for build in ordered_builds:
+            if not build.successful:
+                if not build_started_outage:
+                    # store the failed build that marks the start of an outage
+                    build_started_outage = build
+            else:
+                outages.append(
+                    Outage(
+                        source="jenkins",
+                        environment=environment,
+                        project=project,
+                        jenkins_failed_build_hash=build_started_outage.git_reference,
+                        down_timestamp=build_started_outage.started_at,
+                        up_timestamp=build.finished_at,
+                    )
+                )
+                build_started_outage = None
+        return outages
 
 
 class GitHubCommits:
