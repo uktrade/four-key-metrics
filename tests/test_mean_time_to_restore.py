@@ -189,7 +189,6 @@ def test_two_failed_builds_in_a_row():
     assert len(outages) == 1
     assert outages[0].seconds_to_restore == 5280142
 
-# Outage will not be created if there is no faile build( success and success)
 def test_get_jenkins_outages_success_with_no_failed_builds():
     httpretty_two_success_jenkins_build()
 
