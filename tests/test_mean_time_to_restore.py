@@ -108,6 +108,34 @@ def test_mean_time_to_restore_output_pingdom(capsys):
     assert "'mean time to restore in seconds': 1980" in captured.out
     assert "'count': 2" in captured.out
 
+def test_mean_time_to_restore_output_jenkins(capsys):
+    httpretty_checks()
+    httpretty_four_jenkins_builds_two_failures()
+
+    jenkins_jobs = ["test-job"]
+    UseCaseFactory().create("generate_mean_time_to_restore")(
+        [], jenkins_jobs, ConsoleOnlyPresenter()
+    )
+
+    captured = capsys.readouterr()
+    assert "'source': 'jenkins'" in captured.out
+    assert "'mean time to restore in seconds': 1256440" in captured.out
+    assert "'count': 2" in captured.out
+
+def test_mean_time_to_restore_output_failure_jenkins(capsys):
+    httpretty_checks()
+    httpretty_four_jenkins_builds_two_failures()
+
+    jenkins_jobs = []
+    UseCaseFactory().create("generate_mean_time_to_restore")(
+        [], jenkins_jobs, ConsoleOnlyPresenter()
+    )
+
+    captured = capsys.readouterr()
+    assert "'source': 'jenkins'" in captured.out
+    assert "'mean time to restore in seconds': None" in captured.out
+    assert "'count': None" in captured.out
+
 
 def test_get_jenkins_outages():
     httpretty_four_jenkins_builds_two_failures()

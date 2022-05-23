@@ -56,6 +56,7 @@ class GenerateMeanTimeToRestore:
                 {
                     "source": outage.source,
                     "project": outage.project,
+                    "environment": outage.environment,
                     "down_timestamp": outage.down_timestamp,
                     "down_time": datetime.fromtimestamp(outage.down_timestamp).strftime(
                         "%d/%m/%Y %H:%M:%S"

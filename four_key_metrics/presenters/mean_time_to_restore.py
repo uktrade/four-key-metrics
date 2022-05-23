@@ -5,6 +5,7 @@ from pprint import pprint
 MTR_FIELD_NAMES = [
     "source",
     "project",
+    "environment",
     "down_timestamp",
     "down_time",
     "up_timestamp",
