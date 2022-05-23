@@ -33,13 +33,13 @@ class Outage:
         environment,
         down_timestamp,
         up_timestamp,
-        check_id=None,
+        pingdom_check_id=None,
         jenkins_failed_build_hash=None,
     ):
         self.source = source
         self.project = project
         self.environment = environment
-        self.check_id = check_id or None
+        self.pingdom_check_id = pingdom_check_id or None
         self.down_timestamp = down_timestamp
         self.up_timestamp = up_timestamp
         self.seconds_to_restore = self.up_timestamp - self.down_timestamp

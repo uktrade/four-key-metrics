@@ -223,7 +223,7 @@ class PingdomOutages:
                         source="pingdom",
                         environment="production",
                         project=name,
-                        check_id=pingdom_check_id,
+                        pingdom_check_id=pingdom_check_id,
                         down_timestamp=outage["down_timestamp"],
                         up_timestamp=outage["up_timestamp"],
                     )
