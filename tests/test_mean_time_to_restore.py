@@ -18,7 +18,6 @@ from tests.mock_jenkins_request import (
     httpretty_four_jenkins_builds_two_failures_mixed_envs,
     httpretty_one_failed_jenkins_build,
     httpretty_two_success_jenkins_build,
-
 )
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
 
@@ -100,13 +99,14 @@ def test_mean_time_to_restore_output_pingdom(capsys):
     check_names = ["Data Hub P1"]
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        check_names,[], ConsoleOnlyPresenter()
+        check_names, [], ConsoleOnlyPresenter()
     )
 
     captured = capsys.readouterr()
     assert "'source': 'pingdom'" in captured.out
     assert "'mean time to restore in seconds': 1980" in captured.out
     assert "'count': 2" in captured.out
+
 
 def test_mean_time_to_restore_output_jenkins(capsys):
     httpretty_checks()
@@ -121,6 +121,7 @@ def test_mean_time_to_restore_output_jenkins(capsys):
     assert "'source': 'jenkins'" in captured.out
     assert "'mean time to restore in seconds': 1256440" in captured.out
     assert "'count': 2" in captured.out
+
 
 def test_mean_time_to_restore_output_failure_jenkins(capsys):
     httpretty_checks()
@@ -148,8 +149,8 @@ def test_get_jenkins_outages():
         assert o.environment == "production"
         assert o.project == "test-job"
 
-    assert outages[0].seconds_to_restore == 2511671.0
-    assert outages[1].seconds_to_restore == 1210.0
+    assert outages[0].seconds_to_restore == 2511671
+    assert outages[1].seconds_to_restore == 1210
     assert outages[0].jenkins_failed_build_hash == "build-sha-1"
     assert outages[1].jenkins_failed_build_hash == "build-sha-4"
 
@@ -216,6 +217,7 @@ def test_two_failed_builds_in_a_row():
     outages = JenkinsBuilds("https://jenkins.test/").get_jenkins_outages(["test-job"])
     assert len(outages) == 1
     assert outages[0].seconds_to_restore == 5280142
+
 
 def test_get_jenkins_outages_success_with_no_failed_builds():
     httpretty_two_success_jenkins_build()

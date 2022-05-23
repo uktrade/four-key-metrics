@@ -138,8 +138,8 @@ class JenkinsBuilds:
                         environment=environment,
                         project=jenkins_job,
                         jenkins_failed_build_hash=build_started_outage.git_reference,
-                        down_timestamp=build_started_outage.started_at,
-                        up_timestamp=build.finished_at,
+                        down_timestamp=round(build_started_outage.started_at),
+                        up_timestamp=round(build.finished_at),
                     )
                 )
                 build_started_outage = None
