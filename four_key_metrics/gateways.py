@@ -105,7 +105,8 @@ class JenkinsBuilds:
             build_started_outage = None
             for environment, builds in grouped_builds.items():
                 # TODO sort the builds here?
-                for build in builds:
+                grouped_builds=self.order_builds_by_ascending_timestamp(builds)
+                for build in grouped_builds:
                     if not build.successful:
                         if not build_started_outage:
                             build_started_outage = build

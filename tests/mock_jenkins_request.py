@@ -269,31 +269,8 @@ def httpretty_three_jenkins_builds():
 def httpretty_four_jenkins_builds_two_failures():
     jenkins = {
         "allBuilds": [
-            {
-                "timestamp": 1643768542000,
-                "duration": 600000,
-                "result": "FAILURE",
-                "actions": [
-                    {
-                        "_class": "hudson.model.ParametersAction",
-                        "parameters": [
-                            {"name": "Environment", "value": "production"},
-                        ],
-                    },
-                    {
-                        "_class": "hudson.plugins.git.util.BuildData",
-                        "lastBuiltRevision": {
-                            "branch": [
-                                {
-                                    "SHA1": "build-sha-1",
-                                }
-                            ]
-                        },
-                    },
-                ],
-            },
-            {
-                "timestamp": 1646279613000,
+             {
+                "timestamp": 1649048084000,
                 "duration": 600000,
                 "result": "SUCCESS",
                 "actions": [
@@ -308,7 +285,7 @@ def httpretty_four_jenkins_builds_two_failures():
                         "lastBuiltRevision": {
                             "branch": [
                                 {
-                                    "SHA1": "build-sha-2",
+                                    "SHA1": "build-sha-3",
                                 }
                             ]
                         },
@@ -339,7 +316,7 @@ def httpretty_four_jenkins_builds_two_failures():
                 ],
             },
             {
-                "timestamp": 1649048084000,
+                "timestamp": 1646279613000,
                 "duration": 600000,
                 "result": "SUCCESS",
                 "actions": [
@@ -354,7 +331,30 @@ def httpretty_four_jenkins_builds_two_failures():
                         "lastBuiltRevision": {
                             "branch": [
                                 {
-                                    "SHA1": "build-sha-3",
+                                    "SHA1": "build-sha-2",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+            {
+                "timestamp": 1643768542000,
+                "duration": 600000,
+                "result": "FAILURE",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-1",
                                 }
                             ]
                         },
