@@ -115,9 +115,6 @@ class JenkinsBuilds:
                                 source="jenkins",
                                 environment=environment,
                                 project=project,
-                                # TODO make check_id optional (with a default) so we don't need to pass it in here
-                                # already passing the git_reference as jenkins_failed_build_hash
-                                check_id=build_started_outage.git_reference,
                                 jenkins_failed_build_hash=build_started_outage.git_reference,
                                 down_timestamp=build_started_outage.started_at,
                                 up_timestamp=build.finished_at,
