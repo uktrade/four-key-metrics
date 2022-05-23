@@ -34,6 +34,9 @@ class TestMeanTimeToRestoreCSVFile:
     def around_each(self, capsys):
         httpretty.enable(allow_net_connect=False, verbose=True)
         os.environ["PINGDOM_TOKEN"] = "1234"
+        os.environ["DIT_JENKINS_USER"] = "test"
+        os.environ["DIT_JENKINS_TOKEN"] = "1234"
+        os.environ["DIT_JENKINS_URI"] = "https://jenkins.test/"
         httpretty.reset()
         generate_mean_time_to_restore_to_csv()
         self.filename, self.captured = get_csv_filename_and_captured_outerr(capsys)
@@ -74,9 +77,27 @@ class TestMeanTimeToRestoreCSVFile:
 
             assert csvreader_list[1]["source"] == "pingdom"
             assert csvreader_list[1]["project"] == "Data Hub P1"
-            assert csvreader_list[0]["environment"] == "production"
+            assert csvreader_list[1]["environment"] == "production"
             assert csvreader_list[1]["down_timestamp"] == "1641082949"
             assert csvreader_list[1]["down_time"] == "02/01/2022 00:22:29"
             assert csvreader_list[1]["up_timestamp"] == "1641083189"
             assert csvreader_list[1]["up_time"] == "02/01/2022 00:26:29"
             assert csvreader_list[1]["seconds_to_restore"] == "240"
+
+            assert csvreader_list[2]["source"] == "jenkins"
+            assert csvreader_list[2]["project"] == "test-job"
+            assert csvreader_list[2]["environment"] == "production"
+            assert csvreader_list[2]["down_timestamp"] == "1643768542"
+            assert csvreader_list[2]["down_time"] == "02/02/2022 02:22:22"
+            assert csvreader_list[2]["up_timestamp"] == "1646280213"
+            assert csvreader_list[2]["up_time"] == "03/03/2022 04:03:33"
+            assert csvreader_list[2]["seconds_to_restore"] == "2511671"
+
+            assert csvreader_list[3]["source"] == "jenkins"
+            assert csvreader_list[3]["project"] == "test-job"
+            assert csvreader_list[3]["environment"] == "production"
+            assert csvreader_list[3]["down_timestamp"] == "1649047474"
+            assert csvreader_list[3]["down_time"] == "04/04/2022 05:44:34"
+            assert csvreader_list[3]["up_timestamp"] == "1649048684"
+            assert csvreader_list[3]["up_time"] == "04/04/2022 06:04:44"
+            assert csvreader_list[3]["seconds_to_restore"] == "1210"
