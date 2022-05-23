@@ -17,6 +17,8 @@ from tests.mock_jenkins_request import (
     httpretty_two_jenkins_builds_failures_in_row,
     httpretty_four_jenkins_builds_two_failures_mixed_envs,
     httpretty_one_failed_jenkins_build,
+    httpretty_two_success_jenkins_build,
+
 )
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
 
@@ -186,3 +188,10 @@ def test_two_failed_builds_in_a_row():
     outages = JenkinsBuilds("https://jenkins.test/").get_jenkins_outages(["test-job"])
     assert len(outages) == 1
     assert outages[0].seconds_to_restore == 5280142
+
+# Outage will not be created if there is no faile build( success and success)
+def test_get_jenkins_outages_success_with_no_failed_builds():
+    httpretty_two_success_jenkins_build()
+
+    outages = JenkinsBuilds("https://jenkins.test/").get_jenkins_outages(["test-job"])
+    assert outages == []

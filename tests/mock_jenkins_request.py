@@ -597,3 +597,63 @@ def httpretty_one_failed_jenkins_build():
     )
     all_builds = JenkinsBuilds("https://jenkins.test/")
     return all_builds
+
+def httpretty_two_success_jenkins_build():
+    jenkins = {
+        "allBuilds": [
+             {
+                "timestamp": 1649048084000,
+                "duration": 600000,
+                "result": "SUCCESS",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-3",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+            {
+                "timestamp": 1643768582000,
+                "duration": 600000,
+                "result": "SUCCESS",
+                "actions": [
+                    {
+                        "_class": "hudson.model.ParametersAction",
+                        "parameters": [
+                            {"name": "Environment", "value": "production"},
+                        ],
+                    },
+                    {
+                        "_class": "hudson.plugins.git.util.BuildData",
+                        "lastBuiltRevision": {
+                            "branch": [
+                                {
+                                    "SHA1": "build-sha-4",
+                                }
+                            ]
+                        },
+                    },
+                ],
+            },
+        ]
+    }
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://jenkins.test/" "job/test-job/api/json",
+        body=json.dumps(jenkins),
+    )
+    all_builds = JenkinsBuilds("https://jenkins.test/")
+    return all_builds
