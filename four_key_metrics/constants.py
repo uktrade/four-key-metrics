@@ -15,3 +15,8 @@ PINGDOM_CHECK_NAMES = [
     "Data Hub P1",
     "Data Hub P2",
 ]
+
+JENKINS_JOBS = [
+    "datahub-api",
+    "datahub-fe",
+]

@@ -3,7 +3,7 @@ from pprint import pprint
 
 from dotenv import load_dotenv
 
-from four_key_metrics.constants import DATAHUB_GIT_PROJECTS
+from four_key_metrics.constants import DATAHUB_GIT_PROJECTS, JENKINS_JOBS
 from four_key_metrics.constants import PINGDOM_CHECK_NAMES
 from four_key_metrics.file_utilities import remove_generated_reports
 from four_key_metrics.presenters.lead_time_metrics import (
@@ -59,9 +59,10 @@ class DisplayShell(Cmd):
         """Generate mean time to restore metric"""
 
         pingdom_check_names = PINGDOM_CHECK_NAMES
+        jenkins_jobs = JENKINS_JOBS
 
         UseCaseFactory().create("generate_mean_time_to_restore")(
-            pingdom_check_names, MeanTimeCSVDataPresenter.create()
+            pingdom_check_names,jenkins_jobs, MeanTimeCSVDataPresenter.create()
         )
 
     def do_remove_reports(self, arg):

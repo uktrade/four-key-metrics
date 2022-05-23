@@ -22,7 +22,7 @@ def generate_mean_time_to_restore_to_csv():
     check_names = ["Data Hub P1"]
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        check_names, CSVDataPresenter.create()
+        check_names, [], CSVDataPresenter.create()
     )
 
 

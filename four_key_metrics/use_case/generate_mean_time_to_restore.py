@@ -27,13 +27,13 @@ class GenerateMeanTimeToRestore:
         return
 
     def __call__(
-        self, pingdom_check_names, presenter: GenerateMeanTimeToRestorePresenter
+        self, pingdom_check_names, jenkins_jobs, presenter: GenerateMeanTimeToRestorePresenter
     ):
         self._presenter = presenter
         try:
             self._presenter.begin()
             self._get_pingdom_mean_time_to_restore(pingdom_check_names)
-            # TODO Call _get_jenkins_mean_time_to_restore from here, passing through projects
+            self._get_jenkins_mean_time_to_restore(jenkins_jobs)
         finally:
             self._presenter.end()
 
@@ -41,11 +41,11 @@ class GenerateMeanTimeToRestore:
         all_outages = PingdomOutages().get_pingdom_outages(check_names)
         return self._add_outages_to_presenter(all_outages, "pingdom")
 
-    def _get_jenkins_mean_time_to_restore(self, projects: List[str]):
+    def _get_jenkins_mean_time_to_restore(self, jenkins_jobs: List[str]):
         jenkins_builds = JenkinsBuilds(
             os.getenv("DIT_JENKINS_URI", "https://jenkins.ci.uktrade.digital/")
         )
-        all_outages = jenkins_builds.get_jenkins_outages(projects)
+        all_outages = jenkins_builds.get_jenkins_outages(jenkins_jobs)
         return self._add_outages_to_presenter(all_outages, "jenkins")
 
     def _add_outages_to_presenter(self, outages, source_name):
