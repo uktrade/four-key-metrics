@@ -128,11 +128,10 @@ class JenkinsBuilds:
         build_started_outage = None
         ordered_builds = self.order_builds_by_ascending_timestamp(builds)
         for build in ordered_builds:
-            if not build.successful:
-                if not build_started_outage:
-                    # store the failed build that marks the start of an outage
-                    build_started_outage = build
-            else:
+            if not build.successful and not build_started_outage:
+                # store the failed build that marks the start of an outage
+                build_started_outage = build
+            elif build.successful and build_started_outage:
                 outages.append(
                     Outage(
                         source="jenkins",
@@ -144,6 +143,8 @@ class JenkinsBuilds:
                     )
                 )
                 build_started_outage = None
+            else:
+                pass
         return outages
 
 
