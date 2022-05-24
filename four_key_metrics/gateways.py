@@ -253,4 +253,21 @@ class CircleCiRuns:
 
         body = response.json() 
         return body["items"]
-           
+
+    # def get_circle_ci_runs_not_found(self,project,workflow ) -> List[dict]:
+    #     response = requests.get(
+    #         f"https://circleci.com/api/v2/insights/{project}/workflows/{workflow}",
+    #         headers={"Authorization": "Bearer " + (os.environ["CIRCLE_CI_TOKEN"])},
+    #         timeout=5,
+    #     )
+    #     if response.status_code != 200:
+    #         print(
+    #             f"{response.reason} [{response.status_code}] "
+    #             f"whilst loading {response.url}"
+    #         )
+    #         if response.status_code == 404:
+    #             print("Check your project's name or workflow name")
+    #         return {}
+
+    #     body = response.json()
+    #     return     

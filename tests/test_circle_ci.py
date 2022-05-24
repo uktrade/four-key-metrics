@@ -4,7 +4,9 @@ import httpretty
 
 from four_key_metrics.gateways import CircleCiRuns
 from tests.mock_circle_ci_request import (
-    httpretty_no_circle_ci_runs,
+    httpretty_404_not_found_circle_ci_runs,
+    httpretty_circle_ci_no_runs,
+    httpretty_circle_ci_runs_success,
 )
 
 @pytest.fixture(autouse=True)
@@ -15,16 +17,23 @@ def around_each():
     yield
     httpretty.disable()
 
-def test_get_circle_ci_runs_success():
-    pass
+def xtest_get_circle_ci_runs_success():
+    httpretty_circle_ci_runs_success()
+
+    circle_ci_runs = CircleCiRuns().get_circle_ci_runs("test-project", "test-workflow")
+    assert circle_ci_runs.response.items()
 
 def test_get_circle_ci_runs_no_items():
-    httpretty_no_circle_ci_runs()
+    httpretty_circle_ci_no_runs()
     
     circle_ci_runs = CircleCiRuns().get_circle_ci_runs("test-project", "test-workflow")
     assert circle_ci_runs == []
     
 
-def test_get_circle_ci_runs_not_found():
-    pass
+def xtest_get_circle_ci_runs_not_found():
+    httpretty_404_not_found_circle_ci_runs()
+
+    circle_ci_runs = CircleCiRuns().get_circle_ci_runs("test-wrong-project", "test-workflow")
+    assert 
+    
 
