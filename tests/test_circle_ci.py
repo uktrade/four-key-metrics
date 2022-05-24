@@ -21,7 +21,7 @@ def xtest_get_circle_ci_runs_success():
     httpretty_circle_ci_runs_success()
 
     circle_ci_runs = CircleCiRuns().get_circle_ci_runs("test-project", "test-workflow")
-    assert circle_ci_runs.response.items()
+    assert circle_ci_runs
 
 def test_get_circle_ci_runs_no_items():
     httpretty_circle_ci_no_runs()
@@ -34,6 +34,6 @@ def xtest_get_circle_ci_runs_not_found():
     httpretty_404_not_found_circle_ci_runs()
 
     circle_ci_runs = CircleCiRuns().get_circle_ci_runs("test-wrong-project", "test-workflow")
-    assert 
+    assert circle_ci_runs
     
 
