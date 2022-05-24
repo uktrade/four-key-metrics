@@ -98,14 +98,14 @@ class JenkinsBuilds:
         else:
             return None
 
-    def get_jenkins_outages(self, projects):
+    def get_jenkins_outages(self, jenkins_jobs):
         outages = []
-        for project in projects:
-            builds = self.get_jenkins_builds(project)
+        for job in jenkins_jobs:
+            builds = self.get_jenkins_builds(job)
             grouped_builds = self.group_builds_by_environment(builds)
             for environment, builds in grouped_builds.items():
                 outages.extend(
-                    self.create_outages_for_environment(environment, builds, project)
+                    self.create_outages_for_environment(environment, builds, job)
                 )
         return outages
 
@@ -122,7 +122,7 @@ class JenkinsBuilds:
         return sorted(builds, key=(lambda build: build.started_at))
 
     def create_outages_for_environment(
-        self, environment, builds, project
+        self, environment, builds, jenkins_job
     ) -> List[Outage]:
         outages = []
         build_started_outage = None
@@ -136,7 +136,7 @@ class JenkinsBuilds:
                     Outage(
                         source="jenkins",
                         environment=environment,
-                        project=project,
+                        project=jenkins_job,
                         jenkins_failed_build_hash=build_started_outage.git_reference,
                         down_timestamp=build_started_outage.started_at,
                         up_timestamp=build.finished_at,
