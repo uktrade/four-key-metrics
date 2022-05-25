@@ -7,6 +7,7 @@ from tests.mock_circle_ci_request import (
     httpretty_404_not_found_circle_ci_runs,
     httpretty_circle_ci_no_runs,
     httpretty_circle_ci_runs_success,
+    two_mock_runs,
 )
 
 
@@ -19,11 +20,12 @@ def around_each():
     httpretty.disable()
 
 
-def xtest_get_circle_ci_runs_success():
+def test_get_circle_ci_runs_success():
     httpretty_circle_ci_runs_success()
 
+    expected_result = two_mock_runs
     circle_ci_runs = CircleCiRuns().get_circle_ci_runs("test-project", "test-workflow")
-    assert circle_ci_runs
+    assert circle_ci_runs == expected_result
 
 
 def test_get_circle_ci_runs_no_items():

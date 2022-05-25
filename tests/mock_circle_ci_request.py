@@ -1,11 +1,33 @@
 import json
 import httpretty
 
+
+two_mock_runs = [
+    {
+        "id": "59ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+        "duration": 731,
+        "status": "success",
+        "created_at": "2022-05-24T10:13:58.411Z",
+        "stopped_at": "2022-05-24T10:26:09.509Z",
+        "credits_used": 25165,
+        "branch": "master",
+        "is_approval": "false",
+    },
+    {
+        "id": "69ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+        "duration": 731,
+        "status": "failed",
+        "created_at": "2022-05-23T10:13:58.411Z",
+        "stopped_at": "2022-05-23T10:26:09.509Z",
+        "credits_used": 25165,
+        "branch": "master",
+        "is_approval": "false",
+    },
+]
+
+
 def httpretty_circle_ci_no_runs():
-    response = {
-        "next_page_token" : 'null',
-        "items" : [ ]
-        }
+    response = {"next_page_token": "null", "items": []}
 
     httpretty.register_uri(
         httpretty.GET,
@@ -13,33 +35,24 @@ def httpretty_circle_ci_no_runs():
         body=json.dumps(response),
     )
 
-    return 
+    return
+
 
 def httpretty_404_not_found_circle_ci_runs():
     httpretty.register_uri(
-        httpretty.GET, "https://circleci.com/api/v2/insights/test-wrong-project/workflows/test-workflow", status=404
+        httpretty.GET,
+        "https://circleci.com/api/v2/insights/test-wrong-project/workflows/test-workflow",
+        status=404,
     )
-    return    
+    return
+
 
 def httpretty_circle_ci_runs_success():
-    response = {
-        "items": [
-            {
-                "id" : "59ad3361-99eb-44a4-8c97-03c0b62eb3f2",
-                "duration" : 731,
-                "status" : "failed",
-                "created_at" : "2022-05-24T10:13:58.411Z",
-                "stopped_at" : "2022-05-24T10:26:09.509Z",
-                # "credits_used" : 25165,
-                "branch" : "master",
-                # "is_approval" : false,
-            }
-        ]
-    }
+    response = {"items": two_mock_runs}
 
     httpretty.register_uri(
         httpretty.GET,
-        "https://circleci.com/api/v2/insights/test-project-dh/workflows/test-workflow",
+        "https://circleci.com/api/v2/insights/test-project/workflows/test-workflow",
         body=json.dumps(response),
     )
-    return  
+    return
