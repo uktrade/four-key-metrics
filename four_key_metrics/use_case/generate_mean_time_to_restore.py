@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 from typing import List, Protocol
 
@@ -27,7 +27,10 @@ class GenerateMeanTimeToRestore:
         return
 
     def __call__(
-        self, pingdom_check_names, jenkins_jobs, presenter: GenerateMeanTimeToRestorePresenter
+        self,
+        pingdom_check_names,
+        jenkins_jobs,
+        presenter: GenerateMeanTimeToRestorePresenter,
     ):
         self._presenter = presenter
         try:
@@ -58,13 +61,13 @@ class GenerateMeanTimeToRestore:
                     "project": outage.project,
                     "environment": outage.environment,
                     "down_timestamp": outage.down_timestamp,
-                    "down_time": datetime.fromtimestamp(outage.down_timestamp).strftime(
-                        "%d/%m/%Y %H:%M:%S"
-                    ),
+                    "down_time": datetime.fromtimestamp(
+                        outage.down_timestamp, tz=timezone.utc
+                    ).strftime("%d/%m/%Y %H:%M:%S"),
                     "up_timestamp": outage.up_timestamp,
-                    "up_time": datetime.fromtimestamp(outage.up_timestamp).strftime(
-                        "%d/%m/%Y %H:%M:%S"
-                    ),
+                    "up_time": datetime.fromtimestamp(
+                        outage.up_timestamp, tz=timezone.utc
+                    ).strftime("%d/%m/%Y %H:%M:%S"),
                     "seconds_to_restore": outage.seconds_to_restore,
                 }
             )
