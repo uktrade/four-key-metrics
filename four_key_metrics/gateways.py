@@ -244,7 +244,7 @@ class PingdomOutages:
 
 
 class CircleCiRuns:
-    def get_circle_ci_runs(self, project, workflow) -> List[dict]:
+    def _get_circle_ci_runs(self, project, workflow) -> List[dict]:
 
         response = requests.get(
             f"https://circleci.com/api/v2/insights/{project}/workflows/{workflow}",
