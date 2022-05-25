@@ -267,3 +267,5 @@ class CircleCiRuns:
     def _sort_runs_by_ascending_time(self, runs) -> List[dict]:
         return sorted(runs, key=(lambda run: run["created_at"]))
 
+    def get_circle_ci_outages(self, project, workflow) -> List[Outage]:
+        pass

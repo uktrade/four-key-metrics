@@ -1,6 +1,7 @@
 import os
 import pytest
 import httpretty
+from four_key_metrics.domain_models import Outage
 
 from four_key_metrics.gateways import CircleCiRuns
 from tests.mock_circle_ci_request import (
@@ -112,3 +113,16 @@ def test_sort_runs_by_ascending_time():
     assert sorted_runs == expected_result
 
 
+def xtest_get_circle_ci_outages_success():
+    expected_result = [Outage()]
+
+    circle_ci_outages = CircleCiRuns().get_circle_ci_outages(
+        "test-wrong-project", "test-workflow"
+    )
+
+    assert circle_ci_outages == expected_result
+
+
+def xtest_get_circle_ci_outages_failure():
+    # test return empty list
+    pass
