@@ -1,8 +1,8 @@
 import json
 import httpretty
 
-
-two_mock_runs = [
+# four runs which should turn into 2 outages
+four_mock_runs = [
     {
         "id": "59ad3361-99eb-44a4-8c97-03c0b62eb3f2",
         "duration": 731,
@@ -19,6 +19,26 @@ two_mock_runs = [
         "status": "failed",
         "created_at": "2022-05-23T10:13:58.411Z",
         "stopped_at": "2022-05-23T10:26:09.509Z",
+        "credits_used": 25165,
+        "branch": "master",
+        "is_approval": "false",
+    },
+    {
+        "id": "79ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+        "duration": 731,
+        "status": "success",
+        "created_at": "2022-05-22T10:13:58.411Z",
+        "stopped_at": "2022-05-22T10:26:09.509Z",
+        "credits_used": 25165,
+        "branch": "master",
+        "is_approval": "false",
+    },
+    {
+        "id": "89ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+        "duration": 731,
+        "status": "failed",
+        "created_at": "2022-05-20T10:13:58.411Z",
+        "stopped_at": "2022-05-20T10:26:09.509Z",
         "credits_used": 25165,
         "branch": "master",
         "is_approval": "false",
@@ -48,7 +68,7 @@ def httpretty_404_not_found_circle_ci_runs():
 
 
 def httpretty_circle_ci_runs_success():
-    response = {"items": two_mock_runs}
+    response = {"items": four_mock_runs}
 
     httpretty.register_uri(
         httpretty.GET,

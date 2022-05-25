@@ -7,7 +7,7 @@ from tests.mock_circle_ci_request import (
     httpretty_404_not_found_circle_ci_runs,
     httpretty_circle_ci_no_runs,
     httpretty_circle_ci_runs_success,
-    two_mock_runs,
+    four_mock_runs,
 )
 
 
@@ -23,7 +23,7 @@ def around_each():
 def test_get_circle_ci_runs_success():
     httpretty_circle_ci_runs_success()
 
-    expected_result = two_mock_runs
+    expected_result = four_mock_runs
     circle_ci_runs = CircleCiRuns()._get_circle_ci_runs("test-project", "test-workflow")
     assert circle_ci_runs == expected_result
 
