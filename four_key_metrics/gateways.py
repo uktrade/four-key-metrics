@@ -263,3 +263,7 @@ class CircleCiRuns:
 
         body = response.json()
         return body["items"]
+
+    def _sort_runs_by_ascending_time(self, runs) -> List[dict]:
+        return sorted(runs, key=(lambda run: run["created_at"]))
+

@@ -63,3 +63,52 @@ def test_get_circle_ci_runs_unauthorized(capsys):
     )
     assert circle_ci_runs == []
 
+
+def test_sort_runs_by_ascending_time():
+    expected_result = [
+        {
+            "id": "89ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+            "duration": 731,
+            "status": "failed",
+            "created_at": "2022-05-20T10:13:58.411Z",
+            "stopped_at": "2022-05-20T10:26:09.509Z",
+            "credits_used": 25165,
+            "branch": "master",
+            "is_approval": "false",
+        },
+        {
+            "id": "79ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+            "duration": 731,
+            "status": "success",
+            "created_at": "2022-05-22T10:13:58.411Z",
+            "stopped_at": "2022-05-22T10:26:09.509Z",
+            "credits_used": 25165,
+            "branch": "master",
+            "is_approval": "false",
+        },
+        {
+            "id": "69ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+            "duration": 731,
+            "status": "failed",
+            "created_at": "2022-05-23T10:13:58.411Z",
+            "stopped_at": "2022-05-23T10:26:09.509Z",
+            "credits_used": 25165,
+            "branch": "master",
+            "is_approval": "false",
+        },
+        {
+            "id": "59ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+            "duration": 731,
+            "status": "success",
+            "created_at": "2022-05-24T10:13:58.411Z",
+            "stopped_at": "2022-05-24T10:26:09.509Z",
+            "credits_used": 25165,
+            "branch": "master",
+            "is_approval": "false",
+        },
+    ]
+
+    sorted_runs = CircleCiRuns()._sort_runs_by_ascending_time(four_mock_runs)
+    assert sorted_runs == expected_result
+
+
