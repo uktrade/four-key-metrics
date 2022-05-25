@@ -4,6 +4,7 @@ import httpretty
 
 from four_key_metrics.gateways import CircleCiRuns
 from tests.mock_circle_ci_request import (
+    httpretty_401_unauthorized_circle_ci_runs,
     httpretty_404_not_found_circle_ci_runs,
     httpretty_circle_ci_no_runs,
     httpretty_circle_ci_runs_success,
@@ -48,3 +49,17 @@ def test_get_circle_ci_runs_not_found(capsys):
         in captured.out
     )
     assert circle_ci_runs == []
+
+
+def test_get_circle_ci_runs_unauthorized(capsys):
+    httpretty_401_unauthorized_circle_ci_runs()
+    circle_ci_runs = CircleCiRuns()._get_circle_ci_runs(
+        "test-wrong-project", "test-workflow"
+    )
+    captured = capsys.readouterr()
+    assert (
+        "Unauthorized [401] whilst loading https://circleci.com/api/v2/insights/test-wrong-project/workflows/test-workflow"
+        in captured.out
+    )
+    assert circle_ci_runs == []
+

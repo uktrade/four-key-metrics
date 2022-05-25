@@ -67,6 +67,16 @@ def httpretty_404_not_found_circle_ci_runs():
     return
 
 
+def httpretty_401_unauthorized_circle_ci_runs():
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://circleci.com/api/v2/insights/test-wrong-project/workflows/test-workflow",
+        status=401,
+        body=json.dumps({"message": "You must log in first."}),
+    )
+    return
+
+
 def httpretty_circle_ci_runs_success():
     response = {"items": four_mock_runs}
 

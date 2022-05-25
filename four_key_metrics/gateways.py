@@ -257,8 +257,8 @@ class CircleCiRuns:
                 f"{response.reason} [{response.status_code}] "
                 f"whilst loading {response.url}"
             )
-        if response.status_code == 404:
-            print("Check your project or workflow name")
+            if response.status_code == 404:
+                print("Check your project or workflow name")
             return []
 
         body = response.json()
