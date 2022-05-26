@@ -88,6 +88,28 @@ def httpretty_circle_ci_runs_success():
     return
 
 
+def httpretty_circle_ci_runs_success_other_project():
+    response = {"items": four_mock_runs}
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://circleci.com/api/v2/insights/other-project/workflows/test-workflow",
+        body=json.dumps(response),
+    )
+    return
+
+
+def httpretty_circle_ci_runs_success_other_workflow():
+    response = {"items": four_mock_runs}
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://circleci.com/api/v2/insights/test-project/workflows/other-workflow",
+        body=json.dumps(response),
+    )
+    return
+
+
 def httpretty_circle_ci_runs_all_failures():
     response = {
         "items": [

@@ -268,34 +268,40 @@ class CircleCiRuns:
     def _sort_runs_by_ascending_time(self, runs) -> List[dict]:
         return sorted(runs, key=(lambda run: run["created_at"]))
 
-    def get_circle_ci_outages(self, project, workflow) -> List[Outage]:
-        runs = self._get_circle_ci_runs(project, workflow)
-        ascending_runs = self._sort_runs_by_ascending_time(runs)
+    def get_circle_ci_outages(self, projects: dict) -> List[Outage]:
         outages = []
-        failed_run_starting_outage = None
-        for run in ascending_runs:
-
-            is_succcessful_run = run["status"] == "success"
-
-            if not is_succcessful_run and not failed_run_starting_outage:
-                failed_run_starting_outage = run
-
-            elif is_succcessful_run and failed_run_starting_outage:
-                outages.append(
-                    Outage(
-                        source="circle_ci",
-                        project=project,
-                        environment=run["branch"],
-                        circle_ci_failed_run_id=failed_run_starting_outage["id"],
-                        down_timestamp=round(
-                            iso_string_to_timestamp(
-                                failed_run_starting_outage["created_at"]
-                            )
-                        ),
-                        up_timestamp=round(iso_string_to_timestamp(run["stopped_at"])),
-                    )
-                )
+        for project, workflows in projects.items():
+            for workflow in workflows:
+                runs = self._get_circle_ci_runs(project, workflow)
+                ascending_runs = self._sort_runs_by_ascending_time(runs)
                 failed_run_starting_outage = None
-            else:
-                pass
+                for run in ascending_runs:
+
+                    is_succcessful_run = run["status"] == "success"
+
+                    if not is_succcessful_run and not failed_run_starting_outage:
+                        failed_run_starting_outage = run
+
+                    elif is_succcessful_run and failed_run_starting_outage:
+                        outages.append(
+                            Outage(
+                                source="circle_ci",
+                                project=project,
+                                environment=run["branch"],
+                                circle_ci_failed_run_id=failed_run_starting_outage[
+                                    "id"
+                                ],
+                                down_timestamp=round(
+                                    iso_string_to_timestamp(
+                                        failed_run_starting_outage["created_at"]
+                                    )
+                                ),
+                                up_timestamp=round(
+                                    iso_string_to_timestamp(run["stopped_at"])
+                                ),
+                            )
+                        )
+                        failed_run_starting_outage = None
+                    else:
+                        pass
         return outages

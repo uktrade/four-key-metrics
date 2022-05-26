@@ -12,6 +12,8 @@ from tests.mock_circle_ci_request import (
     httpretty_circle_ci_runs_all_failures,
     httpretty_circle_ci_runs_all_successes,
     httpretty_circle_ci_runs_two_failures_in_a_row,
+    httpretty_circle_ci_runs_success_other_project,
+    httpretty_circle_ci_runs_success_other_workflow,
     four_mock_runs,
 )
 
@@ -116,8 +118,10 @@ def test_sort_runs_by_ascending_time():
     assert sorted_runs == expected_result
 
 
-def test_get_circle_ci_outages_success():
+def test_get_circle_ci_outages_multiple_workflows_and_projects():
     httpretty_circle_ci_runs_success()
+    httpretty_circle_ci_runs_success_other_project()
+    httpretty_circle_ci_runs_success_other_workflow()
 
     expected_result = [
         Outage(
@@ -136,34 +140,69 @@ def test_get_circle_ci_outages_success():
             up_timestamp=1653387970,
             circle_ci_failed_run_id="69ad3361-99eb-44a4-8c97-03c0b62eb3f2",
         ),
+        Outage(
+            source="circle_ci",
+            project="test-project",
+            environment="master",
+            down_timestamp=1653041638,
+            up_timestamp=1653215170,
+            circle_ci_failed_run_id="89ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+        ),
+        Outage(
+            source="circle_ci",
+            project="test-project",
+            environment="master",
+            down_timestamp=1653300838,
+            up_timestamp=1653387970,
+            circle_ci_failed_run_id="69ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+        ),
+        Outage(
+            source="circle_ci",
+            project="other-project",
+            environment="master",
+            down_timestamp=1653041638,
+            up_timestamp=1653215170,
+            circle_ci_failed_run_id="89ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+        ),
+        Outage(
+            source="circle_ci",
+            project="other-project",
+            environment="master",
+            down_timestamp=1653300838,
+            up_timestamp=1653387970,
+            circle_ci_failed_run_id="69ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+        ),
     ]
 
     circle_ci_outages = CircleCiRuns().get_circle_ci_outages(
-        "test-project", "test-workflow"
+        {
+            "test-project": ["test-workflow", "other-workflow"],
+            "other-project": ["test-workflow"],
+        }
     )
-
-    assert circle_ci_outages[0].__dict__ == expected_result[0].__dict__
-    assert circle_ci_outages[1].__dict__ == expected_result[1].__dict__
+    assert len(circle_ci_outages) == 6
+    for i, outage in enumerate(circle_ci_outages):
+        assert outage.__dict__ == expected_result[i].__dict__
 
 
 def test_get_circle_ci_outages_no_runs():
 
     httpretty_404_not_found_circle_ci_runs()
     outages = CircleCiRuns().get_circle_ci_outages(
-        "test-wrong-project", "test-workflow"
+        {"test-wrong-project": ["test-workflow"]}
     )
     assert outages == []
 
 
 def test_get_circle_ci_outages_all_failed_runs():
     httpretty_circle_ci_runs_all_failures()
-    outages = CircleCiRuns().get_circle_ci_outages("test-project", "test-workflow")
+    outages = CircleCiRuns().get_circle_ci_outages({"test-project": ["test-workflow"]})
     assert outages == []
 
 
 def test_get_circle_ci_outages_all_successful_runs():
     httpretty_circle_ci_runs_all_successes()
-    outages = CircleCiRuns().get_circle_ci_outages("test-project", "test-workflow")
+    outages = CircleCiRuns().get_circle_ci_outages({"test-project": ["test-workflow"]})
     assert outages == []
 
 
@@ -180,5 +219,5 @@ def test_get_circle_ci_outages_two_failed_runs_in_a_row():
         )
     ]
 
-    outages = CircleCiRuns().get_circle_ci_outages("test-project", "test-workflow")
+    outages = CircleCiRuns().get_circle_ci_outages({"test-project": ["test-workflow"]})
     assert outages[0].__dict__ == expected_result[0].__dict__
