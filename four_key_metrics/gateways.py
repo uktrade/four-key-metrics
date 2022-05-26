@@ -269,27 +269,27 @@ class CircleCiRuns:
         return sorted(runs, key=(lambda run: run["created_at"]))
 
     def get_circle_ci_outages(self, project, workflow) -> List[Outage]:
-        runs = self._get_circle_ci_runs(project,workflow)
+        runs = self._get_circle_ci_runs(project, workflow)
         ascending_runs = self._sort_runs_by_ascending_time(runs)
         outages = []
         run_start_outage = None
         for run in ascending_runs:
-            
             if not run["status"] == "success" and not run_start_outage:
-
-                run_start_outage =run
+                run_start_outage = run
             elif run["status"] == "success" and run_start_outage:
                 outages.append(
                     Outage(
                         source="circle_ci",
                         project=project,
-                        environment= run["branch"],
+                        environment=run["branch"],
                         circle_ci_failed_run_id=run_start_outage["id"],
-                        down_timestamp=round(iso_string_to_timestamp(run_start_outage["created_at"])),
+                        down_timestamp=round(
+                            iso_string_to_timestamp(run_start_outage["created_at"])
+                        ),
                         up_timestamp=round(iso_string_to_timestamp(run["stopped_at"])),
                     )
                 )
-                run_start_outage = None                
+                run_start_outage = None
             else:
                 pass
         return outages
