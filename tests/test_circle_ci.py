@@ -11,6 +11,7 @@ from tests.mock_circle_ci_request import (
     httpretty_circle_ci_runs_success,
     httpretty_circle_ci_runs_all_failures,
     httpretty_circle_ci_runs_all_successes,
+    httpretty_circle_ci_runs_two_failures_in_a_row,
     four_mock_runs,
 )
 
@@ -167,4 +168,17 @@ def test_get_circle_ci_outages_all_successful_runs():
 
 
 def test_get_circle_ci_outages_two_failed_runs_in_a_row():
-    pass
+    httpretty_circle_ci_runs_two_failures_in_a_row()
+    expected_result = [
+        Outage(
+            source="circle_ci",
+            project="test-project",
+            environment="master",
+            down_timestamp=1653300838,
+            up_timestamp=1653474370,
+            circle_ci_failed_run_id="39ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+        )
+    ]
+
+    outages = CircleCiRuns().get_circle_ci_outages("test-project", "test-workflow")
+    assert outages[0].__dict__ == expected_result[0].__dict__
