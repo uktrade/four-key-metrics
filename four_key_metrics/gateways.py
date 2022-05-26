@@ -268,4 +268,53 @@ class CircleCiRuns:
         return sorted(runs, key=(lambda run: run["created_at"]))
 
     def get_circle_ci_outages(self, project, workflow) -> List[Outage]:
-        pass
+        runs = self._get_circle_ci_runs(project,workflow)
+        ascending_runs = self._sort_runs_by_ascending_time(runs)
+        outages = []
+        run_start_outage = None
+        for run in ascending_runs:
+            
+            if not run["status"] == "success" and not run_start_outage:
+
+                run_start_outage =run
+            elif run["status"] == "success" and run_start_outage:
+                outages.append(
+                    Outage(
+                        source="circle ci",
+                        project="circle ci project",
+                        environment= run["branch"],
+                        circle_ci_failed_run_id=run_start_outage["id"],
+                        down_timestamp=datetime.strptime(run_start_outage["created_at"], "%Y-%m-%dT%H:%M:%S.%fZ"),
+                        up_timestamp=(run["stopped_at"]),
+                    )
+                )                
+            else:
+                pass
+        return outages
+
+
+#  def create_outages_for_environment(
+#         self, environment, builds, jenkins_job
+#     ) -> List[Outage]:
+#         outages = []
+#         build_started_outage = None
+#         ordered_builds = self.order_builds_by_ascending_timestamp(builds)
+#         for build in ordered_builds:
+#             if not build.successful and not build_started_outage:
+#                 # store the failed build that marks the start of an outage
+#                 build_started_outage = build
+#             elif build.successful and build_started_outage:
+#                 outages.append(
+#                     Outage(
+#                         source="jenkins",
+#                         environment=environment,
+#                         project=jenkins_job,
+#                         jenkins_failed_build_hash=build_started_outage.git_reference,
+#                         down_timestamp=round(build_started_outage.started_at),
+#                         up_timestamp=round(build.finished_at),
+#                     )
+#                 )
+#                 build_started_outage = None
+#             else:
+#                 pass
+#         return outages

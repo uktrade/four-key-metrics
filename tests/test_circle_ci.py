@@ -113,11 +113,27 @@ def test_sort_runs_by_ascending_time():
     assert sorted_runs == expected_result
 
 
-def xtest_get_circle_ci_outages_success():
-    expected_result = [Outage()]
+def test_get_circle_ci_outages_success():
+    httpretty_circle_ci_runs_success()
+    expected_result = [Outage(
+        source = "circle_ci",
+        project = "test-project",
+        environment = "master",
+        down_timestamp = 1653041638,
+        up_timestamp = 1653215169,
+        circle_ci_failed_run_id="89ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+    ),
+    Outage(
+        source = "circle_ci",
+        project = "test-project",
+        environment = "master",
+        down_timestamp = 1653300838,
+        up_timestamp = 1653387969,
+        circle_ci_failed_run_id="69ad3361-99eb-44a4-8c97-03c0b62eb3f2",
+    )]
 
     circle_ci_outages = CircleCiRuns().get_circle_ci_outages(
-        "test-wrong-project", "test-workflow"
+        "test-project", "test-workflow"
     )
 
     assert circle_ci_outages == expected_result

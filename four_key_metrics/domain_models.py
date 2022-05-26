@@ -35,7 +35,7 @@ class Outage:
         up_timestamp,
         pingdom_check_id=None,
         jenkins_failed_build_hash=None,
-        circle_ci_id=None,
+        circle_ci_failed_run_id=None,
     ):
         self.source = source
         self.project = project
@@ -45,4 +45,4 @@ class Outage:
         self.up_timestamp = up_timestamp
         self.seconds_to_restore = self.up_timestamp - self.down_timestamp
         self.jenkins_failed_build_hash = jenkins_failed_build_hash or None
-        self.circle_ci_id = circle_ci_id or None
+        self.circle_ci_failed_run_id = circle_ci_failed_run_id or None
