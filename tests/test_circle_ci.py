@@ -113,7 +113,7 @@ def test_sort_runs_by_ascending_time():
     assert sorted_runs == expected_result
 
 
-def test_get_circle_ci_outages_success():
+def xtest_get_circle_ci_outages_success():
     httpretty_circle_ci_runs_success()
     expected_result = [Outage(
         source = "circle_ci",
