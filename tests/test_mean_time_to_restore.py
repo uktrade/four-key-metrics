@@ -5,9 +5,6 @@ import pytest
 
 from four_key_metrics.domain_models import Build
 from four_key_metrics.gateways import JenkinsBuilds
-from four_key_metrics.use_case.generate_mean_time_to_restore import (
-    GenerateMeanTimeToRestore,
-)
 from four_key_metrics.presenters.mean_time_to_restore import (
     ConsolePresenter,
 )

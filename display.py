@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 from four_key_metrics.constants import DATAHUB_GIT_PROJECTS, JENKINS_JOBS
 from four_key_metrics.constants import PINGDOM_CHECK_NAMES
-from four_key_metrics.file_utilities import remove_generated_reports
+from four_key_metrics.utilities import remove_generated_reports
 from four_key_metrics.presenters.lead_time_metrics import (
     CSVDataPresenter as LeadTimeCSVDataPresenter,
     JSONDataPresenter,

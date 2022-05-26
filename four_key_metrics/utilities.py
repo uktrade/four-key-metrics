@@ -6,3 +6,4 @@ def remove_generated_reports(extension=".csv"):
         if file.endswith(extension):
             os.remove(file)
             print(os.path.join("Removed ./", file))
+

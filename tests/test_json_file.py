@@ -4,7 +4,7 @@ import os
 import httpretty
 import pytest
 
-from four_key_metrics.file_utilities import remove_generated_reports
+from four_key_metrics.utilities import remove_generated_reports
 from four_key_metrics.presenters.lead_time_metrics import JSONDataPresenter
 from four_key_metrics.use_case_factory import UseCaseFactory
 from tests.mock_github_request import httpretty_two_github_requests
