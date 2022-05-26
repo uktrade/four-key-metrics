@@ -278,43 +278,19 @@ class CircleCiRuns:
 
                 run_start_outage =run
             elif run["status"] == "success" and run_start_outage:
+                down_timestamp =datetime.timestamp(datetime.strptime(run_start_outage["created_at"], "%Y-%m-%dT%H:%M:%S.%fZ"))
+                up_timestamp =datetime.timestamp(datetime.strptime(run["stopped_at"], "%Y-%m-%dT%H:%M:%S.%fZ"))
                 outages.append(
                     Outage(
-                        source="circle ci",
-                        project="circle ci project",
+                        source="circle_ci",
+                        project=project,
                         environment= run["branch"],
                         circle_ci_failed_run_id=run_start_outage["id"],
-                        down_timestamp=datetime.strptime(run_start_outage["created_at"], "%Y-%m-%dT%H:%M:%S.%fZ"),
-                        up_timestamp=(run["stopped_at"]),
+                        down_timestamp=round(down_timestamp),
+                        up_timestamp=round(up_timestamp),
+                        ),
                     )
-                )                
+                run_start_outage = None                
             else:
                 pass
         return outages
-
-
-#  def create_outages_for_environment(
-#         self, environment, builds, jenkins_job
-#     ) -> List[Outage]:
-#         outages = []
-#         build_started_outage = None
-#         ordered_builds = self.order_builds_by_ascending_timestamp(builds)
-#         for build in ordered_builds:
-#             if not build.successful and not build_started_outage:
-#                 # store the failed build that marks the start of an outage
-#                 build_started_outage = build
-#             elif build.successful and build_started_outage:
-#                 outages.append(
-#                     Outage(
-#                         source="jenkins",
-#                         environment=environment,
-#                         project=jenkins_job,
-#                         jenkins_failed_build_hash=build_started_outage.git_reference,
-#                         down_timestamp=round(build_started_outage.started_at),
-#                         up_timestamp=round(build.finished_at),
-#                     )
-#                 )
-#                 build_started_outage = None
-#             else:
-#                 pass
-#         return outages
