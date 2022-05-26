@@ -6,6 +6,7 @@ import requests
 from glom import glom, Path
 
 from four_key_metrics.domain_models import Build, GitCommit, Outage
+from four_key_metrics.utilities import iso_string_to_timestamp
 
 
 class JenkinsBuilds:
@@ -278,18 +279,16 @@ class CircleCiRuns:
 
                 run_start_outage =run
             elif run["status"] == "success" and run_start_outage:
-                down_timestamp =datetime.timestamp(datetime.strptime(run_start_outage["created_at"], "%Y-%m-%dT%H:%M:%S.%fZ"))
-                up_timestamp =datetime.timestamp(datetime.strptime(run["stopped_at"], "%Y-%m-%dT%H:%M:%S.%fZ"))
                 outages.append(
                     Outage(
                         source="circle_ci",
                         project=project,
                         environment= run["branch"],
                         circle_ci_failed_run_id=run_start_outage["id"],
-                        down_timestamp=round(down_timestamp),
-                        up_timestamp=round(up_timestamp),
-                        ),
+                        down_timestamp=round(iso_string_to_timestamp(run_start_outage["created_at"])),
+                        up_timestamp=round(iso_string_to_timestamp(run["stopped_at"])),
                     )
+                )
                 run_start_outage = None                
             else:
                 pass
