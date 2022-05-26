@@ -272,24 +272,30 @@ class CircleCiRuns:
         runs = self._get_circle_ci_runs(project, workflow)
         ascending_runs = self._sort_runs_by_ascending_time(runs)
         outages = []
-        run_start_outage = None
+        failed_run_starting_outage = None
         for run in ascending_runs:
-            if not run["status"] == "success" and not run_start_outage:
-                run_start_outage = run
-            elif run["status"] == "success" and run_start_outage:
+
+            is_succcessful_run = run["status"] == "success"
+
+            if not is_succcessful_run and not failed_run_starting_outage:
+                failed_run_starting_outage = run
+
+            elif is_succcessful_run and failed_run_starting_outage:
                 outages.append(
                     Outage(
                         source="circle_ci",
                         project=project,
                         environment=run["branch"],
-                        circle_ci_failed_run_id=run_start_outage["id"],
+                        circle_ci_failed_run_id=failed_run_starting_outage["id"],
                         down_timestamp=round(
-                            iso_string_to_timestamp(run_start_outage["created_at"])
+                            iso_string_to_timestamp(
+                                failed_run_starting_outage["created_at"]
+                            )
                         ),
                         up_timestamp=round(iso_string_to_timestamp(run["stopped_at"])),
                     )
                 )
-                run_start_outage = None
+                failed_run_starting_outage = None
             else:
                 pass
         return outages
