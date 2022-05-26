@@ -9,6 +9,7 @@ from tests.mock_circle_ci_request import (
     httpretty_404_not_found_circle_ci_runs,
     httpretty_circle_ci_no_runs,
     httpretty_circle_ci_runs_success,
+    httpretty_circle_ci_runs_all_failures,
     four_mock_runs,
 )
 
@@ -150,3 +151,17 @@ def test_get_circle_ci_outages_no_runs():
         "test-wrong-project", "test-workflow"
     )
     assert outages == []
+
+
+def test_get_circle_ci_outages_all_failed_runs():
+    httpretty_circle_ci_runs_all_failures()
+    outages = CircleCiRuns().get_circle_ci_outages("test-project", "test-workflow")
+    assert outages == []
+
+
+def test_get_circle_ci_outages_all_successful_runs():
+    pass
+
+
+def test_get_circle_ci_outages_two_failed_runs_in_a_row():
+    pass
