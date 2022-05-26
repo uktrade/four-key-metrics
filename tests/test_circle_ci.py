@@ -143,6 +143,10 @@ def test_get_circle_ci_outages_success():
     assert circle_ci_outages[1].__dict__ == expected_result[1].__dict__
 
 
-def xtest_get_circle_ci_outages_failure():
-    # test return empty list
-    pass
+def test_get_circle_ci_outages_no_runs():
+
+    httpretty_404_not_found_circle_ci_runs()
+    outages = CircleCiRuns().get_circle_ci_outages(
+        "test-wrong-project", "test-workflow"
+    )
+    assert outages == []
