@@ -20,3 +20,8 @@ JENKINS_JOBS = [
     "datahub-api",
     "datahub-fe",
 ]
+
+CIRCLE_CI_PROJECTS = {
+    "gh/uktrade/data-hub-frontend": ["datahub"],
+    "gh/uktrade/data-hub-api": ["Default build"],
+}
