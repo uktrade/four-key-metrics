@@ -2,7 +2,7 @@ from datetime import datetime
 import os
 from typing import List, Protocol
 
-from four_key_metrics.gateways import PingdomOutages, JenkinsBuilds
+from four_key_metrics.gateways import CircleCiRuns, PingdomOutages, JenkinsBuilds
 
 
 class GenerateMeanTimeToRestorePresenter(Protocol):
@@ -30,6 +30,7 @@ class GenerateMeanTimeToRestore:
         self,
         pingdom_check_names,
         jenkins_jobs,
+        circle_ci_projects,
         presenter: GenerateMeanTimeToRestorePresenter,
     ):
         self._presenter = presenter
@@ -37,6 +38,7 @@ class GenerateMeanTimeToRestore:
             self._presenter.begin()
             self._get_pingdom_mean_time_to_restore(pingdom_check_names)
             self._get_jenkins_mean_time_to_restore(jenkins_jobs)
+            self._get_circle_ci_mean_time_to_restore(circle_ci_projects)
         finally:
             self._presenter.end()
 
@@ -50,6 +52,10 @@ class GenerateMeanTimeToRestore:
         )
         all_outages = jenkins_builds.get_jenkins_outages(jenkins_jobs)
         return self._add_outages_to_presenter(all_outages, "jenkins")
+
+    def _get_circle_ci_mean_time_to_restore(self, circle_ci_projects: dict):
+        all_outages = CircleCiRuns().get_circle_ci_outages(circle_ci_projects)
+        return self._add_outages_to_presenter(all_outages, "circle_ci")          
 
     def _add_outages_to_presenter(self, outages, source_name):
         total_time_to_restore = 0
