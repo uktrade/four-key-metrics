@@ -8,6 +8,7 @@ from four_key_metrics.presenters.mean_time_to_restore import (
     CSVDataPresenter,
 )
 from four_key_metrics.use_case_factory import UseCaseFactory
+from tests.mock_circle_ci_request import httpretty_circle_ci_runs_two_failures_in_a_row
 from tests.mock_jenkins_request import httpretty_four_jenkins_builds_two_failures
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
 from tests.utilities import clean_up_test_file, get_filename_and_captured_outerr
@@ -21,11 +22,13 @@ def generate_mean_time_to_restore_to_csv():
     httpretty_checks()
     httpretty_summary_outage_p1()
     httpretty_four_jenkins_builds_two_failures()
+    httpretty_circle_ci_runs_two_failures_in_a_row()
     check_names = ["Data Hub P1"]
     jenkins_jobs = ["test-job"]
+    circle_ci_projects= {"test-project": ["test-workflow"]}
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        check_names, jenkins_jobs, CSVDataPresenter.create()
+        check_names, jenkins_jobs,circle_ci_projects, CSVDataPresenter.create()
     )
 
 
@@ -37,6 +40,7 @@ class TestMeanTimeToRestoreCSVFile:
         os.environ["DIT_JENKINS_USER"] = "test"
         os.environ["DIT_JENKINS_TOKEN"] = "1234"
         os.environ["DIT_JENKINS_URI"] = "https://jenkins.test/"
+        os.environ["CIRCLE_CI_TOKEN"] = "1234"
         httpretty.reset()
         generate_mean_time_to_restore_to_csv()
         self.filename, self.captured = get_csv_filename_and_captured_outerr(capsys)
@@ -101,3 +105,12 @@ class TestMeanTimeToRestoreCSVFile:
             assert csvreader_list[3]["up_timestamp"] == "1649048684"
             assert csvreader_list[3]["up_time"] == "04/04/2022 05:04:44"
             assert csvreader_list[3]["seconds_to_restore"] == "1210"
+
+            # assert csvreader_list[4]["project"] == "test-project"
+            # assert csvreader_list[4]["environment"] == "master"
+            # assert csvreader_list[4]["down_timestamp"] == "1653303521"
+            # assert csvreader_list[4]["down_time"] == "23/05/2022 10:13:58"
+            # assert csvreader_list[4]["up_timestamp"] == "1653387969"
+            # assert csvreader_list[4]["up_time"] == "24/05/2022 10:26:09"
+            # assert csvreader_list[4]["seconds_to_restore"] == "731"
+            # assert csvreader_list[4]["source"] == "circle_ci"

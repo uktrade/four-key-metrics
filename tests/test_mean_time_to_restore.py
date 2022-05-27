@@ -81,7 +81,7 @@ def test_mean_time_to_restore_output_failure_pingdom(capsys):
     check_names = ["Failing"]
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        check_names, [], ConsoleOnlyPresenter()
+        check_names, [],{}, ConsoleOnlyPresenter()
     )
 
     captured = capsys.readouterr()
@@ -96,7 +96,7 @@ def test_mean_time_to_restore_output_pingdom(capsys):
     check_names = ["Data Hub P1"]
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        check_names, [], ConsoleOnlyPresenter()
+        check_names, [],{}, ConsoleOnlyPresenter()
     )
 
     captured = capsys.readouterr()
@@ -111,7 +111,7 @@ def test_mean_time_to_restore_output_jenkins(capsys):
 
     jenkins_jobs = ["test-job"]
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        [], jenkins_jobs, ConsoleOnlyPresenter()
+        [], jenkins_jobs,{}, ConsoleOnlyPresenter()
     )
 
     captured = capsys.readouterr()
@@ -126,7 +126,7 @@ def test_mean_time_to_restore_output_failure_jenkins(capsys):
 
     jenkins_jobs = []
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        [], jenkins_jobs, ConsoleOnlyPresenter()
+        [], jenkins_jobs,{}, ConsoleOnlyPresenter()
     )
 
     captured = capsys.readouterr()
