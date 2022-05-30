@@ -2,7 +2,7 @@ import json
 
 import httpretty
 
-from four_key_metrics.gateways import JenkinsBuilds
+from four_key_metrics.gateways_new.jenkins import JenkinsBuilds
 
 
 def httpretty_404_no_job_jenkins_builds():

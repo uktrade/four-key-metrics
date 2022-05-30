@@ -1,6 +1,6 @@
 import os
 
-from four_key_metrics.gateways import JenkinsBuilds
+from four_key_metrics.gateways_new.jenkins import JenkinsBuilds
 from four_key_metrics.gateways_new.github import GitHubCommits
 from four_key_metrics.use_case.generate_lead_time_metrics import (
     GenerateLeadTimeMetrics,
