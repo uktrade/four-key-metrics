@@ -75,7 +75,7 @@ def around_each():
     httpretty.disable()
 
 
-def test_mean_time_to_restore_output_failure_pingdom(capsys):
+def test_mean_time_to_restore_output_no_pingdom_outages(capsys):
     httpretty_checks()
     httpretty_summary_outage_p1()
     check_names = ["Failing"]
@@ -90,7 +90,7 @@ def test_mean_time_to_restore_output_failure_pingdom(capsys):
     assert "'count': None" in captured.out
 
 
-def test_mean_time_to_restore_output_pingdom(capsys):
+def test_mean_time_to_restore_output_pingdom_outages(capsys):
     httpretty_checks()
     httpretty_summary_outage_p1()
     check_names = ["Data Hub P1"]
@@ -105,7 +105,7 @@ def test_mean_time_to_restore_output_pingdom(capsys):
     assert "'count': 2" in captured.out
 
 
-def test_mean_time_to_restore_output_jenkins(capsys):
+def test_mean_time_to_restore_output_jenkins_outages(capsys):
     httpretty_checks()
     httpretty_four_jenkins_builds_two_failures()
 
@@ -120,7 +120,7 @@ def test_mean_time_to_restore_output_jenkins(capsys):
     assert "'count': 2" in captured.out
 
 
-def test_mean_time_to_restore_output_failure_jenkins(capsys):
+def test_mean_time_to_restore_output_no_jenkins_outages(capsys):
     httpretty_checks()
     httpretty_four_jenkins_builds_two_failures()
 
