@@ -4,7 +4,8 @@ import httpretty
 import pytest
 import requests
 
-from four_key_metrics.gateways import JenkinsBuilds, GitHubCommits
+from four_key_metrics.gateways import JenkinsBuilds
+from four_key_metrics.gateways_new.github import GitHubCommits
 from four_key_metrics.use_case.generate_lead_time_metrics import ProjectSummariser
 from tests.authorization_assertions import assert_authorization_is
 from tests.mock_jenkins_request import (
