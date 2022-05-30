@@ -3,7 +3,7 @@ import pytest
 import httpretty
 from four_key_metrics.domain_models import Outage
 
-from four_key_metrics.gateways import CircleCiRuns
+from four_key_metrics.gateways_new.circle_ci import CircleCiRuns
 from tests.mock_circle_ci_request import (
     httpretty_401_unauthorized_circle_ci_runs,
     httpretty_404_not_found_circle_ci_runs,
