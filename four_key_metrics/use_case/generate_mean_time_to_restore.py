@@ -2,9 +2,10 @@ from datetime import datetime
 import os
 from typing import List, Protocol
 
-from four_key_metrics.gateways import PingdomOutages, JenkinsBuilds
+from four_key_metrics.gateways import JenkinsBuilds
 
 from four_key_metrics.gateways_new.circle_ci import CircleCiRuns
+from four_key_metrics.gateways_new.pingdom import PingdomOutages
 
 class GenerateMeanTimeToRestorePresenter(Protocol):
     def add(self, data: dict):

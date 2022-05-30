@@ -5,7 +5,7 @@ import pytest
 from freezegun import freeze_time
 
 from four_key_metrics.domain_models import Outage
-from four_key_metrics.gateways import PingdomOutages
+from four_key_metrics.gateways_new.pingdom import PingdomOutages
 from tests.mock_pingdom_request import (
     httpretty_checks,
     httpretty_summary_outage_p1,
