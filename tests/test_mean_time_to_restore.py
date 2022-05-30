@@ -9,6 +9,7 @@ from four_key_metrics.presenters.mean_time_to_restore import (
     ConsolePresenter,
 )
 from four_key_metrics.use_case_factory import UseCaseFactory
+from tests.mock_circle_ci_request import httpretty_circle_ci_runs_all_successes
 from tests.mock_jenkins_request import (
     httpretty_four_jenkins_builds_two_failures,
     httpretty_two_jenkins_builds_failures_in_row,
@@ -221,3 +222,18 @@ def test_get_jenkins_outages_success_with_no_failed_builds():
 
     outages = JenkinsBuilds("https://jenkins.test/").get_jenkins_outages(["test-job"])
     assert outages == []
+
+
+def test_mean_time_to_restore_output_no_circle_ci_outages(capsys):
+    httpretty_checks()
+    httpretty_circle_ci_runs_all_successes()
+    circle_ci_projects= {"test-project": ["test-workflow"]}
+
+    UseCaseFactory().create("generate_mean_time_to_restore")(
+        [],[],circle_ci_projects, ConsoleOnlyPresenter()
+    ) 
+
+    captured = capsys.readouterr()
+    assert "'source': 'circle_ci'" in captured.out
+    assert "'mean time to restore in seconds': None" in captured.out
+    assert "'count': None" in captured.out
