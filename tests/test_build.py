@@ -5,7 +5,7 @@ import httpretty
 import pytest
 
 from four_key_metrics.domain_models import Build
-from four_key_metrics.gateways_new.github import GitHubCommits
+from four_key_metrics.gateways.github import GitHubCommits
 from tests.authorization_assertions import assert_authorization_is
 
 
