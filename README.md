@@ -70,3 +70,6 @@ https://my.pingdom.com/app/api-tokens
 
 Pingdom documentation:
 https://docs.pingdom.com/api/
+
+## Circle CI API
+Visit https://app.circleci.com/settings/user/tokens > Create new API Token > add to CIRCLE_CI_TOKEN in your .env
