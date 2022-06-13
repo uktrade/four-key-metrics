@@ -10,6 +10,7 @@ from tests.mock_pingdom_request import (
     httpretty_checks,
     httpretty_summary_outage_p1,
     httpretty_summary_outage_blank,
+    httpretty_summary_outage_404,
     httpretty_404_no_pingdom_checks,
     httpretty_no_checks,
 )
@@ -146,7 +147,20 @@ def test_get_pingdom_no_checks(pingdom_outages):
     assert pingdom_info == {}
 
 
-def test_get_summary_outage_no_outages(pingdom_outages):
+def test_get_summary_outage_no_outages(capsys, pingdom_outages):
+    httpretty_checks()
+    httpretty_summary_outage_404()
+
+    pingdom_info = pingdom_outages._get_pingdom_outage_summary(4946807)
+
+    captured = capsys.readouterr()
+    # assert all_builds
+    assert "Not Found [404] whilst loading " in captured.out
+    assert "Check your pingdom check id." in captured.out
+    assert pingdom_info == {}
+
+
+def test_get_summary_outage_no_outage_summary(pingdom_outages):
     httpretty_checks()
     httpretty_summary_outage_blank()
 
