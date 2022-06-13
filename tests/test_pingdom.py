@@ -10,6 +10,7 @@ from tests.mock_pingdom_request import (
     httpretty_checks,
     httpretty_summary_outage_p1,
     httpretty_summary_outage_blank,
+    httpretty_404_no_pingdom_checks,
 )
 
 
@@ -116,6 +117,23 @@ def test_get_summary_outage_for_check_id(
         httpretty.last_request().url
         == f"https://api.pingdom.com/api/3.1/summary.outage/4946807?from={expected_from_timestamp}"
     )
+
+
+def test_empty_add_project(capsys, pingdom_outages):
+    httpretty_404_no_pingdom_checks()
+    httpretty_summary_outage_blank()
+
+    pingdom_info = pingdom_outages._get_pingdom_id_for_check_names([])
+
+    pingdom_info = pingdom_outages._get_pingdom_outage_summary(
+        4946807,
+        None,
+    )
+
+    captured = capsys.readouterr()
+    # assert all_builds
+    assert "Not Found [404] whilst loading " in captured.out
+    assert "Check your project's job name." in captured.out
 
 
 def test_get_summary_outage_no_outages(pingdom_outages):

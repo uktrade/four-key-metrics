@@ -3,6 +3,15 @@ import json
 import httpretty
 
 
+def httpretty_404_no_pingdom_checks():
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://api.pingdom.com/" "api/3.1/checks/",
+        status=404,
+    )
+    return
+
+
 def httpretty_checks():
     pingdom = {
         "checks": [
