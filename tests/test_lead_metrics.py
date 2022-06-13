@@ -154,6 +154,30 @@ def test_can_get_lead_time_for_two_builds_one_commit(capsys):
     assert "'standard_deviation': '0:00:00'" in captured.out
 
 
+def test_undefined_use_case_in_use_case_factory(capsys):
+
+    httpretty_three_jenkins_builds()
+    httpretty_one_github_requests()
+    httpretty_one_github_requests("build-sha-2", "build-sha-3")
+    httpretty_one_github_requests("build-sha-1", "build-sha-3")
+
+    projects = [
+        {
+            "job": "test-job",
+            "repository": "test-repository",
+            "environment": "production",
+        }
+    ]
+
+    use_case_name = "this_is_not_the_use_case_you_re_looking_for"
+
+    with pytest.raises(Exception) as exception_info:
+        UseCaseFactory().create(use_case_name)(projects, ConsoleOnlyPresenter())
+    assert f"Use Case {use_case_name} not found. Check UseCaseFactory" in str(
+        exception_info.value
+    )
+
+
 def test_can_get_lead_time_for_three_builds_one_commit(capsys):
     httpretty_three_jenkins_builds()
     httpretty_one_github_requests()
