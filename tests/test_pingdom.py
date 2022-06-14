@@ -10,7 +10,7 @@ from tests.mock_pingdom_request import (
     httpretty_checks,
     httpretty_summary_outage_p1,
     httpretty_summary_outage_blank,
-    httpretty_summary_outage_404,
+    httpretty_summary_outage_status,
     httpretty_404_no_pingdom_checks,
     httpretty_503_no_pingdom_checks,
     httpretty_no_checks,
@@ -138,6 +138,7 @@ def test_empty_add_project(capsys, pingdom_outages):
     assert "Not Found [404] whilst loading " in captured.out
     assert "Check your project's job name." in captured.out
 
+
 def test_empty_add_project(capsys, pingdom_outages):
     httpretty_404_no_pingdom_checks()
     httpretty_summary_outage_blank()
@@ -147,6 +148,7 @@ def test_empty_add_project(capsys, pingdom_outages):
     captured = capsys.readouterr()
     assert "Not Found [404] whilst loading " in captured.out
     assert "Check your project's job name." in captured.out
+
 
 def test_empty_503_add_project(capsys, pingdom_outages):
     httpretty_503_no_pingdom_checks()
@@ -164,6 +166,7 @@ def test_empty_503_add_project(capsys, pingdom_outages):
     assert "Service Unavailable [503] whilst loading " in captured.out
     assert "Check your project's job name." not in captured.out
 
+
 def test_get_pingdom_no_checks(pingdom_outages):
     httpretty_no_checks()
     httpretty_summary_outage_blank()
@@ -175,7 +178,7 @@ def test_get_pingdom_no_checks(pingdom_outages):
 
 def test_get_summary_outage_no_outages(capsys, pingdom_outages):
     httpretty_checks()
-    httpretty_summary_outage_404()
+    httpretty_summary_outage_status(404)
 
     pingdom_info = pingdom_outages._get_pingdom_outage_summary(4946807)
 
@@ -183,6 +186,19 @@ def test_get_summary_outage_no_outages(capsys, pingdom_outages):
     # assert all_builds
     assert "Not Found [404] whilst loading " in captured.out
     assert "Check your pingdom check id." in captured.out
+    assert pingdom_info == {}
+
+
+def test_get_summary_outage_503_outages(capsys, pingdom_outages):
+    httpretty_checks()
+    httpretty_summary_outage_status(503)
+
+    pingdom_info = pingdom_outages._get_pingdom_outage_summary(4946807)
+
+    captured = capsys.readouterr()
+    # assert all_builds
+    assert "Service Unavailable [503] whilst loading " in captured.out
+    assert "Check your pingdom check id." not in captured.out
     assert pingdom_info == {}
 
 

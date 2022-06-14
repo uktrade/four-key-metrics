@@ -195,13 +195,13 @@ def httpretty_summary_outage_p1():
     return
 
 
-def httpretty_summary_outage_404():
+def httpretty_summary_outage_status(status=404):
     pingdom = {"summary": {"states": []}}
 
     httpretty.register_uri(
         httpretty.GET,
         "https://api.pingdom.com/" "api/3.1/summary.outage/4946807",
-        status=404,
+        status=status,
     )
     return
 
