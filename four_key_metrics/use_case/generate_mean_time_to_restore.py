@@ -40,10 +40,10 @@ class GenerateMeanTimeToRestore:
         self._presenter = presenter
         try:
             self._presenter.begin()
-            self._get_circle_ci_mean_time_to_restore(circle_ci_projects)
-            self._get_grafana_mean_time_to_restore(grafana_alert_names)
-            self._get_jenkins_mean_time_to_restore(jenkins_jobs)
             self._get_pingdom_mean_time_to_restore(pingdom_check_names)
+            self._get_jenkins_mean_time_to_restore(jenkins_jobs)
+            self._get_circle_ci_mean_time_to_restore(circle_ci_projects)
+            # self._get_grafana_mean_time_to_restore(grafana_alert_names)
         finally:
             self._presenter.end()
 

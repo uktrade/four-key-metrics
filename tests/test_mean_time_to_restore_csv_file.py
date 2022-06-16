@@ -23,12 +23,17 @@ def generate_mean_time_to_restore_to_csv():
     httpretty_summary_outage_p1()
     httpretty_four_jenkins_builds_two_failures()
     httpretty_circle_ci_runs_two_failures_in_a_row()
-    check_names = ["Data Hub P1"]
+    pingdom_check_names = ["Data Hub P1"]
     jenkins_jobs = ["test-job"]
     circle_ci_projects = {"test-project": ["test-workflow"]}
+    grafana_alert_names = []  # ["Grafana Alert"]
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        check_names, jenkins_jobs, circle_ci_projects, CSVDataPresenter.create()
+        pingdom_check_names,
+        jenkins_jobs,
+        circle_ci_projects,
+        grafana_alert_names,
+        CSVDataPresenter.create(),
     )
 
 
