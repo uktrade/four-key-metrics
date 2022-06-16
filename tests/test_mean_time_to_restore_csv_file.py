@@ -2,6 +2,7 @@ import csv
 import os
 
 import httpretty
+from freezegun import freeze_time
 import pytest
 
 from four_key_metrics.presenters.mean_time_to_restore import (
@@ -9,6 +10,10 @@ from four_key_metrics.presenters.mean_time_to_restore import (
 )
 from four_key_metrics.use_case_factory import UseCaseFactory
 from tests.mock_circle_ci_request import httpretty_circle_ci_runs_two_failures_in_a_row
+from tests.mock_grafana_request import (
+    httpretty_grafana_alerts,
+    httpretty_grafana_alert_annotations,
+)
 from tests.mock_jenkins_request import httpretty_four_jenkins_builds_two_failures
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
 from tests.utilities import clean_up_test_file, get_filename_and_captured_outerr
@@ -23,12 +28,19 @@ def generate_mean_time_to_restore_to_csv():
     httpretty_summary_outage_p1()
     httpretty_four_jenkins_builds_two_failures()
     httpretty_circle_ci_runs_two_failures_in_a_row()
-    check_names = ["Data Hub P1"]
+    httpretty_grafana_alerts()
+    httpretty_grafana_alert_annotations()
+    pingdom_check_names = ["Data Hub P1"]
     jenkins_jobs = ["test-job"]
-    circle_ci_projects= {"test-project": ["test-workflow"]}
+    circle_ci_projects = {"test-project": ["test-workflow"]}
+    grafana_alert_names = ["Test Grafana Alert"]
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        check_names, jenkins_jobs,circle_ci_projects, CSVDataPresenter.create()
+        pingdom_check_names,
+        jenkins_jobs,
+        circle_ci_projects,
+        grafana_alert_names,
+        CSVDataPresenter.create(),
     )
 
 
@@ -41,6 +53,7 @@ class TestMeanTimeToRestoreCSVFile:
         os.environ["DIT_JENKINS_TOKEN"] = "1234"
         os.environ["DIT_JENKINS_URI"] = "https://jenkins.test/"
         os.environ["CIRCLE_CI_TOKEN"] = "1234"
+        os.environ["GRAFANA_TOKEN"] = "1234"
         httpretty.reset()
         generate_mean_time_to_restore_to_csv()
         self.filename, self.captured = get_csv_filename_and_captured_outerr(capsys)
@@ -48,6 +61,7 @@ class TestMeanTimeToRestoreCSVFile:
         clean_up_test_file(self.filename)
         httpretty.disable()
 
+    @freeze_time("2022-05-09")
     def test_csv_created(self):
         file_exists = os.path.exists(self.filename)
         assert "CSV metrics stored in mean_time_to_restore_" in self.captured.out
@@ -114,3 +128,12 @@ class TestMeanTimeToRestoreCSVFile:
             assert csvreader_list[4]["up_timestamp"] == "1653474370"
             assert csvreader_list[4]["up_time"] == "25/05/2022 10:26:10"
             assert csvreader_list[4]["seconds_to_restore"] == "173532"
+
+            assert csvreader_list[5]["source"] == "grafana"
+            assert csvreader_list[5]["project"] == "Test Grafana Alert"
+            assert csvreader_list[5]["environment"] == "-"
+            assert csvreader_list[5]["down_timestamp"] == "1655113050"
+            assert csvreader_list[5]["down_time"] == "13/06/2022 09:37:30"
+            assert csvreader_list[5]["up_timestamp"] == "1655113230"
+            assert csvreader_list[5]["up_time"] == "13/06/2022 09:40:30"
+            assert csvreader_list[5]["seconds_to_restore"] == "180"

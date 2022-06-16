@@ -9,7 +9,10 @@ from four_key_metrics.presenters.mean_time_to_restore import (
     ConsolePresenter,
 )
 from four_key_metrics.use_case_factory import UseCaseFactory
-from tests.mock_circle_ci_request import httpretty_circle_ci_runs_all_successes, httpretty_circle_ci_runs_success
+from tests.mock_circle_ci_request import (
+    httpretty_circle_ci_runs_all_successes,
+    httpretty_circle_ci_runs_success,
+)
 from tests.mock_jenkins_request import (
     httpretty_four_jenkins_builds_two_failures,
     httpretty_two_jenkins_builds_failures_in_row,
@@ -18,6 +21,7 @@ from tests.mock_jenkins_request import (
     httpretty_two_success_jenkins_build,
 )
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
+from tests.mock_grafana_request import httpretty_grafana_alerts
 
 
 @pytest.fixture
@@ -71,6 +75,7 @@ def around_each():
     os.environ["DIT_JENKINS_TOKEN"] = "1234"
     os.environ["DIT_JENKINS_URI"] = "https://jenkins.test/"
     os.environ["PINGDOM_TOKEN"] = "1234"
+    os.environ["GRAFANA_TOKEN"] = "1234"
     httpretty.reset()
     yield
     httpretty.disable()
@@ -82,7 +87,7 @@ def test_mean_time_to_restore_output_no_pingdom_outages(capsys):
     check_names = ["Failing"]
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        check_names, [],{}, ConsoleOnlyPresenter()
+        check_names, [], {}, [], ConsoleOnlyPresenter()
     )
 
     captured = capsys.readouterr()
@@ -97,7 +102,7 @@ def test_mean_time_to_restore_output_pingdom_outages(capsys):
     check_names = ["Data Hub P1"]
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        check_names, [],{}, ConsoleOnlyPresenter()
+        check_names, [], {}, [], ConsoleOnlyPresenter()
     )
 
     captured = capsys.readouterr()
@@ -112,7 +117,7 @@ def test_mean_time_to_restore_output_jenkins_outages(capsys):
 
     jenkins_jobs = ["test-job"]
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        [], jenkins_jobs,{}, ConsoleOnlyPresenter()
+        [], jenkins_jobs, {}, [], ConsoleOnlyPresenter()
     )
 
     captured = capsys.readouterr()
@@ -127,7 +132,7 @@ def test_mean_time_to_restore_output_no_jenkins_outages(capsys):
 
     jenkins_jobs = []
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        [], jenkins_jobs,{}, ConsoleOnlyPresenter()
+        [], jenkins_jobs, {}, [], ConsoleOnlyPresenter()
     )
 
     captured = capsys.readouterr()
@@ -227,27 +232,28 @@ def test_get_jenkins_outages_success_with_no_failed_builds():
 def test_mean_time_to_restore_output_no_circle_ci_outages(capsys):
     httpretty_checks()
     httpretty_circle_ci_runs_all_successes()
-    circle_ci_projects= {"test-project": ["test-workflow"]}
+    circle_ci_projects = {"test-project": ["test-workflow"]}
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        [],[],circle_ci_projects, ConsoleOnlyPresenter()
-    ) 
+        [], [], circle_ci_projects, [], ConsoleOnlyPresenter()
+    )
 
     captured = capsys.readouterr()
     assert "'source': 'circle_ci'" in captured.out
     assert "'mean time to restore in seconds': None" in captured.out
     assert "'count': None" in captured.out
 
+
 def test_mean_time_to_restore_output_circle_ci_outages(capsys):
     httpretty_checks()
     httpretty_circle_ci_runs_success()
 
-    circle_ci_projects= {"test-project": ["test-workflow"]}
+    circle_ci_projects = {"test-project": ["test-workflow"]}
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        [], [], circle_ci_projects, ConsoleOnlyPresenter()
+        [], [], circle_ci_projects, [], ConsoleOnlyPresenter()
     )
 
     captured = capsys.readouterr()
     assert "'source': 'circle_ci'" in captured.out
     assert "'mean time to restore in seconds': 130332" in captured.out
-    assert "'count': 2" in captured.out    
+    assert "'count': 2" in captured.out

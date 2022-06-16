@@ -2,9 +2,11 @@ from datetime import datetime
 import os
 from typing import List, Protocol
 
-from four_key_metrics.gateways.jenkins import JenkinsBuilds
 from four_key_metrics.gateways.circle_ci import CircleCiRuns
+from four_key_metrics.gateways.grafana import GrafanaAlertAnnotation
+from four_key_metrics.gateways.jenkins import JenkinsBuilds
 from four_key_metrics.gateways.pingdom import PingdomOutages
+
 
 class GenerateMeanTimeToRestorePresenter(Protocol):
     def add(self, data: dict):
@@ -32,6 +34,7 @@ class GenerateMeanTimeToRestore:
         pingdom_check_names,
         jenkins_jobs,
         circle_ci_projects,
+        grafana_alert_names,
         presenter: GenerateMeanTimeToRestorePresenter,
     ):
         self._presenter = presenter
@@ -40,6 +43,7 @@ class GenerateMeanTimeToRestore:
             self._get_pingdom_mean_time_to_restore(pingdom_check_names)
             self._get_jenkins_mean_time_to_restore(jenkins_jobs)
             self._get_circle_ci_mean_time_to_restore(circle_ci_projects)
+            self._get_grafana_mean_time_to_restore(grafana_alert_names)
         finally:
             self._presenter.end()
 
@@ -56,7 +60,11 @@ class GenerateMeanTimeToRestore:
 
     def _get_circle_ci_mean_time_to_restore(self, circle_ci_projects: dict):
         all_outages = CircleCiRuns().get_circle_ci_outages(circle_ci_projects)
-        return self._add_outages_to_presenter(all_outages, "circle_ci")          
+        return self._add_outages_to_presenter(all_outages, "circle_ci")
+
+    def _get_grafana_mean_time_to_restore(self, grafana_alert_names: List[str]):
+        all_outages = GrafanaAlertAnnotation().get_grafana_outages(grafana_alert_names)
+        return self._add_outages_to_presenter(all_outages, "grafana")
 
     def _add_outages_to_presenter(self, outages, source_name):
         total_time_to_restore = 0
