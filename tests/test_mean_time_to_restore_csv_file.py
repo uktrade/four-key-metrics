@@ -25,10 +25,10 @@ def generate_mean_time_to_restore_to_csv():
     httpretty_circle_ci_runs_two_failures_in_a_row()
     check_names = ["Data Hub P1"]
     jenkins_jobs = ["test-job"]
-    circle_ci_projects= {"test-project": ["test-workflow"]}
+    circle_ci_projects = {"test-project": ["test-workflow"]}
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        check_names, jenkins_jobs,circle_ci_projects, CSVDataPresenter.create()
+        check_names, jenkins_jobs, circle_ci_projects, CSVDataPresenter.create()
     )
 
 
@@ -41,6 +41,7 @@ class TestMeanTimeToRestoreCSVFile:
         os.environ["DIT_JENKINS_TOKEN"] = "1234"
         os.environ["DIT_JENKINS_URI"] = "https://jenkins.test/"
         os.environ["CIRCLE_CI_TOKEN"] = "1234"
+        os.environ["GRAFANA_TOKEN"] = "1234"
         httpretty.reset()
         generate_mean_time_to_restore_to_csv()
         self.filename, self.captured = get_csv_filename_and_captured_outerr(capsys)

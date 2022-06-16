@@ -36,6 +36,7 @@ class Outage:
         pingdom_check_id=None,
         jenkins_failed_build_hash=None,
         circle_ci_failed_run_id=None,
+        grafana_alert_name=None,
     ):
         self.source = source
         self.project = project
@@ -46,3 +47,4 @@ class Outage:
         self.seconds_to_restore = self.up_timestamp - self.down_timestamp
         self.jenkins_failed_build_hash = jenkins_failed_build_hash or None
         self.circle_ci_failed_run_id = circle_ci_failed_run_id or None
+        self.grafana_alert_name = grafana_alert_name or None
