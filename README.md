@@ -75,5 +75,16 @@ https://docs.pingdom.com/api/
 Visit https://app.circleci.com/settings/user/tokens > Create new API Token > add to CIRCLE_CI_TOKEN in your .env
 
 ## Grafana API key
-The Grafana API key can be found at:
+SRE has created a Grafana API key which can be found at:
 https://passman.ci.uktrade.digital/?name=grafana%20api%20key&submit=
+
+### Grafana alerts
+When an alert in Grafana fires a message this is recorded as an annotation.
+
+A list of Grafana alerts can be accessed through:
+https://grafana.ci.uktrade.digital/api/alerts
+
+A list of annotations (the actual messages sent) can be found at:
+https://grafana.ci.uktrade.digital/api/annotations
+
+For more information see https://grafana.com/docs/grafana/next/developers/http_api/alerting/ and https://grafana.com/docs/grafana/next/developers/http_api/annotations/#annotations-api
