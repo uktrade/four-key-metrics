@@ -3,7 +3,7 @@ import json
 import httpretty
 
 
-def httpretty_404_no_grafana_alerts():
+def httpretty_404_grafana_alerts():
     httpretty.register_uri(
         httpretty.GET,
         "https://grafana.ci.uktrade.digital/" "api/alerts",
@@ -12,7 +12,7 @@ def httpretty_404_no_grafana_alerts():
     return
 
 
-def httpretty_503_no_grafana_alerts():
+def httpretty_503_grafana_alerts():
     httpretty.register_uri(
         httpretty.GET,
         "https://grafana.ci.uktrade.digital/" "api/alerts",
@@ -54,6 +54,39 @@ def httpretty_grafana_alerts():
         httpretty.GET,
         "https://grafana.ci.uktrade.digital/" "api/alerts",
         body=json.dumps(grafana),
+    )
+    return
+
+
+def httpretty_no_grafana_alert_annotations():
+    grafana = []
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://grafana.ci.uktrade.digital/" "api/annotations?alertId=1",
+        body=json.dumps(grafana),
+    )
+    return
+
+
+def httpretty_404_grafana_alert_annotations():
+    grafana = []
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://grafana.ci.uktrade.digital/" "api/annotations?alertId=1",
+        status=404,
+    )
+    return
+
+
+def httpretty_503_grafana_alert_annotations():
+    grafana = []
+
+    httpretty.register_uri(
+        httpretty.GET,
+        "https://grafana.ci.uktrade.digital/" "api/annotations?alertId=1",
+        status=503,
     )
     return
 
