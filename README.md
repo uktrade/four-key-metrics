@@ -73,3 +73,7 @@ https://docs.pingdom.com/api/
 
 ## Circle CI API
 Visit https://app.circleci.com/settings/user/tokens > Create new API Token > add to CIRCLE_CI_TOKEN in your .env
+
+## Grafana API key
+The Grafana API key can be found at:
+https://passman.ci.uktrade.digital/?name=grafana%20api%20key&submit=
