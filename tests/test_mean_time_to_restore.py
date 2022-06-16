@@ -21,6 +21,7 @@ from tests.mock_jenkins_request import (
     httpretty_two_success_jenkins_build,
 )
 from tests.mock_pingdom_request import httpretty_checks, httpretty_summary_outage_p1
+from tests.mock_grafana_request import httpretty_grafana_alerts
 
 
 @pytest.fixture
@@ -74,6 +75,7 @@ def around_each():
     os.environ["DIT_JENKINS_TOKEN"] = "1234"
     os.environ["DIT_JENKINS_URI"] = "https://jenkins.test/"
     os.environ["PINGDOM_TOKEN"] = "1234"
+    os.environ["GRAFANA_TOKEN"] = "1234"
     httpretty.reset()
     yield
     httpretty.disable()

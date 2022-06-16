@@ -84,15 +84,16 @@ class GrafanaAlertAnnotation:
 
     def get_grafana_outages(self, grafana_alert_names):
         grafana_outages = []
-        alert_uids = self._get_alert_uids_from_names(grafana_alert_names)
-        for alert_name, alert_uid in alert_uids.items():
-            annotations = self._get_grafana_alert_annotations(alert_uid)
-            ascending_annotations = self._sort_annotations_by_ascending_time(
-                annotations
-            )
-            outages = self._create_outages_from_annotations(
-                ascending_annotations, alert_name
-            )
-            grafana_outages.extend(outages)
+        if grafana_alert_names:
+            alert_uids = self._get_alert_uids_from_names(grafana_alert_names)
+            for alert_name, alert_uid in alert_uids.items():
+                annotations = self._get_grafana_alert_annotations(alert_uid)
+                ascending_annotations = self._sort_annotations_by_ascending_time(
+                    annotations
+                )
+                outages = self._create_outages_from_annotations(
+                    ascending_annotations, alert_name
+                )
+                grafana_outages.extend(outages)
 
         return grafana_outages
