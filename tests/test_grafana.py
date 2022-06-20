@@ -75,8 +75,9 @@ def test_no_grafana_alert_notifications(grafana_alert_annotation):
     httpretty_grafana_alerts()
     httpretty_no_grafana_alert_annotations()
 
-    #    grafana_outages = grafana_alert_annotation._get_alert_uids_from_names(["Test Grafana Alert"])
-    all_outages = GrafanaAlertAnnotation().get_grafana_outages(["Test Grafana Alert"])
+    all_outages = GrafanaAlertAnnotation().get_grafana_outages(
+        [{"name": "Test Grafana Alert", "environment": "testing"}]
+    )
 
     assert len(all_outages) == 0
 
@@ -87,7 +88,10 @@ def test_not_all_grafana_alert_names(capsys, grafana_alert_annotation):
 
     #    grafana_outages = grafana_alert_annotation._get_alert_uids_from_names(["Test Grafana Alert"])
     all_outages = GrafanaAlertAnnotation().get_grafana_outages(
-        ["Test Grafana Alert", "Not here"]
+        [
+            {"name": "Test Grafana Alert", "environment": "testing"},
+            {"name": "Not here", "environment": "failing"},
+        ]
     )
 
     captured = capsys.readouterr()
@@ -100,8 +104,9 @@ def test_404_grafana_alert_notifications(capsys, grafana_alert_annotation):
     httpretty_grafana_alerts()
     httpretty_404_grafana_alert_annotations()
 
-    #    grafana_outages = grafana_alert_annotation._get_alert_uids_from_names(["Test Grafana Alert"])
-    all_outages = GrafanaAlertAnnotation().get_grafana_outages(["Test Grafana Alert"])
+    all_outages = GrafanaAlertAnnotation().get_grafana_outages(
+        [{"name": "Test Grafana Alert", "environment": "testing"}]
+    )
 
     captured = capsys.readouterr()
     assert "Not Found [404] whilst loading " in captured.out
@@ -112,8 +117,9 @@ def test_503_grafana_alert_notifications(capsys, grafana_alert_annotation):
     httpretty_grafana_alerts()
     httpretty_503_grafana_alert_annotations()
 
-    #    grafana_outages = grafana_alert_annotation._get_alert_uids_from_names(["Test Grafana Alert"])
-    all_outages = GrafanaAlertAnnotation().get_grafana_outages(["Test Grafana Alert"])
+    all_outages = GrafanaAlertAnnotation().get_grafana_outages(
+        [{"name": "Test Grafana Alert", "environment": "testing"}]
+    )
 
     captured = capsys.readouterr()
     assert "Service Unavailable [503] whilst loading " in captured.out

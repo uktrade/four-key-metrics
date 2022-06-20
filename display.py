@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from four_key_metrics.constants import (
     CIRCLE_CI_PROJECTS,
     DATAHUB_GIT_PROJECTS,
-    GRAFANA_ALERT_NAMES,
+    GRAFANA_ALERTS,
     JENKINS_JOBS,
     PINGDOM_CHECK_NAMES,
 )
@@ -66,7 +66,7 @@ class DisplayShell(Cmd):
         pingdom_check_names = PINGDOM_CHECK_NAMES
         jenkins_jobs = JENKINS_JOBS
         circle_ci_projects = CIRCLE_CI_PROJECTS
-        grafana_alert_names = GRAFANA_ALERT_NAMES
+        grafana_alert_names = GRAFANA_ALERTS
 
         UseCaseFactory().create("generate_mean_time_to_restore")(
             pingdom_check_names,

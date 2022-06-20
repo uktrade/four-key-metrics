@@ -26,4 +26,4 @@ CIRCLE_CI_PROJECTS = {
     "gh/uktrade/data-hub-api": ["Default build"],
 }
 
-GRAFANA_ALERT_NAMES = ["Database connection alert"]
+GRAFANA_ALERTS = [{"name": "Database connection alert", "environment": "production"}]

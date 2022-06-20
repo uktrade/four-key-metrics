@@ -33,7 +33,7 @@ def generate_mean_time_to_restore_to_csv():
     pingdom_check_names = ["Data Hub P1"]
     jenkins_jobs = ["test-job"]
     circle_ci_projects = {"test-project": ["test-workflow"]}
-    grafana_alert_names = ["Test Grafana Alert"]
+    grafana_alert_names = [{"name": "Test Grafana Alert", "environment": "testing"}]
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
         pingdom_check_names,
@@ -131,7 +131,7 @@ class TestMeanTimeToRestoreCSVFile:
 
             assert csvreader_list[5]["source"] == "grafana"
             assert csvreader_list[5]["project"] == "Test Grafana Alert"
-            assert csvreader_list[5]["environment"] == "-"
+            assert csvreader_list[5]["environment"] == "testing"
             assert csvreader_list[5]["down_timestamp"] == "1655113050"
             assert csvreader_list[5]["down_time"] == "13/06/2022 09:37:30"
             assert csvreader_list[5]["up_timestamp"] == "1655113230"

@@ -7,7 +7,7 @@ from four_key_metrics.domain_models import Outage
 
 
 class GrafanaAlertAnnotation:
-    def _get_alert_uids_from_names(self, alert_names):
+    def _get_alert_uids_from_names(self, alerts):
         response = requests.get(
             "https://grafana.ci.uktrade.digital/api/alerts",
             headers={"Authorization": "Bearer " + (os.environ["GRAFANA_TOKEN"])},
@@ -26,14 +26,17 @@ class GrafanaAlertAnnotation:
         if len(body) == 0:
             return {}
 
-        alert_uids = {
-            alert["name"]: alert["id"] for alert in body if alert["name"] in alert_names
-        }
+        alerts_with_uids = []
+        for grafana_alert in body:
+            for alert in alerts:
+                if alert["name"] == grafana_alert["name"]:
+                    alert["id"] = grafana_alert["id"]
+                    alerts_with_uids.append(alert)
 
-        if len(alert_uids) != len(alert_names):
+        if len(alerts_with_uids) != len(alerts):
             print("WARNING: Not all Grafana alert names found. Check for typos.")
 
-        return alert_uids
+        return alerts_with_uids
 
     def _sort_annotations_by_ascending_time(self, annotations) -> List[dict]:
         return sorted(annotations, key=(lambda annotation: annotation["created"]))
@@ -59,7 +62,7 @@ class GrafanaAlertAnnotation:
 
         return response.json()
 
-    def _create_outages_from_annotations(self, annotations, alert_name):
+    def _create_outages_from_annotations(self, annotations, environment):
         outages = []
         ongoing_outage = None
         for annotation in annotations:
@@ -71,7 +74,7 @@ class GrafanaAlertAnnotation:
                     Outage(
                         source="grafana",
                         project=annotation["alertName"],
-                        environment="-",
+                        environment=environment,
                         grafana_alert_name=ongoing_outage["id"],
                         down_timestamp=round(ongoing_outage["time"] / 1000),
                         up_timestamp=round(annotation["timeEnd"] / 1000),
@@ -82,17 +85,17 @@ class GrafanaAlertAnnotation:
                 pass
         return outages
 
-    def get_grafana_outages(self, grafana_alert_names):
+    def get_grafana_outages(self, grafana_alerts):
         grafana_outages = []
-        if grafana_alert_names:
-            alert_uids = self._get_alert_uids_from_names(grafana_alert_names)
-            for alert_name, alert_uid in alert_uids.items():
-                annotations = self._get_grafana_alert_annotations(alert_uid)
+        if grafana_alerts:
+            alerts = self._get_alert_uids_from_names(grafana_alerts)
+            for alert in alerts:
+                annotations = self._get_grafana_alert_annotations(alert["id"])
                 ascending_annotations = self._sort_annotations_by_ascending_time(
                     annotations
                 )
                 outages = self._create_outages_from_annotations(
-                    ascending_annotations, alert_name
+                    ascending_annotations, alert["environment"]
                 )
                 grafana_outages.extend(outages)
 
