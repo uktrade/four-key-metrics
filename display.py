@@ -76,6 +76,19 @@ class DisplayShell(Cmd):
             MeanTimeCSVDataPresenter.create(),
         )
 
+    def do_4km(self, args):
+        """Generate four key metrics
+        (currently Lead Time Metrics and Mean Time To Restore only)"""
+
+        self.do_four_key_metrics(args)
+
+    def do_four_key_metrics(self, args):
+        """Generate four key metrics
+        (currently Lead Time Metrics and Mean Time To Restore only)"""
+
+        self.do_lead_time_metrics(args)
+        self.do_mean_time_to_restore(args)
+
     def do_remove_reports(self, arg):
         """Clean up generated reports by supported output types, e.g. .csv
 
