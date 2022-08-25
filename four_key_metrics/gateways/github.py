@@ -15,6 +15,13 @@ class GitHubCommits:
             timeout=30,
         )
 
+        if response.status_code != 200:
+            print(
+                f"{response.reason} [{response.status_code}] {response.text}  "
+                f"whilst loading {response.url}"
+            )
+            return []
+
         commits = []
         for commit in response.json()["commits"]:
             commit_author_date = commit["commit"]["author"]["date"]

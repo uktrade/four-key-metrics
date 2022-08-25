@@ -1,4 +1,3 @@
-
 import os
 from typing import List
 import requests
@@ -8,10 +7,16 @@ from four_key_metrics.utilities import iso_string_to_timestamp
 
 
 class CircleCiRuns:
-    def _get_circle_ci_runs(self, project, workflow) -> List[dict]:
+    def _get_circle_ci_runs(self, project, workflow, branch) -> List[dict]:
+        uri = (
+            f"https://circleci.com/api/v2/insights/{project}/workflows/{workflow}"
+            f"?branch={branch}"
+            if branch
+            else ""
+        )
 
         response = requests.get(
-            f"https://circleci.com/api/v2/insights/{project}/workflows/{workflow}",
+            uri,
             headers={"Authorization": "Bearer " + (os.environ["CIRCLE_CI_TOKEN"])},
             timeout=5,
         )
@@ -33,11 +38,16 @@ class CircleCiRuns:
 
     def get_circle_ci_outages(self, projects: dict) -> List[Outage]:
         outages = []
-        for project, workflows in projects.items():
-            for workflow in workflows:
-                runs = self._get_circle_ci_runs(project, workflow)
-                ascending_runs = self._sort_runs_by_ascending_time(runs)
-                outages.extend(self._create_outages_from_runs(ascending_runs, project))
+        for project in projects:
+            for workflow in project["workflows"]:
+                for branch in project["branches"]:
+                    runs = self._get_circle_ci_runs(
+                        project["project"], workflow, branch
+                    )
+                    ascending_runs = self._sort_runs_by_ascending_time(runs)
+                    outages.extend(
+                        self._create_outages_from_runs(ascending_runs, project)
+                    )
         return outages
 
     def _create_outages_from_runs(self, runs, project):

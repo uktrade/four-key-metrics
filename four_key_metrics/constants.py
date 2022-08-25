@@ -21,9 +21,17 @@ JENKINS_JOBS = [
     "datahub-fe",
 ]
 
-CIRCLE_CI_PROJECTS = {
-    "gh/uktrade/data-hub-frontend": ["datahub"],
-    "gh/uktrade/data-hub-api": ["Default build"],
-}
+CIRCLE_CI_PROJECTS = [
+    {
+        "project": "gh/uktrade/data-hub-frontend",
+        "workflows": ["datahub"],
+        "branches": ["main", "master"],
+    },
+    {
+        "project": "gh/uktrade/data-hub-api",
+        "workflows": ["Default build"],
+        "branches": ["main", "master"],
+    },
+]
 
 GRAFANA_ALERTS = [{"name": "Database connection alert", "environment": "production"}]
