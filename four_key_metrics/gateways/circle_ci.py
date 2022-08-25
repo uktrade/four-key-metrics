@@ -7,13 +7,10 @@ from four_key_metrics.utilities import iso_string_to_timestamp
 
 
 class CircleCiRuns:
-    def _get_circle_ci_runs(self, project, workflow, branch) -> List[dict]:
-        uri = (
-            f"https://circleci.com/api/v2/insights/{project}/workflows/{workflow}"
-            f"?branch={branch}"
-            if branch
-            else ""
-        )
+    def _get_circle_ci_runs(self, project, workflow, branch=None) -> List[dict]:
+        uri = f"https://circleci.com/api/v2/insights/{project}/workflows/{workflow}"
+        if branch:
+            uri = f"{uri}?branch={branch}"
 
         response = requests.get(
             uri,
@@ -46,7 +43,9 @@ class CircleCiRuns:
                     )
                     ascending_runs = self._sort_runs_by_ascending_time(runs)
                     outages.extend(
-                        self._create_outages_from_runs(ascending_runs, project)
+                        self._create_outages_from_runs(
+                            ascending_runs, project["project"]
+                        )
                     )
         return outages
 

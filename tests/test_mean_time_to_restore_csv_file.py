@@ -32,7 +32,13 @@ def generate_mean_time_to_restore_to_csv():
     httpretty_grafana_alert_annotations()
     pingdom_check_names = ["Data Hub P1"]
     jenkins_jobs = ["test-job"]
-    circle_ci_projects = {"test-project": ["test-workflow"]}
+    circle_ci_projects = [
+        {
+            "project": "test-project",
+            "workflows": ["test-workflow"],
+            "branches": ["master"],
+        }
+    ]
     grafana_alert_names = [{"name": "Test Grafana Alert", "environment": "testing"}]
 
     UseCaseFactory().create("generate_mean_time_to_restore")(

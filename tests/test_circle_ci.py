@@ -38,7 +38,9 @@ def test_get_circle_ci_runs_success():
 def test_get_circle_ci_runs_no_items():
     httpretty_circle_ci_no_runs()
 
-    circle_ci_runs = CircleCiRuns()._get_circle_ci_runs("test-project", "test-workflow")
+    circle_ci_runs = CircleCiRuns()._get_circle_ci_runs(
+        "test-project", "test-workflow", False
+    )
     assert circle_ci_runs == []
 
 
