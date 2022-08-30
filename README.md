@@ -50,6 +50,9 @@ export GITHUB_USERNAME='my-username'
 export GITHUB_TOKEN='1234'
 export DIT_JENKINS_USER='a-username'
 export DIT_JENKINS_TOKEN='5678'
+export PINGDOM_TOKEN='9012'
+export CIRCLE_CI_TOKEN='3456'
+export GRAFANA_TOKEN='7890'
 ```
 
 `poetry run python display.py`
