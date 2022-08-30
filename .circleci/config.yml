@@ -16,6 +16,7 @@ jobs:
           name: Run tests
           command: poetry run pytest
       - slack/notify:
+          branch_pattern: main
           event: fail
           template: basic_fail_1
 
