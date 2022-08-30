@@ -9,7 +9,10 @@ from four_key_metrics.presenters.mean_time_to_restore import (
     CSVDataPresenter,
 )
 from four_key_metrics.use_case_factory import UseCaseFactory
-from tests.mock_circle_ci_request import httpretty_circle_ci_runs_two_failures_in_a_row
+from tests.mock_circle_ci_request import (
+    basic_circle_ci_project_configuration,
+    httpretty_circle_ci_runs_two_failures_in_a_row,
+)
 from tests.mock_grafana_request import (
     httpretty_grafana_alerts,
     httpretty_grafana_alert_annotations,
@@ -32,13 +35,12 @@ def generate_mean_time_to_restore_to_csv():
     httpretty_grafana_alert_annotations()
     pingdom_check_names = ["Data Hub P1"]
     jenkins_jobs = ["test-job"]
-    circle_ci_projects = {"test-project": ["test-workflow"]}
     grafana_alert_names = [{"name": "Test Grafana Alert", "environment": "testing"}]
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
         pingdom_check_names,
         jenkins_jobs,
-        circle_ci_projects,
+        basic_circle_ci_project_configuration,
         grafana_alert_names,
         CSVDataPresenter.create(),
     )

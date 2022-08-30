@@ -10,6 +10,7 @@ from four_key_metrics.presenters.mean_time_to_restore import (
 )
 from four_key_metrics.use_case_factory import UseCaseFactory
 from tests.mock_circle_ci_request import (
+    basic_circle_ci_project_configuration,
     httpretty_circle_ci_runs_all_successes,
     httpretty_circle_ci_runs_success,
 )
@@ -71,6 +72,7 @@ class ConsoleOnlyPresenter(ConsolePresenter):
 @pytest.fixture(autouse=True)
 def around_each():
     httpretty.enable(allow_net_connect=False, verbose=True)
+    os.environ["CIRCLE_CI_TOKEN"] = "1234"
     os.environ["DIT_JENKINS_USER"] = "test"
     os.environ["DIT_JENKINS_TOKEN"] = "1234"
     os.environ["DIT_JENKINS_URI"] = "https://jenkins.test/"
@@ -232,10 +234,9 @@ def test_get_jenkins_outages_success_with_no_failed_builds():
 def test_mean_time_to_restore_output_no_circle_ci_outages(capsys):
     httpretty_checks()
     httpretty_circle_ci_runs_all_successes()
-    circle_ci_projects = {"test-project": ["test-workflow"]}
 
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        [], [], circle_ci_projects, [], ConsoleOnlyPresenter()
+        [], [], basic_circle_ci_project_configuration, [], ConsoleOnlyPresenter()
     )
 
     captured = capsys.readouterr()
@@ -248,9 +249,8 @@ def test_mean_time_to_restore_output_circle_ci_outages(capsys):
     httpretty_checks()
     httpretty_circle_ci_runs_success()
 
-    circle_ci_projects = {"test-project": ["test-workflow"]}
     UseCaseFactory().create("generate_mean_time_to_restore")(
-        [], [], circle_ci_projects, [], ConsoleOnlyPresenter()
+        [], [], basic_circle_ci_project_configuration, [], ConsoleOnlyPresenter()
     )
 
     captured = capsys.readouterr()

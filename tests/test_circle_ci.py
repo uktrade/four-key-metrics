@@ -5,6 +5,7 @@ from four_key_metrics.domain_models import Outage
 
 from four_key_metrics.gateways.circle_ci import CircleCiRuns
 from tests.mock_circle_ci_request import (
+    basic_circle_ci_project_configuration,
     httpretty_401_unauthorized_circle_ci_runs,
     httpretty_404_not_found_circle_ci_runs,
     httpretty_circle_ci_no_runs,
@@ -38,7 +39,9 @@ def test_get_circle_ci_runs_success():
 def test_get_circle_ci_runs_no_items():
     httpretty_circle_ci_no_runs()
 
-    circle_ci_runs = CircleCiRuns()._get_circle_ci_runs("test-project", "test-workflow")
+    circle_ci_runs = CircleCiRuns()._get_circle_ci_runs(
+        "test-project", "test-workflow", False
+    )
     assert circle_ci_runs == []
 
 
@@ -175,10 +178,18 @@ def test_get_circle_ci_outages_multiple_workflows_and_projects():
     ]
 
     circle_ci_outages = CircleCiRuns().get_circle_ci_outages(
-        {
-            "test-project": ["test-workflow", "other-workflow"],
-            "other-project": ["test-workflow"],
-        }
+        [
+            {
+                "project": "test-project",
+                "workflows": ["test-workflow", "other-workflow"],
+                "branches": ["master"],
+            },
+            {
+                "project": "other-project",
+                "workflows": ["test-workflow"],
+                "branches": ["master"],
+            },
+        ]
     )
     assert len(circle_ci_outages) == 6
     for i, outage in enumerate(circle_ci_outages):
@@ -189,20 +200,30 @@ def test_get_circle_ci_outages_no_runs():
 
     httpretty_404_not_found_circle_ci_runs()
     outages = CircleCiRuns().get_circle_ci_outages(
-        {"test-wrong-project": ["test-workflow"]}
+        [
+            {
+                "project": "test-wrong-project",
+                "workflows": ["test-workflow"],
+                "branches": ["master"],
+            },
+        ]
     )
     assert outages == []
 
 
 def test_get_circle_ci_outages_all_failed_runs():
     httpretty_circle_ci_runs_all_failures()
-    outages = CircleCiRuns().get_circle_ci_outages({"test-project": ["test-workflow"]})
+    outages = CircleCiRuns().get_circle_ci_outages(
+        basic_circle_ci_project_configuration
+    )
     assert outages == []
 
 
 def test_get_circle_ci_outages_all_successful_runs():
     httpretty_circle_ci_runs_all_successes()
-    outages = CircleCiRuns().get_circle_ci_outages({"test-project": ["test-workflow"]})
+    outages = CircleCiRuns().get_circle_ci_outages(
+        basic_circle_ci_project_configuration
+    )
     assert outages == []
 
 
@@ -219,5 +240,7 @@ def test_get_circle_ci_outages_two_failed_runs_in_a_row():
         )
     ]
 
-    outages = CircleCiRuns().get_circle_ci_outages({"test-project": ["test-workflow"]})
+    outages = CircleCiRuns().get_circle_ci_outages(
+        basic_circle_ci_project_configuration
+    )
     assert outages[0].__dict__ == expected_result[0].__dict__
