@@ -1,6 +1,14 @@
 import json
 import httpretty
 
+basic_circle_ci_project_configuration = [
+    {
+        "project": "test-project",
+        "workflows": ["test-workflow"],
+        "branches": ["master"],
+    },
+]
+
 # four runs which should turn into 2 outages
 four_mock_runs = [
     {
