@@ -12,6 +12,7 @@ jobs:
     steps:
       - checkout
       - poetry/install:
+          version: 1.2.2
       - run:
           name: Run tests
           command: poetry run pytest
