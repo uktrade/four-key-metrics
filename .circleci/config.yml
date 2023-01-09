@@ -11,8 +11,7 @@ jobs:
       - image: cimg/python:3.10
     steps:
       - checkout
-      - python/install-packages:
-          pkg-manager: poetry
+      - poetry/install
       - run:
           name: Run tests
           command: poetry run pytest
