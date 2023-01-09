@@ -3,16 +3,15 @@ version: 2.1
 orbs:
   python: circleci/python@1.2
   slack: circleci/slack@4.1
-  poetry: talkiq/poetry@4.0.0
 
 jobs:
   test:
     docker:
-      - image: cimg/python:3.10
+      - image: cimg/python:3.11.1
     steps:
       - checkout
-      - poetry/install:
-          version: 1.2.2
+      - python/install-packages:
+          pkg-manager: poetry
       - run:
           name: Run tests
           command: poetry run pytest
