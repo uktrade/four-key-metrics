@@ -6,8 +6,8 @@ Intended as a way to measure the `four key metrics` as defined in the book Accel
 
 - [x] [product delivery] lead time (Time between code committed and code deployed)
 - [x] deployment frequency (Number of deployments of new code per day)
-- [ ] mean time to restore (MTTR) (How long does it take to restore the service after it has been impaired?)
-- [ ] change fail percentage (% of times the CI/CD pipeline for the default branch fails or causes an outage in any environment)
+- [x] mean time to restore (MTTR) (How long does it take to restore the service after it has been impaired?)
+- [x] change fail percentage (% of times the CI/CD pipeline for the default branch fails or causes an outage in any environment)
 
 ## Environment
 
