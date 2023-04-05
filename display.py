@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 from four_key_metrics.constants import (
     CIRCLE_CI_PROJECTS,
-    DATAHUB_GIT_PROJECTS,
+    GIT_PROJECTS,
     GRAFANA_ALERTS,
     JENKINS_JOBS,
     PINGDOM_CHECK_NAMES,
@@ -46,7 +46,7 @@ class DisplayShell(Cmd):
             'json',
         """
         # TODO: Make this easier to pass and parse these values through the command line
-        projects = DATAHUB_GIT_PROJECTS
+        projects = GIT_PROJECTS
         default_output = LeadTimeCSVDataPresenter()
         data_presenter = {
             "": default_output,

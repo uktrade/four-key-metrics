@@ -55,8 +55,10 @@ class JenkinsBuilds:
         builds = self.get_jenkins_builds(job)
         return list(
             filter(
-                lambda b: b.environment == environment and b.successful,
-                [build for build in builds if build.git_reference],
+                lambda b:
+                    (b.environment == environment and b.successful) or 
+                    (b.environment == None and b.successful),
+                    [build for build in builds if build.git_reference],
             )
         )
 
@@ -107,6 +109,7 @@ class JenkinsBuilds:
                 )
         return outages
 
+    # Not all jenkins jobs have 'environment' - for many of our ones we have seperate jobs for production
     def group_builds_by_environment(self, builds):
         envs_dict = {
             environment: []
