@@ -1,5 +1,10 @@
 GIT_PROJECTS = [
     {
+        "job":"contact-form-production-deploy",
+        "repository": "dit-contact-forms",
+        "environment": "production",
+    },
+    {
         "job": "datahub-api",
         "repository": "data-hub-api",
         "environment": "production",
@@ -10,18 +15,13 @@ GIT_PROJECTS = [
         "environment": "production",
     },
     {
-        "job":"contact-form-production-deploy",
-        "repository": "dit-contact-forms",
-        "environment": "production",
-    },
-    {
         "job":"ess-production-deploy",
         "repository": "export-support",
         "environment": "production",
     },
     {
-        "job":"market-access-public-fe-prod",
-        "repository": "market-access-public-frontend",
+        "job":"helpdesk-production-deploy-public",
+        "repository": "dit-helpdesk",
         "environment": "production",
     },
     {
@@ -35,8 +35,8 @@ GIT_PROJECTS = [
         "environment": "production",
     },
     {
-        "job":"helpdesk-production-deploy-public",
-        "repository": "dit-helpdesk",
+        "job":"market-access-public-fe-prod",
+        "repository": "market-access-public-frontend",
         "environment": "production",
     },
     {
@@ -47,42 +47,47 @@ GIT_PROJECTS = [
 ]
 
 PINGDOM_CHECK_NAMES = [
+    "CHEG contact form",
     "Data Hub P1",
     "Data Hub P2",
-    "CHEG contact form",
     "Export Support Service",
-    "Market Access CITB",
     "Market Access API",
+    "Market Access CITB",
     "Market Access FE",
     "Trade Helpdesk",
     "update-supply-chain-information",
 ]
 
 JENKINS_JOBS = [
+    "contact-form-production-deploy",
     "datahub-api",
     "datahub-fe",
-    "contact-form-production-deploy",
     "ess-production-deploy",
-    "market-access-public-fe-prod",
+    "helpdesk-production-deploy-public",
     "market-access-api-prod",
     "market-access-fe-prod",
-    "helpdesk-production-deploy-public",
+    "market-access-public-fe-prod",
     "update-supply-chain-information",
 ]
 
 CIRCLE_CI_PROJECTS = [
-    {
-        "project": "gh/uktrade/data-hub-frontend",
-        "workflows": ["datahub"],
-        "branches": ["main", "master"],
-    },
     {
         "project": "gh/uktrade/data-hub-api",
         "workflows": ["Default build"],
         "branches": ["main", "master"],
     },
     {
+        "project": "gh/uktrade/data-hub-frontend",
+        "workflows": ["datahub"],
+        "branches": ["main", "master"],
+    },
+    {
         "project": "gh/uktrade/dit-contact-forms",
+        "workflows": ["helpdesk"],
+        "branches": ["master"],
+    },
+    {
+        "project": "gh/uktrade/dit-helpdesk",
         "workflows": ["helpdesk"],
         "branches": ["master"],
     },
@@ -92,23 +97,18 @@ CIRCLE_CI_PROJECTS = [
         "branches": ["master"],
     },
     {
-        "project": "gh/uktrade/market-access-public-frontend",
+        "project": "gh/uktrade/market-access-api",
         "workflows": ["test"],
         "branches": ["master"],
     },
     {
-        "project": "gh/uktrade/market-access-api",
+        "project": "gh/uktrade/market-access-public-frontend",
         "workflows": ["test"],
         "branches": ["master"],
     },
     {
         "project": "gh/uktrade/market-access-python-frontend",
         "workflows": ["test"],
-        "branches": ["master"],
-    },
-    {
-        "project": "gh/uktrade/dit-helpdesk",
-        "workflows": ["helpdesk"],
         "branches": ["master"],
     },
     {
@@ -123,26 +123,26 @@ GRAFANA_ALERTS = [
 ]
 
 SERVICE_NAME_MAPPING = {
-    "contact-form-production-deploy": "CHEG Contact Forms",
-    "gh/uktrade/dit-contact-forms": "CHEG Contact Forms",
-    "CHEG contact form": "CHEG Contact Forms",
-    "ess-production-deploy": "Export Support Service (ESS)",
-    "export-support": "Export Support Service (ESS)",
-    "gh/uktrade/export-support": "Export Support Service (ESS)",
     "gh/uktrade/market-access-public-frontend":"Check International Trade Barriers (CITB)",
     "market-access-public-fe-prod":"Check International Trade Barriers (CITB)",
     "Market Access CITB":"Check International Trade Barriers (CITB)",
     "market-access-public-frontend":"Check International Trade Barriers (CITB)",
+    "gh/uktrade/dit-contact-forms": "CHEG Contact Forms",
+    "contact-form-production-deploy": "CHEG Contact Forms",
+    "CHEG contact form": "CHEG Contact Forms",
+    "gh/uktrade/export-support": "Export Support Service (ESS)",
+    "ess-production-deploy": "Export Support Service (ESS)",
+    "export-support": "Export Support Service (ESS)",
     "gh/uktrade/market-access-api":"Market Access API",
     "market-access-api-prod":"Market Access API",
     "market-access-api":"Market Access API",
-    "market-access-python-frontend":"Market Access Frontend",
     "gh/uktrade/market-access-python-frontend":"Market Access Frontend",
+    "market-access-python-frontend":"Market Access Frontend",
     "market-access-fe-prod":"Market Access Frontend",
     "Market Access FE":"Market Access Frontend",
+    "update-supply-chain-information":"Resilience Tool",
     "gh/uktrade/dit-helpdesk":"Trade With The UK (TWUK)",
     "helpdesk-production-deploy-public":"Trade With The UK (TWUK)",
     "Trade Helpdesk":"Trade With The UK (TWUK)",
     "dit-helpdesk":"Trade With The UK (TWUK)",
-    "update-supply-chain-information":"Resilience Tool",
 }
