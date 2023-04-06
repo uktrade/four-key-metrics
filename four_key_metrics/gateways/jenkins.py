@@ -112,7 +112,6 @@ class JenkinsBuilds:
                 )
         return outages
 
-    # Not all jenkins jobs have 'environment' - for many of our ones we have seperate jobs for production
     def group_builds_by_environment(self, builds):
         envs_dict = {
             environment: []

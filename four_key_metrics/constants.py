@@ -23,6 +23,11 @@ GIT_PROJECTS = [
         "job":"market-access-public-fe-prod",
         "repository": "market-access-public-frontend",
         "environment": "production",
+    },
+    {
+        "job":"market-access-api-prod",
+        "repository": "market-access-api",
+        "environment": "production",
     }
 ]
 
@@ -32,6 +37,7 @@ PINGDOM_CHECK_NAMES = [
     "CHEG contact form",
     "Export Support Service",
     "Market Access CITB",
+    "Market Access API",
 ]
 
 JENKINS_JOBS = [
@@ -40,6 +46,7 @@ JENKINS_JOBS = [
     "contact-form-production-deploy",
     "ess-production-deploy",
     "market-access-public-fe-prod",
+    "market-access-api-prod",
 ]
 
 CIRCLE_CI_PROJECTS = [
@@ -68,6 +75,11 @@ CIRCLE_CI_PROJECTS = [
         "workflows": ["test"],
         "branches": ["master"],
     },
+    {
+        "project": "gh/uktrade/market-access-api",
+        "workflows": ["test"],
+        "branches": ["master"],
+    },
 ]
 
 GRAFANA_ALERTS = [
@@ -86,4 +98,7 @@ SERVICE_NAME_MAPPING = {
     "market-access-public-fe-prod":"Check International Trade Barriers (CITB)",
     "Market Access CITB":"Check International Trade Barriers (CITB)",
     "market-access-public-frontend":"Check International Trade Barriers (CITB)",
+    "gh/uktrade/market-access-api":"Market Access API",
+    "market-access-api-prod":"Market Access API",
+    "market-access-api":"Market Access API",
 }
