@@ -33,6 +33,11 @@ GIT_PROJECTS = [
         "job":"market-access-fe-prod",
         "repository": "market-access-python-frontend",
         "environment": "production",
+    },
+    {
+        "job":"helpdesk-production-deploy-public",
+        "repository": "dit-helpdesk",
+        "environment": "production",
     }
 ]
 
@@ -44,6 +49,7 @@ PINGDOM_CHECK_NAMES = [
     "Market Access CITB",
     "Market Access API",
     "Market Access FE",
+    "Trade Helpdesk",
 ]
 
 JENKINS_JOBS = [
@@ -54,6 +60,7 @@ JENKINS_JOBS = [
     "market-access-public-fe-prod",
     "market-access-api-prod",
     "market-access-fe-prod",
+    "helpdesk-production-deploy-public",
 ]
 
 CIRCLE_CI_PROJECTS = [
@@ -91,6 +98,11 @@ CIRCLE_CI_PROJECTS = [
         "project": "gh/uktrade/market-access-python-frontend",
         "workflows": ["test"],
         "branches": ["master"],
+    },
+    {
+        "project": "gh/uktrade/dit-helpdesk",
+        "workflows": ["helpdesk"],
+        "branches": ["master"],
     }
 ]
 
@@ -98,7 +110,6 @@ GRAFANA_ALERTS = [
     {"name": "Database connection alert", "environment": "production"}
 ]
 
-# Might need a service name mapping constant, as many awkward names exist for one product (like dit-helpdesk is actually TWUK)
 SERVICE_NAME_MAPPING = {
     "contact-form-production-deploy": "CHEG Contact Forms",
     "gh/uktrade/dit-contact-forms": "CHEG Contact Forms",
@@ -117,4 +128,8 @@ SERVICE_NAME_MAPPING = {
     "gh/uktrade/market-access-python-frontend":"Market Access Frontend",
     "market-access-fe-prod":"Market Access Frontend",
     "Market Access FE":"Market Access Frontend",
+    "gh/uktrade/dit-helpdesk":"Trade With The UK (TWUK)",
+    "helpdesk-production-deploy-public":"Trade With The UK (TWUK)",
+    "Trade Helpdesk":"Trade With The UK (TWUK)",
+    "dit-helpdesk":"Trade With The UK (TWUK)",
 }
