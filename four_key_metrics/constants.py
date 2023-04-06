@@ -38,6 +38,11 @@ GIT_PROJECTS = [
         "job":"helpdesk-production-deploy-public",
         "repository": "dit-helpdesk",
         "environment": "production",
+    },
+    {
+        "job":"update-supply-chain-information",
+        "repository": "update-supply-chain-information",
+        "environment": "production",
     }
 ]
 
@@ -50,6 +55,7 @@ PINGDOM_CHECK_NAMES = [
     "Market Access API",
     "Market Access FE",
     "Trade Helpdesk",
+    "update-supply-chain-information",
 ]
 
 JENKINS_JOBS = [
@@ -61,6 +67,7 @@ JENKINS_JOBS = [
     "market-access-api-prod",
     "market-access-fe-prod",
     "helpdesk-production-deploy-public",
+    "update-supply-chain-information",
 ]
 
 CIRCLE_CI_PROJECTS = [
@@ -103,6 +110,11 @@ CIRCLE_CI_PROJECTS = [
         "project": "gh/uktrade/dit-helpdesk",
         "workflows": ["helpdesk"],
         "branches": ["master"],
+    },
+    {
+        "project": "gh/uktrade/update-supply-chain-information",
+        "workflows": ["workflow"],
+        "branches": ["main"],
     }
 ]
 
@@ -132,4 +144,5 @@ SERVICE_NAME_MAPPING = {
     "helpdesk-production-deploy-public":"Trade With The UK (TWUK)",
     "Trade Helpdesk":"Trade With The UK (TWUK)",
     "dit-helpdesk":"Trade With The UK (TWUK)",
+    "update-supply-chain-information":"Resilience Tool",
 }
