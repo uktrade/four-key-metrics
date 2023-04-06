@@ -121,28 +121,3 @@ CIRCLE_CI_PROJECTS = [
 GRAFANA_ALERTS = [
     {"name": "Database connection alert", "environment": "production"}
 ]
-
-SERVICE_NAME_MAPPING = {
-    "gh/uktrade/market-access-public-frontend":"Check International Trade Barriers (CITB)",
-    "market-access-public-fe-prod":"Check International Trade Barriers (CITB)",
-    "Market Access CITB":"Check International Trade Barriers (CITB)",
-    "market-access-public-frontend":"Check International Trade Barriers (CITB)",
-    "gh/uktrade/dit-contact-forms": "CHEG Contact Forms",
-    "contact-form-production-deploy": "CHEG Contact Forms",
-    "CHEG contact form": "CHEG Contact Forms",
-    "gh/uktrade/export-support": "Export Support Service (ESS)",
-    "ess-production-deploy": "Export Support Service (ESS)",
-    "export-support": "Export Support Service (ESS)",
-    "gh/uktrade/market-access-api":"Market Access API",
-    "market-access-api-prod":"Market Access API",
-    "market-access-api":"Market Access API",
-    "gh/uktrade/market-access-python-frontend":"Market Access Frontend",
-    "market-access-python-frontend":"Market Access Frontend",
-    "market-access-fe-prod":"Market Access Frontend",
-    "Market Access FE":"Market Access Frontend",
-    "update-supply-chain-information":"Resilience Tool",
-    "gh/uktrade/dit-helpdesk":"Trade With The UK (TWUK)",
-    "helpdesk-production-deploy-public":"Trade With The UK (TWUK)",
-    "Trade Helpdesk":"Trade With The UK (TWUK)",
-    "dit-helpdesk":"Trade With The UK (TWUK)",
-}
