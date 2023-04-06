@@ -28,6 +28,11 @@ GIT_PROJECTS = [
         "job":"market-access-api-prod",
         "repository": "market-access-api",
         "environment": "production",
+    },
+    {
+        "job":"market-access-fe-prod",
+        "repository": "market-access-python-frontend",
+        "environment": "production",
     }
 ]
 
@@ -38,6 +43,7 @@ PINGDOM_CHECK_NAMES = [
     "Export Support Service",
     "Market Access CITB",
     "Market Access API",
+    "Market Access FE",
 ]
 
 JENKINS_JOBS = [
@@ -47,6 +53,7 @@ JENKINS_JOBS = [
     "ess-production-deploy",
     "market-access-public-fe-prod",
     "market-access-api-prod",
+    "market-access-fe-prod",
 ]
 
 CIRCLE_CI_PROJECTS = [
@@ -80,6 +87,11 @@ CIRCLE_CI_PROJECTS = [
         "workflows": ["test"],
         "branches": ["master"],
     },
+    {
+        "project": "gh/uktrade/market-access-python-frontend",
+        "workflows": ["test"],
+        "branches": ["master"],
+    }
 ]
 
 GRAFANA_ALERTS = [
@@ -101,4 +113,8 @@ SERVICE_NAME_MAPPING = {
     "gh/uktrade/market-access-api":"Market Access API",
     "market-access-api-prod":"Market Access API",
     "market-access-api":"Market Access API",
+    "market-access-python-frontend":"Market Access Frontend",
+    "gh/uktrade/market-access-python-frontend":"Market Access Frontend",
+    "market-access-fe-prod":"Market Access Frontend",
+    "Market Access FE":"Market Access Frontend",
 }
