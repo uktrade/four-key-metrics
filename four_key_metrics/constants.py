@@ -13,6 +13,11 @@ GIT_PROJECTS = [
         "job":"contact-form-production-deploy",
         "repository": "dit-contact-forms",
         "environment": "production",
+    },
+    {
+        "job":"ess-production-deploy",
+        "repository": "export-support",
+        "environment": "production",
     }
 ]
 
@@ -20,12 +25,14 @@ PINGDOM_CHECK_NAMES = [
     "Data Hub P1",
     "Data Hub P2",
     "CHEG contact form",
+    "Export Support Service",
 ]
 
 JENKINS_JOBS = [
     "datahub-api",
     "datahub-fe",
     "contact-form-production-deploy",
+    "ess-production-deploy",
 ]
 
 CIRCLE_CI_PROJECTS = [
@@ -44,6 +51,11 @@ CIRCLE_CI_PROJECTS = [
         "workflows": ["helpdesk"],
         "branches": ["master"],
     },
+    {
+        "project": "gh/uktrade/export-support",
+        "workflows": ["export-support"],
+        "branches": ["master"],
+    },
 ]
 
 GRAFANA_ALERTS = [
@@ -52,7 +64,10 @@ GRAFANA_ALERTS = [
 
 # Might need a service name mapping constant, as many awkward names exist for one product (like dit-helpdesk is actually TWUK)
 SERVICE_NAME_MAPPING = {
-    "contact-form-production-deploy":"cheg-contact-forms",
-    "gh/uktrade/dit-contact-forms":"cheg-contact-forms",
-    "CHEG contact form":"cheg-contact-forms",
+    "contact-form-production-deploy": "CHEG Contact Forms",
+    "gh/uktrade/dit-contact-forms": "CHEG Contact Forms",
+    "CHEG contact form": "CHEG Contact Forms",
+    "ess-production-deploy": "Export Support Service",
+    "export-support": "Export Support Service",
+    "gh/uktrade/export-support": "Export Support Service",
 }
