@@ -91,3 +91,9 @@ A list of annotations (the actual messages sent) can be found at:
 https://grafana.ci.uktrade.digital/api/annotations
 
 For more information see https://grafana.com/docs/grafana/next/developers/http_api/alerting/ and https://grafana.com/docs/grafana/next/developers/http_api/annotations/#annotations-api
+
+## Automatic Runs
+
+The script will run automatically once a week through github actions setting off a circleci build.
+The build will run the script, generate the csvs and commit this to master.
+From there, data-flow will run a pipeline job which will identify the csv files in the master branch of the repository, moving the collected data to data-workspace.

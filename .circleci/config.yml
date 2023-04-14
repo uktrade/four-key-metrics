@@ -19,6 +19,29 @@ jobs:
           branch_pattern: main
           event: fail
           template: basic_fail_1
+  build:
+    docker:
+      - image: cimg/python:3.11.1
+    steps:
+      - run:
+          name: clone
+          command: git clone git@github.com:uktrade/four-key-metrics.git
+      - run:
+          name: run script
+          command: make scheduled_build
+      - run:
+          name: commit changes
+          command: |
+            git checkout Config_Jenkins_For_Autorun
+            git add *
+            git commit "Triggered deployment"
+      - run:
+          name: push changes
+          command: |
+            git config credential.helper 'cache --timeout=120'
+            git config user.email "<email>"
+            git config user.name "Deployment Bot"
+            git push
 
 workflows:
   primary:

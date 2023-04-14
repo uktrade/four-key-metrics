@@ -4,7 +4,6 @@ __pycache__/**
 .env
 /env
 four-key-metrics.code-workspace
-*.csv
 lcov.info
 .coverage
 .DS_Store

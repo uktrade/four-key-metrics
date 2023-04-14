@@ -5,6 +5,9 @@ format-code:
 metrics:
 	poetry run python display.py
 
+scheduled_build:
+	poetry run python scheduled_build.py
+
 install:
 	@echo "Install all the python libraries ready to run the application"	
 	poetry install
