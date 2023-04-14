@@ -50,3 +50,4 @@ workflows:
   primary:
     jobs:
       - test
+      - update_metrics
