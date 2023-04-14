@@ -53,10 +53,15 @@ class JenkinsBuilds:
 
     def get_successful_production_builds(self, job, environment):
         builds = self.get_jenkins_builds(job)
+        # Allow 'environment = None' for apps deployed through seperate jobs per environment
+        # Allow 'environment = ""' for apps deplyed with github versioning
         return list(
             filter(
-                lambda b: b.environment == environment and b.successful,
-                [build for build in builds if build.git_reference],
+                lambda b:
+                    (b.environment == environment and b.successful) or 
+                    (b.environment == None and b.successful) or
+                    (b.environment == "" and b.successful),
+                    [build for build in builds if build.git_reference],
             )
         )
 
