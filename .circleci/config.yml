@@ -34,7 +34,7 @@ jobs:
           command: |
             git checkout Config_Jenkins_For_Autorun
             git add *
-            git commit "Triggered deployment"
+            git commit "Triggered deployment [skip ci]"
       - run:
           name: push changes
           command: |
