@@ -19,7 +19,7 @@ jobs:
           branch_pattern: main
           event: fail
           template: basic_fail_1
-  build:
+  update_metrics:
     docker:
       - image: cimg/python:3.11.1
     steps:
