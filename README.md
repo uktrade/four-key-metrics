@@ -74,8 +74,14 @@ https://my.pingdom.com/app/api-tokens
 Pingdom documentation:
 https://docs.pingdom.com/api/
 
-## Circle CI API
-Visit https://app.circleci.com/settings/user/tokens > Create new API Token > add to CIRCLE_CI_TOKEN in your .env
+## CircleCI API
+Visit https://app.circleci.com/settings/user/tokens > Create new API Token > add to `CIRCLE_CI_TOKEN` in your .env
+
+## Jenkins API
+
+Open Jenkins and click the button with your name on it (in the navigation bar next to 'Log Out'). In your .env file, use your Jenkins User ID for `DIT_JENKINS_USER`.
+
+Click on the 'Configure' button in the left hand navigation, scroll down to the API token section and generate a new token. Use this in your .env file for the `DIT_JENKINS_TOKEN` variable.
 
 ## Grafana API key
 SRE has created a Grafana API key which can be found at:
